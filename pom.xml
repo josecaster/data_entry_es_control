@@ -8,7 +8,7 @@
 		<version>2.1.2.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>software.simplesolutions</groupId>
+	<groupId>software.cxode</groupId>
 	<artifactId>data.entry.es.control</artifactId>
 	<version>1.0.0-SNAPSHOT</version>
 	<name>data.entry.es.control</name>
