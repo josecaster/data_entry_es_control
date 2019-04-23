@@ -1,0 +1,36 @@
+@mixin survey-question {
+
+	.question-menu{
+		background: $v-selection-color;
+		padding: 5px;
+      	color: valo-font-color($v-selection-color, 0.8);
+      	border-bottom: 1px solid valo-font-color($v-selection-color, 0.8);
+      	
+      	&:hover {
+      		background: darken($v-selection-color,25%);
+  		}
+  		
+  		.v-label{
+  			font-size: 12px;
+  		}
+	}
+	
+	.question-menu-selected{
+		background: lighten($v-selection-color,15%);;
+	}
+	
+	.v-caption-matrix-axis {
+        color: $v-focus-color !important;
+        font-weight: bold;
+    }
+    
+    
+	.v-group-label{
+		background: white;
+		color: $v-font-color;
+		border: 2px solid $v-font-color;
+		border-radius: 4px;
+		font-weight: 400;
+		padding: 6px 14px 6px 14px;
+	}
+}

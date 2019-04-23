@@ -1,0 +1,29 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<include file="create-table-survey.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-questions.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-groups.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-questions-answer-choices.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-questions-answer-choice-selections.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-response.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-response-answer.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-table-survey-response-answer-text.xml"
+		relativeToChangelogFile="true" />
+
+</databaseChangeLog>

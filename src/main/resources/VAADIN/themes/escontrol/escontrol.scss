@@ -1,0 +1,9 @@
+@import "variables";
+@import "../cxode/cxode";
+@import "views/survey-question.scss";
+
+@mixin escontrol {
+	
+	@include cxode;
+	@include survey-question;
+}

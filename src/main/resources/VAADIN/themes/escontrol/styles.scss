@@ -1,0 +1,11 @@
+// Import all the mixins for this theme
+@import "addons.scss";
+@import "escontrol.scss";
+
+.escontrol {
+	// Output the actual theme selectors
+  	@include addons;
+  	@include escontrol;
+}
+
+
