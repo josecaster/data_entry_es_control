@@ -1,7 +1,5 @@
 package software.simple.solutions.data.entry.es.control.entities;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -18,16 +16,18 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
 @Entity
-@Table(name = EsControlTables.SURVEY_RESPONSE_.NAME)
+@Table(name = EsControlTables.SURVEY_APPLICATION_USERS_.NAME)
 @DynamicUpdate(value = true)
 @SelectBeforeUpdate(value = true)
-public class SurveyResponse extends MappedSuperClass {
+public class SurveyApplicationUser extends MappedSuperClass {
 
 	private static final long serialVersionUID = -8974022530355774576L;
 
@@ -37,24 +37,17 @@ public class SurveyResponse extends MappedSuperClass {
 	@Column(name = ID_)
 	private Long id;
 
-	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.ACTIVE_)
-	private Boolean active;
-
-	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.UNIQUE_ID_)
-	private String uniqueId;
-
-	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.FORM_NAME_)
-	private String formName;
-
-	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.CREATED_ON_)
-	private LocalDateTime createdOn;
-
+	/**
+	 * The {@link Survey} this question is linked to.
+	 */
 	@ManyToOne
-	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.SURVEY_ID_)
+	@JoinColumn(name = EsControlTables.SURVEY_APPLICATION_USERS_.COLUMNS.SURVEY_ID_)
+	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Survey survey;
 
 	@ManyToOne
-	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.APPLICATION_USER_ID_)
+	@JoinColumn(name = EsControlTables.SURVEY_APPLICATION_USERS_.COLUMNS.APPLICATION_USER_ID_)
+	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private ApplicationUser applicationUser;
 
 	public Long getId() {
@@ -63,14 +56,6 @@ public class SurveyResponse extends MappedSuperClass {
 
 	public void setId(Long id) {
 		this.id = id;
-	}
-
-	public Boolean getActive() {
-		return active;
-	}
-
-	public void setActive(Boolean active) {
-		this.active = active;
 	}
 
 	public Survey getSurvey() {
@@ -89,28 +74,16 @@ public class SurveyResponse extends MappedSuperClass {
 		this.applicationUser = applicationUser;
 	}
 
-	public String getUniqueId() {
-		return uniqueId;
+	@Override
+	public Boolean getActive() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
-	public void setUniqueId(String uniqueId) {
-		this.uniqueId = uniqueId;
-	}
-
-	public String getFormName() {
-		return formName;
-	}
-
-	public void setFormName(String formName) {
-		this.formName = formName;
-	}
-
-	public LocalDateTime getCreatedOn() {
-		return createdOn;
-	}
-
-	public void setCreatedOn(LocalDateTime createdOn) {
-		this.createdOn = createdOn;
+	@Override
+	public void setActive(Boolean active) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

@@ -11,6 +11,9 @@
 	<include file="create-table-survey-groups.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-survey-application-user.xml"
+		relativeToChangelogFile="true" />
+
 	<include file="create-table-survey-questions-answer-choices.xml"
 		relativeToChangelogFile="true" />
 

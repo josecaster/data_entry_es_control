@@ -14,6 +14,9 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="UNIQUE_ID_" type="VARCHAR(4000)" />
+			<column name="FORM_NAME_" type="VARCHAR(4000)" />
+			<column name="CREATED_ON_" type="DATETIME(6)" />
 
 			<column name="SURVEY_ID_" type="BIGINT" />
 			<column name="APPLICATION_USER_ID_" type="BIGINT" />
@@ -35,7 +38,10 @@
 			</column>
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="ACTIVE_" type="BIT(1)" />
-
+			<column name="UNIQUE_ID_" type="VARCHAR(4000)" />
+			<column name="FORM_NAME_" type="VARCHAR(4000)" />
+			<column name="CREATED_ON_" type="DATETIME(6)" />
+			
 			<column name="SURVEY_ID_" type="BIGINT" />
 			<column name="APPLICATION_USER_ID_" type="BIGINT" />
 		</createTable>

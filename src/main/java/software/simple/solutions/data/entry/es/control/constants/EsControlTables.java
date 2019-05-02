@@ -32,6 +32,16 @@ public class EsControlTables extends CxodeTables {
 			public static final String SURVEY_GROUP_ID_ = "SURVEY_GROUP_ID_";
 		}
 	}
+	
+	public final class SURVEY_APPLICATION_USERS_ {
+
+		public static final String NAME = "SURVEY_APPLICATION_USERS_";
+
+		public final class COLUMNS {
+			public static final String SURVEY_ID_ = "SURVEY_ID_";
+			public static final String APPLICATION_USER_ID_ = "APPLICATION_USER_ID_";
+		}
+	}
 
 	public final class SURVEY_GROUPS_ {
 
@@ -88,6 +98,9 @@ public class EsControlTables extends CxodeTables {
 
 		public final class COLUMNS {
 			public static final String ACTIVE_ = "ACTIVE_";
+			public static final String UNIQUE_ID_ = "UNIQUE_ID_";
+			public static final String FORM_NAME_ = "FORM_NAME_";
+			public static final String CREATED_ON_ = "CREATED_ON_";
 			public static final String SURVEY_ID_ = "SURVEY_ID_";
 			public static final String APPLICATION_USER_ID_ = "APPLICATION_USER_ID_";
 		}
