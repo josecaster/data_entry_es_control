@@ -92,4 +92,9 @@ public class SurveyService extends SuperService implements ISurveyService {
 		return surveyRepository.findAllSurveys();
 	}
 
+	@Override
+	public List<Survey> findAllSurveysByUser(String username) throws FrameworkException {
+		return surveyRepository.findAllSurveysByUser(username);
+	}
+
 }

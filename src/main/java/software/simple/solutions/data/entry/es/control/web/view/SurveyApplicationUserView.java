@@ -53,9 +53,9 @@ public class SurveyApplicationUserView extends BasicTemplate<SurveyApplicationUs
 		@Override
 		public void executeBuild() {
 
-			surveyFld = addField(SurveyLookUpField.class, SurveyGroupProperty.SURVEY, 0, 0);
+			surveyFld = addField(SurveyLookUpField.class, SurveyApplicationUserProperty.SURVEY, 0, 0);
 
-			applicationUserLookUpField = addField(ActiveSelect.class, SurveyGroupProperty.PINNED, 0, 1);
+			applicationUserLookUpField = addField(ApplicationUserLookUpField.class, SurveyApplicationUserProperty.APPLICATION_USER, 0, 1);
 
 		}
 
