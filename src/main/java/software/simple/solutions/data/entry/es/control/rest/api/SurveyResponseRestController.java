@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyResponseModel;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionGroupService;
+import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseService;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -23,7 +23,7 @@ public class SurveyResponseRestController {
 	private ISurveyResponseService surveyResponseService;
 
 	@Autowired
-	private ISurveyQuestionGroupService surveyQuestionGroupService;
+	private ISurveyQuestionSectionService surveyQuestionSectionService;
 
 	@Autowired
 	private ISurveyQuestionService surveyQuestionService;

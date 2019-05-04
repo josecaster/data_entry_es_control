@@ -29,7 +29,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 
 	private static final Logger logger = LogManager.getLogger(QuestionPreviewLayout.class);
 
-	private CaptionLabel groupFld;
+	private CaptionLabel sectionFld;
 	private CaptionLabel questionFld;
 	private CaptionLabel questionDescriptionFld;
 	private Label infoFld;
@@ -68,14 +68,14 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		hrFld.setContentMode(ContentMode.HTML);
 		addComponent(hrFld);
 
-		groupFld = new CaptionLabel();
-		groupFld.setVisible(false);
-		groupFld.setWidth("100%");
-		groupFld.addStyleName(Style.WORD_WRAP);
-		groupFld.addStyleName(ValoTheme.LABEL_LIGHT);
-		groupFld.addStyleName(ValoTheme.LABEL_H3);
-		groupFld.addStyleName(EsControlStyle.GROUP_LABEL);
-		addComponent(groupFld);
+		sectionFld = new CaptionLabel();
+		sectionFld.setVisible(false);
+		sectionFld.setWidth("100%");
+		sectionFld.addStyleName(Style.WORD_WRAP);
+		sectionFld.addStyleName(ValoTheme.LABEL_LIGHT);
+		sectionFld.addStyleName(ValoTheme.LABEL_H3);
+		sectionFld.addStyleName(EsControlStyle.SECTION_LABEL);
+		addComponent(sectionFld);
 
 		questionFld = new CaptionLabel();
 		questionFld.addStyleName(Style.WORD_WRAP);
@@ -117,9 +117,9 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		if (surveyQuestion != null) {
 			questionFld.setValue(surveyQuestion.getOrder() + ". " + surveyQuestion.getQuestion());
 
-			if (surveyQuestion.getSurveyGroup() != null) {
-				groupFld.setVisible(true);
-				groupFld.setValue(surveyQuestion.getSurveyGroup().getName());
+			if (surveyQuestion.getSurveySection() != null) {
+				sectionFld.setVisible(true);
+				sectionFld.setValue(surveyQuestion.getSurveySection().getName());
 			}
 
 			if (StringUtils.isNotBlank(surveyQuestion.getQuestionDescription())) {

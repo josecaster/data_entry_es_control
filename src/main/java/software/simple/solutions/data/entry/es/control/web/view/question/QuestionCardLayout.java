@@ -9,7 +9,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
@@ -27,7 +27,7 @@ public class QuestionCardLayout extends VerticalLayout {
 	private final BehaviorSubject<SurveyQuestion> observer;
 	private final BehaviorSubject<Boolean> deletedObserver;
 	private final BehaviorSubject<Integer> tabSelectedIndexObserver;
-	private final BehaviorSubject<Boolean> groupUpdatedObserver;
+	private final BehaviorSubject<Boolean> sectionUpdatedObserver;
 	private Survey survey;
 	private SurveyQuestion surveyQuestion;
 
@@ -38,7 +38,7 @@ public class QuestionCardLayout extends VerticalLayout {
 		observer = BehaviorSubject.create();
 		deletedObserver = BehaviorSubject.create();
 		tabSelectedIndexObserver = BehaviorSubject.create();
-		groupUpdatedObserver = BehaviorSubject.create();
+		sectionUpdatedObserver = BehaviorSubject.create();
 		tabSheet = new TabSheet();
 		tabSheet.setSizeFull();
 		addComponent(tabSheet);
@@ -135,11 +135,11 @@ public class QuestionCardLayout extends VerticalLayout {
 				questionPreviewLayout.reset();
 			}
 		});
-		questionOptionsLayout.getGroupUpdatedObserver().subscribe(new Consumer<SurveyGroup>() {
+		questionOptionsLayout.getSectionUpdatedObserver().subscribe(new Consumer<SurveySection>() {
 
 			@Override
-			public void accept(SurveyGroup surveyGroup) throws Exception {
-				questionDetailsLayout.setSurveyGroup(surveyGroup);
+			public void accept(SurveySection surveySection) throws Exception {
+				questionDetailsLayout.setSurveySection(surveySection);
 			}
 		});
 	}

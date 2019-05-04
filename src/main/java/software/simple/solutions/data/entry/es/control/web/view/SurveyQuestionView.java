@@ -23,13 +23,13 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
-import software.simple.solutions.data.entry.es.control.components.SurveyGroupSelect;
+import software.simple.solutions.data.entry.es.control.components.SurveySectionSelect;
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
-import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
@@ -59,7 +59,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 	private VerticalLayout questionPanelLayout;
 	private CssLayout lastMenuLayout;
 	private Survey survey;
-	private SurveyGroupSelect surveyGroupFld;
+	private SurveySectionSelect surveySectionFld;
 	private CTextField questionFilterFld;
 
 	private int selectedTabIndex;
@@ -92,20 +92,20 @@ public class SurveyQuestionView extends AbstractBaseView {
 		newQuestionBtn.addStyleName(ValoTheme.BUTTON_SMALL);
 		v1.addComponent(newQuestionBtn);
 
-		surveyGroupFld = new SurveyGroupSelect();
-		surveyGroupFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(SurveyGroupProperty.FILTER_BY_SURVEY_GROUP));
-		surveyGroupFld.setWidth("100%");
-		v1.addComponent(surveyGroupFld);
-		BehaviorSubject<SurveyGroup> surveyGroupObserver = getReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER);
-		surveyGroupObserver.subscribe(new Consumer<SurveyGroup>() {
+		surveySectionFld = new SurveySectionSelect();
+		surveySectionFld
+				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.FILTER_BY_SURVEY_SECTION));
+		surveySectionFld.setWidth("100%");
+		v1.addComponent(surveySectionFld);
+		BehaviorSubject<SurveySection> surveySectionObserver = getReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER);
+		surveySectionObserver.subscribe(new Consumer<SurveySection>() {
 
 			@Override
-			public void accept(SurveyGroup t) throws Exception {
-				surveyGroupFld.refresh();
+			public void accept(SurveySection t) throws Exception {
+				surveySectionFld.refresh();
 			}
 		});
-		surveyGroupFld.addValueChangeListener(new ValueChangeListener<ComboItem>() {
+		surveySectionFld.addValueChangeListener(new ValueChangeListener<ComboItem>() {
 
 			@Override
 			public void valueChange(ValueChangeEvent<ComboItem> event) {
@@ -182,7 +182,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 		lastMenuLayout = null;
 		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
 		List<SurveyQuestion> questions = surveyQuestionService.getQuestionList(survey.getId(),
-				questionFilterFld.getValue(), surveyGroupFld.getLongValue());
+				questionFilterFld.getValue(), surveySectionFld.getLongValue());
 		if (questions != null && !questions.isEmpty()) {
 			questionsPanel.setVisible(true);
 			questions.forEach(p -> {

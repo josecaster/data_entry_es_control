@@ -4,7 +4,7 @@ import software.simple.solutions.data.entry.es.control.components.lookup.SurveyL
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.properties.SurveyApplicationUserProperty;
-import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyApplicationUserVO;
 import software.simple.solutions.framework.core.components.CGridLayout;

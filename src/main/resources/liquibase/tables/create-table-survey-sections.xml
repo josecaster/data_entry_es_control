@@ -6,10 +6,10 @@
 		author="simplesolutions" id="1548551035413">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="survey_groups_" />
+				<tableExists tableName="survey_sections_" />
 			</not>
 		</preConditions>
-		<createTable tableName="survey_groups_">
+		<createTable tableName="survey_sections_">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>
@@ -27,10 +27,10 @@
 		author="simplesolutions" id="1548551043809">
 		<preConditions onFail="MARK_RAN">
 			<not>
-				<tableExists tableName="survey_groups_aud" />
+				<tableExists tableName="survey_sections_aud" />
 			</not>
 		</preConditions>
-		<createTable tableName="survey_groups_aud">
+		<createTable tableName="survey_sections_aud">
 			<column name="ID_" type="BIGINT">
 				<constraints nullable="false" />
 			</column>

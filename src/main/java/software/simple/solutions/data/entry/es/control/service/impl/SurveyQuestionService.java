@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import software.simple.solutions.data.entry.es.control.constants.Position;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceRepository;
-import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionGroupRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionRepository;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
@@ -39,7 +39,7 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	private ISurveyQuestionAnswerChoiceRepository surveyQuestionAnswerChoiceRepository;
 
 	@Autowired
-	private ISurveyQuestionGroupRepository surveyQuestionGroupRepository;
+	private ISurveyQuestionSectionRepository surveyQuestionSectionRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -64,7 +64,7 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 		surveyQuestion.setActive(vo.getActive());
 
 		if (vo.isNew()) {
-			updateGroupIfPinned(surveyQuestion);
+			updateSectionIfPinned(surveyQuestion);
 		}
 
 		if (!vo.isNew()) {
@@ -74,10 +74,10 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 		return (T) saveOrUpdate(surveyQuestion, vo.isNew());
 	}
 
-	private SurveyQuestion updateGroupIfPinned(SurveyQuestion surveyQuestion) throws FrameworkException {
-		SurveyGroup surveyGroup = surveyQuestionGroupRepository
-				.getPinnedGroupBySurvey(surveyQuestion.getSurvey().getId());
-		surveyQuestion.setSurveyGroup(surveyGroup);
+	private SurveyQuestion updateSectionIfPinned(SurveyQuestion surveyQuestion) throws FrameworkException {
+		SurveySection surveySection = surveyQuestionSectionRepository
+				.getPinnedSectionBySurvey(surveyQuestion.getSurvey().getId());
+		surveyQuestion.setSurveySection(surveySection);
 		return surveyQuestion;
 	}
 
@@ -166,8 +166,8 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	}
 	
 	@Override
-	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveyGroupId) throws FrameworkException {
-		return surveyQuestionRepository.getQuestionList(surveyId, queryText, surveyGroupId);
+	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId) throws FrameworkException {
+		return surveyQuestionRepository.getQuestionList(surveyId, queryText, surveySectionId);
 	}
 
 	private SurveyQuestion getSurveyQuestionByOrder(Long surveyId, Long order) throws FrameworkException {
@@ -210,9 +210,9 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	}
 
 	@Override
-	public SurveyQuestion updateSurveyQuestionGroup(Long surveyQuestionId, Long groupId) throws FrameworkException {
+	public SurveyQuestion updateSurveyQuestionSection(Long surveyQuestionId, Long sectionId) throws FrameworkException {
 		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, surveyQuestionId);
-		surveyQuestion.setSurveyGroup(get(SurveyGroup.class, groupId));
+		surveyQuestion.setSurveySection(get(SurveySection.class, sectionId));
 		return saveOrUpdate(surveyQuestion, false);
 	}
 

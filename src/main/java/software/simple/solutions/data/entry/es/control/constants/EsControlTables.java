@@ -29,7 +29,7 @@ public class EsControlTables extends CxodeTables {
 			public static final String REQUIRED_ = "REQUIRED_";
 			public static final String REQUIRED_ERROR_ = "REQUIRED_ERROR_";
 			public static final String MULTIPLE_SELECTION_ = "MULTIPLE_SELECTION_";
-			public static final String SURVEY_GROUP_ID_ = "SURVEY_GROUP_ID_";
+			public static final String SURVEY_SECTION_ID_ = "SURVEY_SECTION_ID_";
 		}
 	}
 	
@@ -43,9 +43,9 @@ public class EsControlTables extends CxodeTables {
 		}
 	}
 
-	public final class SURVEY_GROUPS_ {
+	public final class SURVEY_SECTIONS_ {
 
-		public static final String NAME = "SURVEY_GROUPS_";
+		public static final String NAME = "SURVEY_SECTIONS_";
 
 		public final class COLUMNS {
 			public static final String SURVEY_ID_ = "SURVEY_ID_";

@@ -13,7 +13,7 @@ public interface ISurveyQuestionRepository extends IGenericRepository {
 
 	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText) throws FrameworkException;
 	
-	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveyGroupId) throws FrameworkException;
+	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId) throws FrameworkException;
 	
 	Long getNextOrder(Long surveyId) throws FrameworkException;
 

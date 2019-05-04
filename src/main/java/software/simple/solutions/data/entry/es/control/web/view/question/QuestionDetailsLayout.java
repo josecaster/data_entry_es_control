@@ -17,10 +17,10 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.QuestionTypeSelect;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionGroupService;
+import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeChoicesResponseLayout;
@@ -52,7 +52,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	private VerticalLayout v1;
 	private CButton deleteBtn;
 	private CButton submitBtn;
-	private Label groupLbl;
+	private Label sectionLbl;
 
 	private final BehaviorSubject<SurveyQuestion> observer;
 	private final BehaviorSubject<Boolean> deletedObserver;
@@ -72,11 +72,11 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		observer = BehaviorSubject.create();
 		deletedObserver = BehaviorSubject.create();
 
-		groupLbl = new Label();
-		groupLbl.setVisible(false);
-		groupLbl.addStyleName(ValoTheme.LABEL_COLORED);
-		groupLbl.addStyleName(ValoTheme.LABEL_H4);
-		addComponent(groupLbl);
+		sectionLbl = new Label();
+		sectionLbl.setVisible(false);
+		sectionLbl.addStyleName(ValoTheme.LABEL_COLORED);
+		sectionLbl.addStyleName(ValoTheme.LABEL_H4);
+		addComponent(sectionLbl);
 
 		questionFieldLayout = new HorizontalLayout();
 		questionFieldLayout.setWidth("100%");
@@ -205,10 +205,10 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
 		try {
-			ISurveyQuestionGroupService surveyQuestionGroupService = ContextProvider
-					.getBean(ISurveyQuestionGroupService.class);
-			SurveyGroup surveyGroup = surveyQuestionGroupService.getPinnedGroupBySurvey(survey.getId());
-			setSurveyGroup(surveyGroup);
+			ISurveyQuestionSectionService surveyQuestionSectionService = ContextProvider
+					.getBean(ISurveyQuestionSectionService.class);
+			SurveySection surveySection = surveyQuestionSectionService.getPinnedSectionBySurvey(survey.getId());
+			setSurveySection(surveySection);
 		} catch (FrameworkException e) {
 			new MessageWindowHandler(e);
 		}
@@ -221,15 +221,15 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		questionFld.setValue(surveyQuestion.getQuestion());
 		questionTypeFld.setValue(surveyQuestion.getQuestionType());
 
-		SurveyGroup surveyGroup = surveyQuestion.getSurveyGroup();
-		setSurveyGroup(surveyGroup);
+		SurveySection surveySection = surveyQuestion.getSurveySection();
+		setSurveySection(surveySection);
 	}
 	
-	public void setSurveyGroup(SurveyGroup surveyGroup){
-		groupLbl.setVisible(false);
-		if (surveyGroup != null) {
-			groupLbl.setValue(surveyGroup.getName());
-			groupLbl.setVisible(true);
+	public void setSurveySection(SurveySection surveySection){
+		sectionLbl.setVisible(false);
+		if (surveySection != null) {
+			sectionLbl.setValue(surveySection.getName());
+			sectionLbl.setVisible(true);
 		}
 	}
 

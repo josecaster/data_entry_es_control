@@ -97,8 +97,8 @@ public class SurveyQuestion extends MappedSuperClass {
 	private Boolean multipleSelection;
 
 	@ManyToOne
-	@JoinColumn(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.SURVEY_GROUP_ID_)
-	private SurveyGroup surveyGroup;
+	@JoinColumn(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.SURVEY_SECTION_ID_)
+	private SurveySection surveySection;
 
 	public Long getId() {
 		return id;
@@ -186,12 +186,12 @@ public class SurveyQuestion extends MappedSuperClass {
 		this.multipleSelection = choiceType;
 	}
 
-	public SurveyGroup getSurveyGroup() {
-		return surveyGroup;
+	public SurveySection getSurveySection() {
+		return surveySection;
 	}
 
-	public void setSurveyGroup(SurveyGroup surveyGroup) {
-		this.surveyGroup = surveyGroup;
+	public void setSurveySection(SurveySection surveySection) {
+		this.surveySection = surveySection;
 	}
 
 	@Override

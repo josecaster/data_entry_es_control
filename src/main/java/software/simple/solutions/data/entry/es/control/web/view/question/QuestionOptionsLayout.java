@@ -10,11 +10,11 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import io.reactivex.subjects.BehaviorSubject;
-import software.simple.solutions.data.entry.es.control.components.lookup.SurveyGroupLookUpField;
+import software.simple.solutions.data.entry.es.control.components.lookup.SurveySectionLookUpField;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
-import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.framework.core.components.CCheckBox;
@@ -31,12 +31,12 @@ public class QuestionOptionsLayout extends VerticalLayout {
 	private CTextArea questionDescriptionFld;
 	private CCheckBox requiredFld;
 	private CTextArea requiredErrorFld;
-	private SurveyGroupLookUpField groupFld;
+	private SurveySectionLookUpField sectionFld;
 	// private CButton saveBtn;
 	private SurveyQuestion surveyQuestion;
 	private final BehaviorSubject<SurveyQuestion> observer;
 	private final BehaviorSubject<Boolean> optionsUpdatedObserver;
-	private final BehaviorSubject<SurveyGroup> groupUpdatedObserver;
+	private final BehaviorSubject<SurveySection> sectionUpdatedObserver;
 
 	private Survey survey;
 	private SessionHolder sessionHolder;
@@ -51,7 +51,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		observer = BehaviorSubject.create();
 		optionsUpdatedObserver = BehaviorSubject.create();
-		groupUpdatedObserver = BehaviorSubject.create();
+		sectionUpdatedObserver = BehaviorSubject.create();
 
 		createMainLayout();
 	}
@@ -77,10 +77,10 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		requiredErrorFld.setCaptionByKey(SurveyQuestionProperty.QUESTION_IS_REQUIRED_MESSAGE);
 		addComponent(requiredErrorFld);
 
-		groupFld = new SurveyGroupLookUpField();
-		groupFld.setWidth("300px");
-		groupFld.setCaptionByKey(SurveyGroupProperty.SURVEY_GROUP);
-		addComponent(groupFld);
+		sectionFld = new SurveySectionLookUpField();
+		sectionFld.setWidth("300px");
+		sectionFld.setCaptionByKey(SurveySectionProperty.SURVEY_SECTION);
+		addComponent(sectionFld);
 
 		// saveBtn = new CButton();
 		// saveBtn.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_SUBMIT);
@@ -181,18 +181,18 @@ public class QuestionOptionsLayout extends VerticalLayout {
 			}
 		});
 
-		groupFld.setValue(surveyQuestion.getSurveyGroup());
-		groupFld.addValueChangeListener(new ValueChangeListener<Object>() {
+		sectionFld.setValue(surveyQuestion.getSurveySection());
+		sectionFld.addValueChangeListener(new ValueChangeListener<Object>() {
 
 			@Override
 			public void valueChange(ValueChangeEvent<Object> event) {
-				SurveyGroup surveyGroup = (SurveyGroup) event.getValue();
+				SurveySection surveySection = (SurveySection) event.getValue();
 				try {
 					ISurveyQuestionService surveyQuestionService = ContextProvider
 							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateSurveyQuestionGroup(surveyQuestion.getId(),
-							surveyGroup == null ? null : surveyGroup.getId());
-					groupUpdatedObserver.onNext(surveyGroup);
+					surveyQuestion = surveyQuestionService.updateSurveyQuestionSection(surveyQuestion.getId(),
+							surveySection == null ? null : surveySection.getId());
+					sectionUpdatedObserver.onNext(surveySection);
 					optionsUpdatedObserver.onNext(true);
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);
@@ -205,8 +205,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		return optionsUpdatedObserver;
 	}
 
-	public BehaviorSubject<SurveyGroup> getGroupUpdatedObserver() {
-		return groupUpdatedObserver;
+	public BehaviorSubject<SurveySection> getSectionUpdatedObserver() {
+		return sectionUpdatedObserver;
 	}
 
 }

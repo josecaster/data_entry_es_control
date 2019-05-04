@@ -26,7 +26,7 @@ public class SurveyQuestionRepository extends GenericRepository implements ISurv
 	}
 
 	@Override
-	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveyGroupId)
+	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId)
 			throws FrameworkException {
 		String query = "from SurveyQuestion sq where sq.survey.id = :surveyId";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
@@ -35,9 +35,9 @@ public class SurveyQuestionRepository extends GenericRepository implements ISurv
 			query += " and lower(sq.question) like :queryText";
 			paramMap.put("queryText", "%" + queryText + "%");
 		}
-		if (surveyGroupId != null) {
-			query += " and sq.surveyGroup.id=:surveyGroupId ";
-			paramMap.put("surveyGroupId", surveyGroupId);
+		if (surveySectionId != null) {
+			query += " and sq.surveySection.id=:surveySectionId ";
+			paramMap.put("surveySectionId", surveySectionId);
 		}
 		query += " order by sq.order";
 		return createListQuery(query, paramMap);

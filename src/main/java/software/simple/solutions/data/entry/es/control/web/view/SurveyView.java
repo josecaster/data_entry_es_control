@@ -30,7 +30,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
@@ -70,15 +70,15 @@ public class SurveyView extends BasicTemplate<Survey> {
 	private static final Logger logger = LogManager.getLogger(SurveyView.class);
 
 	private static final long serialVersionUID = 6503015064562511801L;
-	private final BehaviorSubject<SurveyGroup> surveyGroupObserver;
+	private final BehaviorSubject<SurveySection> surveySectionObserver;
 
 	public SurveyView() {
 		setEntityClass(Survey.class);
 		setServiceClass(ISurveyService.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
-		surveyGroupObserver = BehaviorSubject.create();
-		addReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER, surveyGroupObserver);
+		surveySectionObserver = BehaviorSubject.create();
+		addReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER, surveySectionObserver);
 	}
 
 	@Override
