@@ -17,14 +17,16 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.QuestionTypeSelect;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeChoicesResponseLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeMatrixResponseLayout;
+import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeSingleResponseLayout;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CTextArea;
 import software.simple.solutions.framework.core.components.ConfirmWindow;
@@ -61,6 +63,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	private SurveyQuestion surveyQuestion;
 	private SessionHolder sessionHolder;
 
+	private BehaviorSubject<SurveyGroup> surveyGroupObserver;
+
 	@Override
 	public void detach() {
 		observer.onComplete();
@@ -71,7 +75,9 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		observer = BehaviorSubject.create();
 		deletedObserver = BehaviorSubject.create();
+	}
 
+	public void build() {
 		sectionLbl = new Label();
 		sectionLbl.setVisible(false);
 		sectionLbl.addStyleName(ValoTheme.LABEL_COLORED);
@@ -97,20 +103,20 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		v1.setVisible(false);
 		questionFieldLayout.addComponent(v1);
 
+		containerLayout = new VerticalLayout();
+		containerLayout.setVisible(false);
+		containerLayout.addStyleName(ValoTheme.LAYOUT_WELL);
+		addComponent(containerLayout);
+
 		questionTypeFld = new QuestionTypeSelect();
 		questionTypeFld.setWidth("200px");
 		questionTypeFld.setVisible(false);
 		questionTypeFld.setEmptySelectionAllowed(false);
 		questionTypeFld.setCaptionByKey(SurveyQuestionProperty.QUESTION_TYPE);
 		v1.addComponent(questionTypeFld);
-		questionTypeFld.setValue(QuestionType.SINGLE);
 		questionTypeFld.setEmptySelectionAllowed(false);
+
 		questionTypeFld.addValueChangeListener(new QuestionTypeSelectValueChangeListener());
-		
-		containerLayout = new VerticalLayout();
-		containerLayout.setVisible(false);
-		containerLayout.addStyleName(ValoTheme.LAYOUT_WELL);
-		addComponent(containerLayout);
 
 		actionLayout = new HorizontalLayout();
 		actionLayout.setWidth("-1px");
@@ -152,7 +158,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 				confirmWindow.execute(new ConfirmationHandler() {
 
 					@Override
-					public void handlePositive() throws FrameworkException {
+					public void handlePositive() {
 						try {
 							ISurveyQuestionService surveyQuestionService = ContextProvider
 									.getBean(ISurveyQuestionService.class);
@@ -174,6 +180,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 
 			}
 		});
+
 	}
 
 	protected void handleSaveOrUpdate() throws FrameworkException {
@@ -224,8 +231,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		SurveySection surveySection = surveyQuestion.getSurveySection();
 		setSurveySection(surveySection);
 	}
-	
-	public void setSurveySection(SurveySection surveySection){
+
+	public void setSurveySection(SurveySection surveySection) {
 		sectionLbl.setVisible(false);
 		if (surveySection != null) {
 			sectionLbl.setValue(surveySection.getName());
@@ -243,6 +250,10 @@ public class QuestionDetailsLayout extends VerticalLayout {
 			ComboItem comboItem = event.getValue();
 			String id = comboItem.getId();
 			switch (id) {
+			case QuestionType.SINGLE:
+			case QuestionType.AREA_FT_INCH:
+				createSingleLayout();
+				break;
 			case QuestionType.CHOICES:
 				createChoicesLayout();
 				break;
@@ -251,6 +262,16 @@ public class QuestionDetailsLayout extends VerticalLayout {
 				break;
 			}
 
+		}
+
+		private void createSingleLayout() {
+			if (surveyQuestion != null) {
+				QuestionTypeSingleResponseLayout questionTypeSingleResponseLayout = new QuestionTypeSingleResponseLayout(
+						surveyQuestion);
+				containerLayout.setVisible(true);
+				containerLayout.addComponent(questionTypeSingleResponseLayout);
+				questionTypeSingleResponseLayout.setSurveyGroupObserver(surveyGroupObserver);
+			}
 		}
 
 		private void createChoicesLayout() {
@@ -267,6 +288,14 @@ public class QuestionDetailsLayout extends VerticalLayout {
 			containerLayout.addComponent(questionTypeMatrixResponseLayout);
 		}
 
+	}
+
+	public void setSurveyGroupObserver(BehaviorSubject<SurveyGroup> surveyGroupObserver) {
+		this.surveyGroupObserver = surveyGroupObserver;
+	}
+
+	public void doForNew() {
+		questionTypeFld.setValue(QuestionType.SINGLE);
 	}
 
 }

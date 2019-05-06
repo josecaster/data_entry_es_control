@@ -1,0 +1,19 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+	<!-- FK survey_questions_ and survey_groups_ -->
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simplesolutions" id="1557030623663">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<foreignKeyConstraintExists
+					foreignKeyName="FK_SQ_SG" />
+			</not>
+		</preConditions>
+		<addForeignKeyConstraint constraintName="FK_SQ_SG"
+			referencedTableName="survey_groups_" baseColumnNames="SURVEY_GROUP_ID_"
+			baseTableName="survey_questions_" referencedColumnNames="ID_" />
+	</changeSet>
+
+</databaseChangeLog>

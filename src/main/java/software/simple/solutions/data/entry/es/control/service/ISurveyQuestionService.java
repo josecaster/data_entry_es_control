@@ -17,8 +17,9 @@ public interface ISurveyQuestionService extends ISuperService {
 	List<SurveyQuestion> getQuestionList(Long surveyId) throws FrameworkException;
 
 	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText) throws FrameworkException;
-	
-	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId) throws FrameworkException;
+
+	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId)
+			throws FrameworkException;
 
 	SurveyQuestion updateOptions(SurveyQuestionVO vo) throws FrameworkException;
 
@@ -38,9 +39,12 @@ public interface ISurveyQuestionService extends ISuperService {
 
 	SurveyQuestion updateSurveyQuestionSection(Long surveyQuestionId, Long sectionId) throws FrameworkException;
 
+	SurveyQuestion updateSurveyQuestionGroup(Long surveyQuestionId, Long groupId) throws FrameworkException;
+
 	SurveyQuestion updateDescription(Long surveyQuestionId, String description) throws FrameworkException;
 
 	SurveyQuestion updateRequired(Long surveyQuestionId, Boolean required) throws FrameworkException;
 
 	SurveyQuestion updateRequiredError(Long surveyQuestionId, String requiredError) throws FrameworkException;
+
 }

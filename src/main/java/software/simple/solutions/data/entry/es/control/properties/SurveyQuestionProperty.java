@@ -19,5 +19,6 @@ public class SurveyQuestionProperty {
 	public static final String QUESTION_SAVE_BEFORE_PREVIEW = "model.survey.question.save.before.preview";
 	public static final String QUESTION_REQUIRED_BY = "model.survey.question.required.by";
 	public static final String FILTER_BY_SURVEY_QUESTION = "model.survey.question.filter.by";
+	public static final String MAKE_SELECTED_GROUP_REQUIRED = "model.survey.question.make.selected.group.required";
 
 }

@@ -30,9 +30,10 @@ public class EsControlTables extends CxodeTables {
 			public static final String REQUIRED_ERROR_ = "REQUIRED_ERROR_";
 			public static final String MULTIPLE_SELECTION_ = "MULTIPLE_SELECTION_";
 			public static final String SURVEY_SECTION_ID_ = "SURVEY_SECTION_ID_";
+			public static final String SURVEY_GROUP_ID_ = "SURVEY_GROUP_ID_";
 		}
 	}
-	
+
 	public final class SURVEY_APPLICATION_USERS_ {
 
 		public static final String NAME = "SURVEY_APPLICATION_USERS_";
@@ -40,6 +41,18 @@ public class EsControlTables extends CxodeTables {
 		public final class COLUMNS {
 			public static final String SURVEY_ID_ = "SURVEY_ID_";
 			public static final String APPLICATION_USER_ID_ = "APPLICATION_USER_ID_";
+		}
+	}
+
+	public final class SURVEY_GROUPS_ {
+
+		public static final String NAME = "SURVEY_GROUPS_";
+
+		public final class COLUMNS {
+			public static final String SURVEY_ID_ = "SURVEY_ID_";
+			public static final String NAME_ = "NAME_";
+			public static final String DESCRIPTION_ = "DESCRIPTION_";
+			public static final String ACTIVE_ = "ACTIVE_";
 		}
 	}
 
@@ -79,6 +92,7 @@ public class EsControlTables extends CxodeTables {
 			public static final String VALIDATION_ERROR_ = "VALIDATION_ERROR_";
 			public static final String IS_OTHER_ = "IS_OTHER_";
 			public static final String MAKE_SELECTED_QUESTION_REQUIRED_ = "MAKE_SELECTED_QUESTION_REQUIRED_";
+			public static final String MAKE_SELECTED_GROUP_REQUIRED_ = "MAKE_SELECTED_GROUP_REQUIRED_";
 		}
 	}
 

@@ -90,7 +90,7 @@ public class SurveyQuestionRepository extends GenericRepository implements ISurv
 	@Override
 	public List<ComboItem> getNextQuestions(Long order) throws FrameworkException {
 		String query = "select new software.simple.solutions.framework.core.pojo.ComboItem(sq.id,str(sq.order),sq.question) from SurveyQuestion sq "
-				+ "where sq.order>:order";
+				+ "where sq.order>:order order by sq.order";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("order", order);
 		return createListQuery(query, paramMap);

@@ -3,15 +3,17 @@ package software.simple.solutions.data.entry.es.control.pojo;
 import java.util.List;
 
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoiceSelection;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 
 public class SurveyPojo {
 
 	private Survey survey;
 	private List<SurveySection> surveySections;
+	private List<SurveyGroup> surveyGroups;
 	private List<SurveyQuestion> surveyQuestions;
 	private List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices;
 	private List<SurveyQuestionAnswerChoiceSelection> surveyQuestionAnswerChoiceSelections;
@@ -59,6 +61,14 @@ public class SurveyPojo {
 	public void setSurveyQuestionAnswerChoiceSelections(
 			List<SurveyQuestionAnswerChoiceSelection> surveyQuestionAnswerChoiceSelections) {
 		this.surveyQuestionAnswerChoiceSelections = surveyQuestionAnswerChoiceSelections;
+	}
+
+	public List<SurveyGroup> getSurveyGroups() {
+		return surveyGroups;
+	}
+
+	public void setSurveyGroups(List<SurveyGroup> surveyGroups) {
+		this.surveyGroups = surveyGroups;
 	}
 
 }

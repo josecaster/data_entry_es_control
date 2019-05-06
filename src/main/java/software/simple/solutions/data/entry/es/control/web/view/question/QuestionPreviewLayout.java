@@ -15,6 +15,7 @@ import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFtInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeChoiceLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeMatrixLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeSingleLayout;
@@ -98,6 +99,12 @@ public class QuestionPreviewLayout extends VerticalLayout {
 				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(surveyQuestion);
 				questionTypeSingleLayout.setPreviewMode();
 				addComponent(questionTypeSingleLayout);
+				break;
+			case QuestionType.AREA_FT_INCH:
+				QuestionTypeAreaFtInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFtInchLayout(
+						surveyQuestion);
+				questionTypeAreaFtInchLayout.setPreviewMode();
+				addComponent(questionTypeAreaFtInchLayout);
 				break;
 			case QuestionType.CHOICES:
 				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(surveyQuestion);

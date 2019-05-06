@@ -68,7 +68,8 @@ public class SurveyQuestion extends MappedSuperClass {
 	/**
 	 * Indicates the type of question.
 	 * <ul>
-	 * <li>{@link QuestionType#SINGLE}</li>
+	 * <li>{@link QuestionType#SINGLE}</li> *
+	 * <li>{@link QuestionType#AREA_FT_INCH}</li>
 	 * <li>{@link QuestionType#CHOICES}</li>
 	 * <li>{@link QuestionType#MATRIX}</li>
 	 * </ul>
@@ -99,6 +100,10 @@ public class SurveyQuestion extends MappedSuperClass {
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.SURVEY_SECTION_ID_)
 	private SurveySection surveySection;
+
+	@ManyToOne
+	@JoinColumn(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.SURVEY_GROUP_ID_)
+	private SurveyGroup surveyGroup;
 
 	public Long getId() {
 		return id;
@@ -192,6 +197,14 @@ public class SurveyQuestion extends MappedSuperClass {
 
 	public void setSurveySection(SurveySection surveySection) {
 		this.surveySection = surveySection;
+	}
+
+	public SurveyGroup getSurveyGroup() {
+		return surveyGroup;
+	}
+
+	public void setSurveyGroup(SurveyGroup surveyGroup) {
+		this.surveyGroup = surveyGroup;
 	}
 
 	@Override

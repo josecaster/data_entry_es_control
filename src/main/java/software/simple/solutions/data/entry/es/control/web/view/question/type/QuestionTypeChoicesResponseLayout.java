@@ -58,10 +58,15 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 	public QuestionTypeChoicesResponseLayout(SurveyQuestion surveyQuestion) {
 		this.surveyQuestion = surveyQuestion;
 		setMargin(false);
-		buildMainLayout();
+		try {
+			buildMainLayout();
+		} catch (FrameworkException e) {
+			logger.error(e.getMessage(), e);
+			new MessageWindowHandler(e);
+		}
 	}
 
-	public void buildMainLayout() {
+	public void buildMainLayout() throws FrameworkException {
 		allowMultipleAnswersFld = new CCheckBox();
 		allowMultipleAnswersFld.setCaptionByKey(SurveyQuestionAnswerChoiceProperty.CHOICE_TYPE_MULTIPLE_ANSWER);
 		addComponent(allowMultipleAnswersFld);

@@ -11,6 +11,9 @@
 	<include file="create-table-survey-sections.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-survey-groups.xml"
+		relativeToChangelogFile="true" />
+
 	<include file="create-table-survey-application-user.xml"
 		relativeToChangelogFile="true" />
 
@@ -27,6 +30,9 @@
 		relativeToChangelogFile="true" />
 
 	<include file="create-table-survey-response-answer-text.xml"
+		relativeToChangelogFile="true" />
+
+	<include file="create-foreign-key-constraints.xml"
 		relativeToChangelogFile="true" />
 
 </databaseChangeLog>

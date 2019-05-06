@@ -219,6 +219,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 				}
 			});
 		} else {
+			questionCardLayout.setSurveyGroupObserver(getReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER));
 			questionCardLayout.setSurveyQuestion(surveyQuestion);
 			questionCardLayout.getObserver().subscribe(new Consumer<SurveyQuestion>() {
 
@@ -242,6 +243,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 					selectedTabIndex = index;
 				}
 			});
+			
 		}
 	}
 

@@ -127,6 +127,8 @@ public interface ISurveyQuestionAnswerChoiceService extends ISuperService {
 
 	void updateMakeSelectedQuestionRequired(Long id, Long selectedQuestionId) throws FrameworkException;
 
+	void updateMakeSelectedGroupRequired(Long id, Long selectedGroupId) throws FrameworkException;
+
 	List<SurveyQuestionAnswerChoice> findBySurvey(Long surveyId) throws FrameworkException;
 
 }

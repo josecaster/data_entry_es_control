@@ -167,6 +167,13 @@ public class SurveyQuestionAnswerChoiceService extends SuperService implements I
 	}
 
 	@Override
+	public void updateMakeSelectedGroupRequired(Long id, Long selectedGroupId) throws FrameworkException {
+		SurveyQuestionAnswerChoice surveyQuestionAnswerChoice = get(SurveyQuestionAnswerChoice.class, id);
+		surveyQuestionAnswerChoice.setMakeSelectedGroupRequired(selectedGroupId);
+		saveOrUpdate(surveyQuestionAnswerChoice, false);
+	}
+
+	@Override
 	public List<SurveyQuestionAnswerChoice> findBySurvey(Long surveyId) throws FrameworkException {
 		return surveyQuestionAnswerChoiceRepository.findBySurvey(surveyId);
 	}

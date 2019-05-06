@@ -5,17 +5,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoiceSelection;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.pojo.SurveyPojo;
+import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
@@ -32,6 +33,9 @@ public class SurveyRestController {
 
 	@Autowired
 	private ISurveyQuestionSectionService surveyQuestionSectionService;
+
+	@Autowired
+	private ISurveyGroupService surveyGroupService;
 
 	@Autowired
 	private ISurveyQuestionService surveyQuestionService;
@@ -54,6 +58,9 @@ public class SurveyRestController {
 
 				List<SurveySection> surveySections = surveyQuestionSectionService.findAllBySurveyId(survey.getId());
 				surveyModel.setSurveySections(surveySections);
+
+				List<SurveyGroup> surveyGroups = surveyGroupService.findAllBySurveyId(survey.getId());
+				surveyModel.setSurveyGroups(surveyGroups);
 
 				List<SurveyQuestion> surveyQuestions = surveyQuestionService.getQuestionList(survey.getId());
 				surveyModel.setSurveyQuestions(surveyQuestions);

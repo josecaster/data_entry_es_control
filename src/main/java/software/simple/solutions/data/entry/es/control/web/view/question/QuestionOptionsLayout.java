@@ -10,12 +10,15 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import io.reactivex.subjects.BehaviorSubject;
+import software.simple.solutions.data.entry.es.control.components.lookup.SurveyGroupLookUpField;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveySectionLookUpField;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
-import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CTextArea;
@@ -32,6 +35,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 	private CCheckBox requiredFld;
 	private CTextArea requiredErrorFld;
 	private SurveySectionLookUpField sectionFld;
+	private SurveyGroupLookUpField groupFld;
 	// private CButton saveBtn;
 	private SurveyQuestion surveyQuestion;
 	private final BehaviorSubject<SurveyQuestion> observer;
@@ -81,6 +85,11 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		sectionFld.setWidth("300px");
 		sectionFld.setCaptionByKey(SurveySectionProperty.SURVEY_SECTION);
 		addComponent(sectionFld);
+
+		groupFld = new SurveyGroupLookUpField();
+		groupFld.setWidth("300px");
+		groupFld.setCaptionByKey(SurveyGroupProperty.SURVEY_GROUP);
+		addComponent(groupFld);
 
 		// saveBtn = new CButton();
 		// saveBtn.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_SUBMIT);
@@ -193,6 +202,24 @@ public class QuestionOptionsLayout extends VerticalLayout {
 					surveyQuestion = surveyQuestionService.updateSurveyQuestionSection(surveyQuestion.getId(),
 							surveySection == null ? null : surveySection.getId());
 					sectionUpdatedObserver.onNext(surveySection);
+					optionsUpdatedObserver.onNext(true);
+				} catch (FrameworkException e) {
+					new MessageWindowHandler(e);
+				}
+			}
+		});
+
+		groupFld.setValue(surveyQuestion.getSurveyGroup());
+		groupFld.addValueChangeListener(new ValueChangeListener<Object>() {
+
+			@Override
+			public void valueChange(ValueChangeEvent<Object> event) {
+				SurveyGroup surveyGroup = (SurveyGroup) event.getValue();
+				try {
+					ISurveyQuestionService surveyQuestionService = ContextProvider
+							.getBean(ISurveyQuestionService.class);
+					surveyQuestion = surveyQuestionService.updateSurveyQuestionGroup(surveyQuestion.getId(),
+							surveyGroup == null ? null : surveyGroup.getId());
 					optionsUpdatedObserver.onNext(true);
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);

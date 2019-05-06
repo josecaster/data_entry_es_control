@@ -53,7 +53,8 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 	/**
 	 * Indicate if the question is a:
 	 * <ul>
-	 * <li>single text question. {@link QuestionType#SINGLE}</li>
+	 * <li>single text question. {@link QuestionType#SINGLE}</li> *
+	 * <li>Area ft-inch question. {@link QuestionType#AREA_FT_INCH}</li>
 	 * <li>multiple choice with just one permissible answer.
 	 * {@link QuestionType#CHOICES}</li>
 	 * <li>multiple choice with just more than one permissible answer.
@@ -157,6 +158,9 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 
 	@Column(name = EsControlTables.SURVEY_QUESTION_ANSWER_CHOICES_.COLUMNS.MAKE_SELECTED_QUESTION_REQUIRED_)
 	private Long makeSelectedQuestionRequired;
+
+	@Column(name = EsControlTables.SURVEY_QUESTION_ANSWER_CHOICES_.COLUMNS.MAKE_SELECTED_GROUP_REQUIRED_)
+	private Long makeSelectedGroupRequired;
 
 	public Long getId() {
 		return id;
@@ -390,6 +394,14 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 
 	public void setMakeSelectedQuestionRequired(Long makeSelectedQuestionRequired) {
 		this.makeSelectedQuestionRequired = makeSelectedQuestionRequired;
+	}
+
+	public Long getMakeSelectedGroupRequired() {
+		return makeSelectedGroupRequired;
+	}
+
+	public void setMakeSelectedGroupRequired(Long makeSelectedGroupRequired) {
+		this.makeSelectedGroupRequired = makeSelectedGroupRequired;
 	}
 
 	@Override

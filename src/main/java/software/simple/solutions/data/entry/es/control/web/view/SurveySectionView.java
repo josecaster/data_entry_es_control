@@ -1,9 +1,8 @@
 package software.simple.solutions.data.entry.es.control.web.view;
 
+import org.vaadin.teemu.switchui.Switch;
+
 import com.vaadin.data.ValueProvider;
-import com.vaadin.ui.Button.ClickEvent;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.themes.ValoTheme;
 
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
@@ -14,7 +13,6 @@ import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
-import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextArea;
@@ -23,11 +21,11 @@ import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ActiveSelect;
-import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.properties.SystemProperty;
+import software.simple.solutions.framework.core.util.ColumnSort;
 import software.simple.solutions.framework.core.util.ComponentUtil;
+import software.simple.solutions.framework.core.util.SortingHelper;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
 public class SurveySectionView extends BasicTemplate<SurveySection> {
@@ -103,6 +101,9 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 			vo.setNameInterval(nameFld.getValue());
 			vo.setDescriptionInterval(descriptionFld.getValue());
 			vo.setPinned(pinnedFld.getItemId());
+			SortingHelper sortingHelper = new SortingHelper();
+			sortingHelper.addColumnSort(new ColumnSort(SurveySectionProperty.ID, SortingHelper.DESCENDING));
+			vo.setSortingHelper(sortingHelper);
 			return vo;
 		}
 	}
@@ -116,11 +117,11 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 		private CTextArea descriptionFld;
 		private CCheckBox activeFld;
 		private CCheckBox enableApplicabilityFld;
-		private CButton pinnedFld;
+		private Switch pinnedFld;
 		private SurveyLookUpField surveyFld;
 
 		private SurveySection surveySection;
-		private Boolean pinned = false;
+		// private Boolean pinned = false;
 
 		@Override
 		public void executeBuild() {
@@ -136,32 +137,12 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 			activeFld = formGrid.addField(CCheckBox.class, SystemProperty.SYSTEM_ENTITY_ACTIVE, 1, 0);
 
-			enableApplicabilityFld = formGrid.addField(CCheckBox.class, SurveySectionProperty.ENABLE_APPLICABILITY, 1, 1);
+			enableApplicabilityFld = formGrid.addField(CCheckBox.class, SurveySectionProperty.ENABLE_APPLICABILITY, 1,
+					1);
 
-			pinnedFld = formGrid.addField(CButton.class, SurveySectionProperty.PINNED, 2, 0);
-			pinnedFld.addStyleName(ValoTheme.BUTTON_BORDERLESS);
-			pinnedFld.addStyleName(Style.NO_PADDING);
-			pinnedFld.addStyleName(Style.RESIZED_ICON);
-			pinnedFld.setIcon(CxodeIcons.UNPIN);
-			pinnedFld.addClickListener(new ClickListener() {
-
-				@Override
-				public void buttonClick(ClickEvent event) {
-					setPinned(!pinned);
-				}
-			});
-		}
-
-		private void setPinned(Boolean pinned) {
-			this.pinned = pinned;
-			if (this.pinned == null) {
-				this.pinned = false;
-			}
-			if (this.pinned) {
-				pinnedFld.setIcon(CxodeIcons.PIN);
-			} else {
-				pinnedFld.setIcon(CxodeIcons.UNPIN);
-			}
+			pinnedFld = formGrid.addField(Switch.class, SurveySectionProperty.PINNED, 2, 0);
+			pinnedFld.setAnimationEnabled(true);
+			pinnedFld.addStyleName("compact");
 		}
 
 		@Override
@@ -179,8 +160,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 			surveyFld.setValue(surveySection.getSurvey());
 			enableApplicabilityFld.setValue(surveySection.getEnableApplicability());
 
-			pinned = surveySection.getPinned();
-			setPinned(pinned);
+			pinnedFld.setValue(surveySection.getPinned());
 			return surveySection;
 		}
 
@@ -193,7 +173,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 			vo.setName(nameFld.getValue());
 			vo.setDescription(descriptionFld.getValue());
 			vo.setActive(activeFld.getValue());
-			vo.setPinned(pinned);
+			vo.setPinned(pinnedFld.getValue());
 			vo.setEnableApplicability(enableApplicabilityFld.getValue());
 			return vo;
 		}

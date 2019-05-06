@@ -10,12 +10,13 @@ import org.springframework.stereotype.Service;
 
 import software.simple.solutions.data.entry.es.control.constants.Position;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceRepository;
-import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -213,6 +214,13 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	public SurveyQuestion updateSurveyQuestionSection(Long surveyQuestionId, Long sectionId) throws FrameworkException {
 		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, surveyQuestionId);
 		surveyQuestion.setSurveySection(get(SurveySection.class, sectionId));
+		return saveOrUpdate(surveyQuestion, false);
+	}
+	
+	@Override
+	public SurveyQuestion updateSurveyQuestionGroup(Long surveyQuestionId, Long groupId) throws FrameworkException {
+		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, surveyQuestionId);
+		surveyQuestion.setSurveyGroup(get(SurveyGroup.class, groupId));
 		return saveOrUpdate(surveyQuestion, false);
 	}
 

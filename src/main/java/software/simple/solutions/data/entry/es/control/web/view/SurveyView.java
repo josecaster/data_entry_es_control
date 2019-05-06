@@ -30,6 +30,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
@@ -71,14 +72,19 @@ public class SurveyView extends BasicTemplate<Survey> {
 
 	private static final long serialVersionUID = 6503015064562511801L;
 	private final BehaviorSubject<SurveySection> surveySectionObserver;
+	private final BehaviorSubject<SurveyGroup> surveyGroupObserver;
 
 	public SurveyView() {
 		setEntityClass(Survey.class);
 		setServiceClass(ISurveyService.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
+
 		surveySectionObserver = BehaviorSubject.create();
 		addReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER, surveySectionObserver);
+
+		surveyGroupObserver = BehaviorSubject.create();
+		addReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER, surveyGroupObserver);
 	}
 
 	@Override
@@ -299,7 +305,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 					confirmWindow.execute(new ConfirmationHandler() {
 
 						@Override
-						public void handlePositive() throws FrameworkException {
+						public void handlePositive() {
 							try {
 								IFileService fileService = ContextProvider.getBean(IFileService.class);
 								fileService.delete(EntityFile.class, entityFile.getId(),

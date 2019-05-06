@@ -11,7 +11,7 @@
 		</preConditions>
 		<createTable tableName="survey_question_answer_choice_selections_">
 			<column name="ID_" type="BIGINT">
-				<constraints nullable="false" />
+				<constraints nullable="false" primaryKey="true" />
 			</column>
 			<column name="SURVEY_QUESTION_ANSWER_CHOICE_ID_" type="BIGINT" />
 			<column name="LABEL_" type="VARCHAR(4000)" />

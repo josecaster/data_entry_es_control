@@ -9,8 +9,9 @@ import com.vaadin.ui.themes.ValoTheme;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
@@ -28,10 +29,13 @@ public class QuestionCardLayout extends VerticalLayout {
 	private final BehaviorSubject<Boolean> deletedObserver;
 	private final BehaviorSubject<Integer> tabSelectedIndexObserver;
 	private final BehaviorSubject<Boolean> sectionUpdatedObserver;
+	private BehaviorSubject<SurveyGroup> surveyGroupObserver;
+
 	private Survey survey;
 	private SurveyQuestion surveyQuestion;
 
 	private int selectedTabIndex;
+
 
 	public QuestionCardLayout() {
 		addStyleName(ValoTheme.LAYOUT_CARD);
@@ -84,6 +88,8 @@ public class QuestionCardLayout extends VerticalLayout {
 
 	private void createQuestionDetailsLayout() {
 		questionDetailsLayout = new QuestionDetailsLayout();
+		questionDetailsLayout.setSurveyGroupObserver(surveyGroupObserver);
+		questionDetailsLayout.build();
 		tabSheet.addComponent(questionDetailsLayout);
 		tabSheet.getTab(questionDetailsLayout)
 				.setCaption(PropertyResolver.getPropertyValueByLocale(SurveyQuestionProperty.QUESTION));
@@ -154,6 +160,10 @@ public class QuestionCardLayout extends VerticalLayout {
 
 	public void doForNew() {
 		questionDetailsLayout = new QuestionDetailsLayout();
+		questionDetailsLayout.setSurveyGroupObserver(surveyGroupObserver);
+		questionDetailsLayout.build();
+		questionDetailsLayout.doForNew();
+		
 		questionDetailsLayout.setSurvey(survey);
 		tabSheet.addComponent(questionDetailsLayout);
 		tabSheet.getTab(questionDetailsLayout)
@@ -193,6 +203,10 @@ public class QuestionCardLayout extends VerticalLayout {
 
 	public void setSelectedTabIndex(int selectedTabIndex) {
 		this.selectedTabIndex = selectedTabIndex;
+	}
+
+	public void setSurveyGroupObserver(BehaviorSubject<SurveyGroup> surveyGroupObserver) {
+		this.surveyGroupObserver = surveyGroupObserver;
 	}
 
 }
