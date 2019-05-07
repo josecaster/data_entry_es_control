@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-	<property name="LOGS" value="./logs" />
+	<springProperty name="LOGS" source="logging.path"/>
+<!-- 	<property name="LOGS" value="./logs" /> -->
 
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
