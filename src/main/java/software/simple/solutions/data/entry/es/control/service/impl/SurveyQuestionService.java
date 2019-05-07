@@ -16,7 +16,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionRepository;
-import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -40,7 +40,7 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	private ISurveyQuestionAnswerChoiceRepository surveyQuestionAnswerChoiceRepository;
 
 	@Autowired
-	private ISurveyQuestionSectionRepository surveyQuestionSectionRepository;
+	private ISurveySectionRepository surveyQuestionSectionRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {

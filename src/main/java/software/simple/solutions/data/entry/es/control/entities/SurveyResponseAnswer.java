@@ -37,6 +37,9 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.ACTIVE_)
 	private Boolean active;
 
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.UNIQUE_ID_)
+	private String uniqueId;
+
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.SURVEY_RESPONSE_ID_)
 	private SurveyResponse surveyResponse;
@@ -46,8 +49,31 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 	private SurveyQuestion surveyQuestion;
 
 	@ManyToOne
-	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.RESPONSE_TEXT_ID_)
-	private SurveyResponseAnswerText surveyResponseText;
+	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_CHOICE_ROW_ID_)
+	private SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceRow;
+
+	@ManyToOne
+	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_CHOICE_COLUMN_ID_)
+	private SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceColumn;
+
+	@ManyToOne
+	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_CHOICE_SELECTION_ID_)
+	private SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_TYPE_)
+	private String questionType;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.MATRIX_COLUMN_TYPE_)
+	private String matrixColumnType;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.RESPONSE_TEXT_)
+	private String responseText;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.OTHER_VALUE_)
+	private String otherValue;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.SELECTED_)
+	private Boolean selected;
 
 	public Long getId() {
 		return id;
@@ -73,20 +99,85 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 		this.surveyQuestion = surveyQuestion;
 	}
 
-	public SurveyResponseAnswerText getSurveyResponseText() {
-		return surveyResponseText;
-	}
-
-	public void setSurveyResponseText(SurveyResponseAnswerText surveyResponseText) {
-		this.surveyResponseText = surveyResponseText;
-	}
-
 	public SurveyResponse getSurveyResponse() {
 		return surveyResponse;
 	}
 
 	public void setSurveyResponse(SurveyResponse surveyResponse) {
 		this.surveyResponse = surveyResponse;
+	}
+
+	public String getUniqueId() {
+		return uniqueId;
+	}
+
+	public void setUniqueId(String uniqueId) {
+		this.uniqueId = uniqueId;
+	}
+
+	public SurveyQuestionAnswerChoice getSurveyQuestionAnswerChoiceRow() {
+		return surveyQuestionAnswerChoiceRow;
+	}
+
+	public void setSurveyQuestionAnswerChoiceRow(SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceRow) {
+		this.surveyQuestionAnswerChoiceRow = surveyQuestionAnswerChoiceRow;
+	}
+
+	public SurveyQuestionAnswerChoice getSurveyQuestionAnswerChoiceColumn() {
+		return surveyQuestionAnswerChoiceColumn;
+	}
+
+	public void setSurveyQuestionAnswerChoiceColumn(SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceColumn) {
+		this.surveyQuestionAnswerChoiceColumn = surveyQuestionAnswerChoiceColumn;
+	}
+
+	public SurveyQuestionAnswerChoiceSelection getSurveyQuestionAnswerChoiceSelection() {
+		return surveyQuestionAnswerChoiceSelection;
+	}
+
+	public void setSurveyQuestionAnswerChoiceSelection(
+			SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection) {
+		this.surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelection;
+	}
+
+	public String getQuestionType() {
+		return questionType;
+	}
+
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
+	}
+
+	public String getMatrixColumnType() {
+		return matrixColumnType;
+	}
+
+	public void setMatrixColumnType(String matrixColumnType) {
+		this.matrixColumnType = matrixColumnType;
+	}
+
+	public String getResponseText() {
+		return responseText;
+	}
+
+	public void setResponseText(String responseText) {
+		this.responseText = responseText;
+	}
+
+	public String getOtherValue() {
+		return otherValue;
+	}
+
+	public void setOtherValue(String otherValue) {
+		this.otherValue = otherValue;
+	}
+
+	public Boolean getSelected() {
+		return selected;
+	}
+
+	public void setSelected(Boolean selected) {
+		this.selected = selected;
 	}
 
 }

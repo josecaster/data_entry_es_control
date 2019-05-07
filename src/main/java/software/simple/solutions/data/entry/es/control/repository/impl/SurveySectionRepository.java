@@ -6,13 +6,13 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
-import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.repository.impl.GenericRepository;
 
 @Repository
-public class SurveyQuestionSectionRepository extends GenericRepository implements ISurveyQuestionSectionRepository {
+public class SurveySectionRepository extends GenericRepository implements ISurveySectionRepository {
 
 	@Override
 	public List<ComboItem> findBySurvey(Long surveyId) throws FrameworkException {

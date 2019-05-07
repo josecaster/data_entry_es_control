@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionSectionRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -24,11 +24,11 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Transactional
 @Service
-@ServiceRepository(claz = ISurveyQuestionSectionRepository.class)
+@ServiceRepository(claz = ISurveySectionRepository.class)
 public class SurveyQuestionSectionService extends SuperService implements ISurveyQuestionSectionService {
 
 	@Autowired
-	private ISurveyQuestionSectionRepository surveyQuestionSectionRepository;
+	private ISurveySectionRepository surveyQuestionSectionRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {

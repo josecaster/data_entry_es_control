@@ -14,10 +14,18 @@
 				<constraints nullable="false" primaryKey="true" />
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
-
+			<column name="UNIQUE_ID_" type="VARCHAR(1000)" />
+			
 			<column name="SURVEY_RESPONSE_ID_" type="BIGINT" />
 			<column name="QUESTION_ID_" type="BIGINT" />
-			<column name="RESPONSE_TEXT_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_ROW_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_COLUMN_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_SELECTION_ID_" type="BIGINT" />
+			<column name="QUESTION_TYPE_" type="VARCHAR(1000)" />
+			<column name="MATRIX_COLUMN_TYPE_" type="VARCHAR(1000)" />
+			<column name="RESPONSE_TEXT_" type="VARCHAR(1000)" />
+			<column name="OTHER_VALUE_" type="VARCHAR(1000)" />
+			<column name="SELECTED_" type="BIT(1)" />
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
@@ -36,10 +44,18 @@
 			</column>
 			<column name="REVISION_TYPE" type="TINYINT" />
 			<column name="ACTIVE_" type="BIT(1)" />
+			<column name="UNIQUE_ID_" type="VARCHAR(1000)" />
 
 			<column name="SURVEY_RESPONSE_ID_" type="BIGINT" />
 			<column name="QUESTION_ID_" type="BIGINT" />
-			<column name="RESPONSE_TEXT_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_ROW_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_COLUMN_ID_" type="BIGINT" />
+			<column name="QUESTION_CHOICE_SELECTION_ID_" type="BIGINT" />
+			<column name="QUESTION_TYPE_" type="VARCHAR(1000)" />
+			<column name="MATRIX_COLUMN_TYPE_" type="VARCHAR(1000)" />
+			<column name="RESPONSE_TEXT_" type="VARCHAR(1000)" />
+			<column name="OTHER_VALUE_" type="VARCHAR(1000)" />
+			<column name="SELECTED_" type="BIT(1)" />
 		</createTable>
 	</changeSet>
 

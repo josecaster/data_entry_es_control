@@ -126,22 +126,31 @@ public class EsControlTables extends CxodeTables {
 
 		public final class COLUMNS {
 			public static final String ACTIVE_ = "ACTIVE_";
+			public static final String UNIQUE_ID_ = "UNIQUE_ID_";
 			public static final String SURVEY_RESPONSE_ID_ = "SURVEY_RESPONSE_ID_";
 			public static final String QUESTION_ID_ = "QUESTION_ID_";
-			public static final String RESPONSE_TEXT_ID_ = "RESPONSE_TEXT_ID_";
+			public static final String QUESTION_CHOICE_ROW_ID_ = "QUESTION_CHOICE_ROW_ID_";
+			public static final String QUESTION_CHOICE_COLUMN_ID_ = "QUESTION_CHOICE_COLUMN_ID_";
+			public static final String QUESTION_CHOICE_SELECTION_ID_ = "QUESTION_CHOICE_SELECTION_ID_";
+			public static final String QUESTION_TYPE_ = "QUESTION_TYPE_";
+			public static final String MATRIX_COLUMN_TYPE_ = "MATRIX_COLUMN_TYPE_";
+			public static final String RESPONSE_TEXT_ = "RESPONSE_TEXT_";
+			public static final String OTHER_VALUE_ = "OTHER_VALUE_";
+			public static final String SELECTED_ = "SELECTED_";
 		}
 	}
 
-	public final class SURVEY_RESPONSE_ANSWER_TEXT_ {
+	public final class SURVEY_RESPONSE_SECTION_ {
 
-		public static final String NAME = "SURVEY_RESPONSE_ANSWER_TEXT_";
+		public static final String NAME = "SURVEY_RESPONSE_SECTIONS_";
 
 		public final class COLUMNS {
 			public static final String ACTIVE_ = "ACTIVE_";
-			public static final String SURVEY_ID_ = "SURVEY_ID_";
-			public static final String QUESTION_ID_ = "QUESTION_ID_";
-			public static final String RESPONSE_ID_ = "RESPONSE_ID_";
-			public static final String RESPONSE_ = "RESPONSE_";
+			public static final String UNIQUE_ID_ = "UNIQUE_ID_";
+			public static final String SURVEY_RESPONSE_ID_ = "SURVEY_RESPONSE_ID_";
+			public static final String SURVEY_SECTION_ID_ = "SURVEY_SECTION_ID_";
+			public static final String NOT_APPLICABLE_ = "NOT_APPLICABLE_";
 		}
 	}
+
 }

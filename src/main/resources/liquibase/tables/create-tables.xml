@@ -29,7 +29,7 @@
 	<include file="create-table-survey-response-answer.xml"
 		relativeToChangelogFile="true" />
 
-	<include file="create-table-survey-response-answer-text.xml"
+	<include file="create-table-survey-response-sections.xml"
 		relativeToChangelogFile="true" />
 
 	<include file="create-foreign-key-constraints.xml"

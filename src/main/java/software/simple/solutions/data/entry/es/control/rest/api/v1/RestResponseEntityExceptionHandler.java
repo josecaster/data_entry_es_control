@@ -1,4 +1,4 @@
-package software.simple.solutions.data.entry.es.control.rest.api;
+package software.simple.solutions.data.entry.es.control.rest.api.v1;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

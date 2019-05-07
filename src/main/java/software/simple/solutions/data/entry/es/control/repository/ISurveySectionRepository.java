@@ -7,7 +7,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.repository.IGenericRepository;
 
-public interface ISurveyQuestionSectionRepository extends IGenericRepository {
+public interface ISurveySectionRepository extends IGenericRepository {
 
 	List<ComboItem> findBySurvey(Long surveyId) throws FrameworkException;
 

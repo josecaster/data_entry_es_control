@@ -2,16 +2,35 @@ package software.simple.solutions.data.entry.es.control.rest.model;
 
 import java.io.Serializable;
 
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
+import software.simple.solutions.framework.core.constants.DateConstant;
+
 public class SurveyResponseModel implements Serializable {
 
 	Long id;
+	Boolean active;
 	String uniqueId;
-	Long surveyId;
 	String formName;
 	String createdOn;
-	Boolean active;
+	Long surveyId;
 	String username;
 	Boolean uploaded;
+
+	public SurveyResponseModel() {
+		super();
+	}
+
+	public SurveyResponseModel(SurveyResponse surveyResponse) {
+		this();
+		this.active = surveyResponse.getActive();
+		this.createdOn = surveyResponse.getCreatedOn().format(DateConstant.DATE_TIME_FORMAT);
+		this.formName = surveyResponse.getFormName();
+		this.id = surveyResponse.getId();
+		this.surveyId = surveyResponse.getSurvey().getId();
+		this.uniqueId = surveyResponse.getUniqueId();
+		this.uploaded = true;
+		this.username = surveyResponse.getApplicationUser().getUsername();
+	}
 
 	public Long getId() {
 		return id;
