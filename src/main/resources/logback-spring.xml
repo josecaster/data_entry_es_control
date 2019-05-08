@@ -2,6 +2,7 @@
 <configuration>
 
 	<property resource="application.properties" />
+
 	<appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<pattern>%d %-5p %c:%L - %msg %n</pattern>
