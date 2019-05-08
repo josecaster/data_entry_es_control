@@ -1,0 +1,119 @@
+2019-05-07 22:01:15,265 INFO  software.simple.solutions.Application:50 - Starting Application on alpha-blondi with PID 25056 (C:\Workspaces\HOMIE\data.entry.es.control\target\classes started by yusuf in C:\Workspaces\HOMIE\data.entry.es.control) 
+2019-05-07 22:01:15,265 DEBUG software.simple.solutions.Application:53 - Running with Spring Boot v2.1.2.RELEASE, Spring v5.1.4.RELEASE 
+2019-05-07 22:01:15,265 INFO  software.simple.solutions.Application:679 - The following profiles are active: prod 
+2019-05-07 22:01:15,318 INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:227 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable 
+2019-05-07 22:01:15,334 INFO  org.springframework.boot.devtools.env.DevToolsPropertyDefaultsPostProcessor:227 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG' 
+2019-05-07 22:01:18,379 INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate:126 - Bootstrapping Spring Data repositories in DEFAULT mode. 
+2019-05-07 22:01:18,766 INFO  org.springframework.data.repository.config.RepositoryConfigurationDelegate:182 - Finished Spring Data repository scanning in 377ms. Found 0 repository interfaces. 
+2019-05-07 22:01:18,967 INFO  org.springframework.context.annotation.ConfigurationClassPostProcessor:380 - Cannot enhance @Configuration bean definition 'com.vaadin.spring.VaadinConfiguration' since its singleton instance has been created too early. The typical cause is a non-static @Bean method with a BeanDefinitionRegistryPostProcessor return type: Consider declaring such methods as 'static'. 
+2019-05-07 22:01:19,371 INFO  org.springframework.context.support.PostProcessorRegistrationDelegate$BeanPostProcessorChecker:330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$823fd00a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying) 
+2019-05-07 22:01:20,193 INFO  org.springframework.boot.web.embedded.tomcat.TomcatWebServer:90 - Tomcat initialized with port(s): 9300 (http) 
+2019-05-07 22:01:20,233 INFO  org.apache.coyote.http11.Http11NioProtocol:173 - Initializing ProtocolHandler ["http-nio-9300"] 
+2019-05-07 22:01:20,243 INFO  org.apache.catalina.core.StandardService:173 - Starting service [Tomcat] 
+2019-05-07 22:01:20,243 INFO  org.apache.catalina.core.StandardEngine:173 - Starting Servlet engine: [Apache Tomcat/9.0.14] 
+2019-05-07 22:01:20,259 INFO  org.apache.catalina.core.AprLifecycleListener:173 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [C:\Program Files\Java\jdk1.8.0_102\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Program Files\Java\jdk1.8.0_102\jre\bin;C:/Program Files/Java/jre1.8.0_102/bin/server;C:/Program Files/Java/jre1.8.0_102/bin;C:/Program Files/Java/jre1.8.0_102/lib/amd64;C:\Program Files (x86)\Intel\iCLS Client\;C:\oraclexe\app\oracle\product\11.2.0\server\bin;C:\Program Files\Microsoft MPI\Bin\;C:\Program Files\Intel\iCLS Client\;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Program Files\OpenVPN\bin;C:\Program Files\Java\jdk1.8.0_102\bin;C:\Tools\TortoiseSVN\bin;C:\Program Files (x86)\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\DTS\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\130\Tools\Binn\;C:\Tools\apache-maven-3.3.9\bin;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files\Intel\Intel(R) Management Engine Components\DAL;C:\Program Files (x86)\Intel\Intel(R) Management Engine Components\IPT;C:\Program Files\Intel\Intel(R) Management Engine Components\IPT;C:\Tools\PuTTY\;C:\OpenSSL\bin\;C:\Tools\Amazon\AWSCLI\;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\Tools\Brackets\command;C:\Program Files (x86)\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files\Microsoft SQL Server\140\Tools\Binn\;C:\Program Files (x86)\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files\Microsoft SQL Server\140\DTS\Binn\;C:\Program Files (x86)\Microsoft SQL Server\150\DTS\Binn\;C:\Tools\Dart\dart-sdk\bin;C:\Tools\Android\sdk;C:\Tools\TortoiseGit\bin;C:\Tools\flutter\bin;C:\Tools\Python\Python35-32\Scripts\;C:\Tools\Python\Python35-32\;C:\Users\yusuf\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Intel\WiFi\bin\;C:\Program Files\Common Files\Intel\WirelessCommon\;C:\flutter\bin;C:\Users\yusuf\AppData\Local\atom\bin;C:\Tools\Microsoft VS Code\bin;C:\Tools\Eclipse\eclipse-reporting-neon\eclipse;;.] 
+2019-05-07 22:01:20,411 INFO  org.apache.catalina.core.ContainerBase.[Tomcat].[localhost].[/escontrol]:173 - Initializing Spring embedded WebApplicationContext 
+2019-05-07 22:01:20,411 INFO  org.springframework.web.context.ContextLoader:296 - Root WebApplicationContext: initialization completed in 5077 ms 
+2019-05-07 22:01:20,426 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:261 - Registering Vaadin servlet 
+2019-05-07 22:01:20,426 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:263 - Servlet will be mapped to URLs [/vaadinServlet/*, /VAADIN/*] 
+2019-05-07 22:01:20,463 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:282 - Setting servlet init parameters 
+2019-05-07 22:01:20,464 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:306 - Set servlet init parameter [productionMode] = [false] 
+2019-05-07 22:01:20,464 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:306 - Set servlet init parameter [resourceCacheTime] = [3600] 
+2019-05-07 22:01:20,464 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:306 - Set servlet init parameter [heartbeatInterval] = [300] 
+2019-05-07 22:01:20,464 INFO  com.vaadin.spring.boot.internal.VaadinServletConfiguration:306 - Set servlet init parameter [closeIdleSessions] = [false] 
+2019-05-07 22:01:21,175 INFO  com.zaxxer.hikari.HikariDataSource:110 - HikariPool-1 - Starting... 
+2019-05-07 22:01:21,332 INFO  com.zaxxer.hikari.HikariDataSource:123 - HikariPool-1 - Start completed. 
+2019-05-07 22:01:21,886 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT COUNT(*) FROM `de-escontrol`.DATABASECHANGELOGLOCK 
+2019-05-07 22:01:21,892 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT COUNT(*) FROM `de-escontrol`.DATABASECHANGELOGLOCK 
+2019-05-07 22:01:21,894 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT `LOCKED` FROM `de-escontrol`.DATABASECHANGELOGLOCK WHERE ID=1 
+2019-05-07 22:01:21,904 INFO  liquibase.lockservice.StandardLockService:42 - Successfully acquired change log lock 
+2019-05-07 22:01:23,181 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT MD5SUM FROM `de-escontrol`.DATABASECHANGELOG WHERE MD5SUM IS NOT NULL LIMIT 1 
+2019-05-07 22:01:23,187 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT COUNT(*) FROM `de-escontrol`.DATABASECHANGELOG 
+2019-05-07 22:01:23,188 INFO  liquibase.changelog.StandardChangeLogHistoryService:42 - Reading from `de-escontrol`.DATABASECHANGELOG 
+2019-05-07 22:01:23,188 INFO  liquibase.executor.jvm.JdbcExecutor:42 - SELECT * FROM `de-escontrol`.DATABASECHANGELOG ORDER BY DATEEXECUTED ASC, ORDEREXECUTED ASC 
+2019-05-07 22:01:23,330 INFO  liquibase.lockservice.StandardLockService:42 - Successfully released change log lock 
+2019-05-07 22:01:23,330 WARN  org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext:554 - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: Invocation of init method failed; nested exception is liquibase.exception.ValidationFailedException: Validation Failed:
+     13 change sets check sum
+          classpath:liquibase/tables/create-table-survey.xml::1548117814142::simplesolutions was: 8:dbb00c4e2fe1a34c758e6be48b36bc78 but is now: 8:ab1c12fbc4575e7fad237dfe652aa4d5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117735660::simplesolutions was: 8:19a574749c4f6ef75e13e6eae3630a8d but is now: 8:4e92da0db2f7314ad8b1d7b8ee23bcd5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117754175::simplesolutions was: 8:9305ca259eeb47550613551ead11429c but is now: 8:9900c8389c45ef59f37bb707338eb6b5
+          classpath:liquibase/tables/create-table-survey-sections.xml::1548551035413::simplesolutions was: 8:5924761e90dc2e9313b4fac8f68c1d61 but is now: 8:7aaec6c74dbcab6f41d37f0ff825772d
+          classpath:liquibase/tables/create-table-survey-application-user.xml::1556746804563::simplesolutions was: 8:1b7a892269ef899afd12f61d376a0245 but is now: 8:bd43a3c4954ad63d0b977ef12d31e611
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117702144::simplesolutions was: 8:99f7566541a274368567180392ef1d65 but is now: 8:28a4abc12d7d1215ccb25974128bc342
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117716145::simplesolutions was: 8:d3daaa48423b6f7a4bd15d7f161a7600 but is now: 8:47fa2f7cdeb2625b31d46518d714108d
+          classpath:liquibase/tables/create-table-survey-questions-answer-choice-selections.xml::1548615871277::simplesolutions was: 8:57fb508efe012f8e7d112fb0184b2661 but is now: 8:e76646520fd92451b7bc317a32db1668
+          classpath:liquibase/tables/create-table-survey-response.xml::1548117791873::simple.solutions was: 8:cef2d184a5bb862160aba1883b400040 but is now: 8:080c0fa932ab7a68bc9cac7f0ae8481c
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365494449::simple.solutions was: 8:8c820eeefda17f2930088c75d7f422b5 but is now: 8:28b1d14ebf9a5eb535a654f596e61f9a
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365500959::simple.solutions was: 8:229bb86a19972543abfec457f8ffb32d but is now: 8:887af00b02209eaa0313cf75c510b8c7
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10003::simple.solutions was: 8:1881997bdb07a1cb8d9f759199d8d3a1 but is now: 8:08832b487ae9e3d95649b6f29baed0b4
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10006::simple.solutions was: 8:4281e25d95f34dadde02d9037d37d61d but is now: 8:d6f263fe767bd4ba4b0bb1f388181421
+ 
+2019-05-07 22:01:23,330 INFO  com.zaxxer.hikari.HikariDataSource:350 - HikariPool-1 - Shutdown initiated... 
+2019-05-07 22:01:23,330 INFO  com.zaxxer.hikari.HikariDataSource:352 - HikariPool-1 - Shutdown completed. 
+2019-05-07 22:01:23,346 INFO  org.apache.catalina.core.StandardService:173 - Stopping service [Tomcat] 
+2019-05-07 22:01:23,362 INFO  org.springframework.boot.autoconfigure.logging.ConditionEvaluationReportLoggingListener:142 - 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled. 
+2019-05-07 22:01:23,377 ERROR org.springframework.boot.SpringApplication:858 - Application run failed 
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'liquibase' defined in class path resource [org/springframework/boot/autoconfigure/liquibase/LiquibaseAutoConfiguration$LiquibaseConfiguration.class]: Invocation of init method failed; nested exception is liquibase.exception.ValidationFailedException: Validation Failed:
+     13 change sets check sum
+          classpath:liquibase/tables/create-table-survey.xml::1548117814142::simplesolutions was: 8:dbb00c4e2fe1a34c758e6be48b36bc78 but is now: 8:ab1c12fbc4575e7fad237dfe652aa4d5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117735660::simplesolutions was: 8:19a574749c4f6ef75e13e6eae3630a8d but is now: 8:4e92da0db2f7314ad8b1d7b8ee23bcd5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117754175::simplesolutions was: 8:9305ca259eeb47550613551ead11429c but is now: 8:9900c8389c45ef59f37bb707338eb6b5
+          classpath:liquibase/tables/create-table-survey-sections.xml::1548551035413::simplesolutions was: 8:5924761e90dc2e9313b4fac8f68c1d61 but is now: 8:7aaec6c74dbcab6f41d37f0ff825772d
+          classpath:liquibase/tables/create-table-survey-application-user.xml::1556746804563::simplesolutions was: 8:1b7a892269ef899afd12f61d376a0245 but is now: 8:bd43a3c4954ad63d0b977ef12d31e611
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117702144::simplesolutions was: 8:99f7566541a274368567180392ef1d65 but is now: 8:28a4abc12d7d1215ccb25974128bc342
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117716145::simplesolutions was: 8:d3daaa48423b6f7a4bd15d7f161a7600 but is now: 8:47fa2f7cdeb2625b31d46518d714108d
+          classpath:liquibase/tables/create-table-survey-questions-answer-choice-selections.xml::1548615871277::simplesolutions was: 8:57fb508efe012f8e7d112fb0184b2661 but is now: 8:e76646520fd92451b7bc317a32db1668
+          classpath:liquibase/tables/create-table-survey-response.xml::1548117791873::simple.solutions was: 8:cef2d184a5bb862160aba1883b400040 but is now: 8:080c0fa932ab7a68bc9cac7f0ae8481c
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365494449::simple.solutions was: 8:8c820eeefda17f2930088c75d7f422b5 but is now: 8:28b1d14ebf9a5eb535a654f596e61f9a
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365500959::simple.solutions was: 8:229bb86a19972543abfec457f8ffb32d but is now: 8:887af00b02209eaa0313cf75c510b8c7
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10003::simple.solutions was: 8:1881997bdb07a1cb8d9f759199d8d3a1 but is now: 8:08832b487ae9e3d95649b6f29baed0b4
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10006::simple.solutions was: 8:4281e25d95f34dadde02d9037d37d61d but is now: 8:d6f263fe767bd4ba4b0bb1f388181421
+
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1745)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:576)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:498)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:307)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.context.support.AbstractApplicationContext.getBean(AbstractApplicationContext.java:1083)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:853)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:546)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:142)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:775)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:397)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:316)
+	at software.simple.solutions.Application.main(Application.java:21)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49)
+Caused by: liquibase.exception.ValidationFailedException: Validation Failed:
+     13 change sets check sum
+          classpath:liquibase/tables/create-table-survey.xml::1548117814142::simplesolutions was: 8:dbb00c4e2fe1a34c758e6be48b36bc78 but is now: 8:ab1c12fbc4575e7fad237dfe652aa4d5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117735660::simplesolutions was: 8:19a574749c4f6ef75e13e6eae3630a8d but is now: 8:4e92da0db2f7314ad8b1d7b8ee23bcd5
+          classpath:liquibase/tables/create-table-survey-questions.xml::1548117754175::simplesolutions was: 8:9305ca259eeb47550613551ead11429c but is now: 8:9900c8389c45ef59f37bb707338eb6b5
+          classpath:liquibase/tables/create-table-survey-sections.xml::1548551035413::simplesolutions was: 8:5924761e90dc2e9313b4fac8f68c1d61 but is now: 8:7aaec6c74dbcab6f41d37f0ff825772d
+          classpath:liquibase/tables/create-table-survey-application-user.xml::1556746804563::simplesolutions was: 8:1b7a892269ef899afd12f61d376a0245 but is now: 8:bd43a3c4954ad63d0b977ef12d31e611
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117702144::simplesolutions was: 8:99f7566541a274368567180392ef1d65 but is now: 8:28a4abc12d7d1215ccb25974128bc342
+          classpath:liquibase/tables/create-table-survey-questions-answer-choices.xml::1548117716145::simplesolutions was: 8:d3daaa48423b6f7a4bd15d7f161a7600 but is now: 8:47fa2f7cdeb2625b31d46518d714108d
+          classpath:liquibase/tables/create-table-survey-questions-answer-choice-selections.xml::1548615871277::simplesolutions was: 8:57fb508efe012f8e7d112fb0184b2661 but is now: 8:e76646520fd92451b7bc317a32db1668
+          classpath:liquibase/tables/create-table-survey-response.xml::1548117791873::simple.solutions was: 8:cef2d184a5bb862160aba1883b400040 but is now: 8:080c0fa932ab7a68bc9cac7f0ae8481c
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365494449::simple.solutions was: 8:8c820eeefda17f2930088c75d7f422b5 but is now: 8:28b1d14ebf9a5eb535a654f596e61f9a
+          classpath:liquibase/tables/create-table-survey-response-answer.xml::1553365500959::simple.solutions was: 8:229bb86a19972543abfec457f8ffb32d but is now: 8:887af00b02209eaa0313cf75c510b8c7
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10003::simple.solutions was: 8:1881997bdb07a1cb8d9f759199d8d3a1 but is now: 8:08832b487ae9e3d95649b6f29baed0b4
+          classpath:liquibase/data/create-data-menus.xml::data_menu_10006::simple.solutions was: 8:4281e25d95f34dadde02d9037d37d61d but is now: 8:d6f263fe767bd4ba4b0bb1f388181421
+
+	at liquibase.changelog.DatabaseChangeLog.validate(DatabaseChangeLog.java:276)
+	at liquibase.Liquibase.update(Liquibase.java:198)
+	at liquibase.Liquibase.update(Liquibase.java:179)
+	at liquibase.integration.spring.SpringLiquibase.performUpdate(SpringLiquibase.java:353)
+	at liquibase.integration.spring.SpringLiquibase.afterPropertiesSet(SpringLiquibase.java:305)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.invokeInitMethods(AbstractAutowireCapableBeanFactory.java:1804)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1741)
+	... 21 common frames omitted
