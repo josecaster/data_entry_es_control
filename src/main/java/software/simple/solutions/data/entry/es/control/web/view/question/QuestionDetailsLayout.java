@@ -21,7 +21,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeChoicesResponseLayout;
@@ -211,8 +211,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
 		try {
-			ISurveyQuestionSectionService surveyQuestionSectionService = ContextProvider
-					.getBean(ISurveyQuestionSectionService.class);
+			ISurveySectionService surveyQuestionSectionService = ContextProvider
+					.getBean(ISurveySectionService.class);
 			SurveySection surveySection = surveyQuestionSectionService.getPinnedSectionBySurvey(survey.getId());
 			setSurveySection(surveySection);
 		} catch (FrameworkException e) {

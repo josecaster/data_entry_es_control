@@ -12,7 +12,7 @@ import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.exceptions.Arg;
@@ -25,7 +25,7 @@ import software.simple.solutions.framework.core.valueobjects.SuperVO;
 @Transactional
 @Service
 @ServiceRepository(claz = ISurveySectionRepository.class)
-public class SurveyQuestionSectionService extends SuperService implements ISurveyQuestionSectionService {
+public class SurveySectionService extends SuperService implements ISurveySectionService {
 
 	@Autowired
 	private ISurveySectionRepository surveyQuestionSectionRepository;
@@ -43,6 +43,7 @@ public class SurveyQuestionSectionService extends SuperService implements ISurve
 		if (!vo.isNew()) {
 			surveyQuestionSection = get(SurveySection.class, vo.getId());
 		}
+		surveyQuestionSection.setCode(vo.getCode());
 		surveyQuestionSection.setName(vo.getName());
 		surveyQuestionSection.setDescription(vo.getDescription());
 		surveyQuestionSection.setActive(vo.getActive());

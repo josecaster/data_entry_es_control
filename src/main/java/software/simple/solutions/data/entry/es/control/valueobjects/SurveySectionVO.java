@@ -13,11 +13,14 @@ public class SurveySectionVO extends SuperVO {
 	@FilterFieldProperty(fieldProperty = SurveySectionProperty.ID)
 	private Long id;
 	private Boolean active;
+	private String code;
 	private String name;
 	private String description;
 
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Long surveyId;
+	@FilterFieldProperty(fieldProperty = SurveySectionProperty.CODE)
+	private StringInterval codeInterval;
 	@FilterFieldProperty(fieldProperty = SurveySectionProperty.NAME)
 	private StringInterval nameInterval;
 	@FilterFieldProperty(fieldProperty = SurveySectionProperty.DESCRIPTION)
@@ -97,6 +100,22 @@ public class SurveySectionVO extends SuperVO {
 
 	public void setEnableApplicability(Boolean enableApplicability) {
 		this.enableApplicability = enableApplicability;
+	}
+
+	public StringInterval getCodeInterval() {
+		return codeInterval;
+	}
+
+	public void setCodeInterval(StringInterval codeInterval) {
+		this.codeInterval = codeInterval;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

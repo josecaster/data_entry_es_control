@@ -7,7 +7,7 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.service.ISuperService;
 
-public interface ISurveyQuestionSectionService extends ISuperService {
+public interface ISurveySectionService extends ISuperService {
 
 	List<ComboItem> findBySurvey(Long surveyId) throws FrameworkException;
 

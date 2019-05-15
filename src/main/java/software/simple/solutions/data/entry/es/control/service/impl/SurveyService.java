@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyRepository;
@@ -75,6 +76,18 @@ public class SurveyService extends SuperService implements ISurveyService {
 			surveyApplicationUser.setApplicationUser(get(ApplicationUser.class, userId));
 			surveyApplicationUser.setSurvey(survey);
 			saveOrUpdate(surveyApplicationUser, true);
+		}
+		
+		if(vo.isNew()){
+			SurveySection surveySection = new SurveySection();
+			surveySection.setActive(true);
+			surveySection.setDescription("Page 1");
+			surveySection.setEnableApplicability(false);
+			surveySection.setCode("PAGE_1");
+			surveySection.setName("Page 1");
+			surveySection.setPinned(true);
+			surveySection.setSurvey(survey);
+			saveOrUpdate(surveySection, true);
 		}
 
 		return (T) survey;

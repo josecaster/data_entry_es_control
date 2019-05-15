@@ -4,7 +4,7 @@ import java.util.List;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -22,8 +22,8 @@ public class SurveySectionSelect extends CComboBox {
 	}
 
 	public void refresh() {
-		ISurveyQuestionSectionService surveyQuestionSectionService = ContextProvider
-				.getBean(ISurveyQuestionSectionService.class);
+		ISurveySectionService surveyQuestionSectionService = ContextProvider
+				.getBean(ISurveySectionService.class);
 		List<ComboItem> items;
 		try {
 			items = surveyQuestionSectionService.getForListing(SurveySection.class, true);

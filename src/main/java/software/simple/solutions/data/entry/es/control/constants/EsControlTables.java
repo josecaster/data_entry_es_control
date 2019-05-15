@@ -62,6 +62,7 @@ public class EsControlTables extends CxodeTables {
 
 		public final class COLUMNS {
 			public static final String SURVEY_ID_ = "SURVEY_ID_";
+			public static final String CODE_ = "CODE_";
 			public static final String NAME_ = "NAME_";
 			public static final String DESCRIPTION_ = "DESCRIPTION_";
 			public static final String ACTIVE_ = "ACTIVE_";

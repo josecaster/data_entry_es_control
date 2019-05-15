@@ -16,6 +16,7 @@
 			<column name="ACTIVE_" type="BIT(1)" />
 
 			<column name="SURVEY_ID_" type="BIGINT" />
+			<column name="CODE_" type="VARCHAR(100)" />
 			<column name="NAME_" type="VARCHAR(4000)" />
 			<column name="DESCRIPTION_" type="VARCHAR(4000)" />
 			<column name="PINNED_" type="BIT(1)"></column>
@@ -41,6 +42,7 @@
 			<column name="ACTIVE_" type="BIT(1)" />
 
 			<column name="SURVEY_ID_" type="BIGINT" />
+			<column name="CODE_" type="VARCHAR(100)" />
 			<column name="NAME_" type="VARCHAR(4000)" />
 			<column name="DESCRIPTION_" type="VARCHAR(4000)" />
 			<column name="PINNED_" type="BIT(1)"></column>

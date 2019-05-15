@@ -11,7 +11,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
@@ -34,7 +34,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 	public SurveySectionView() {
 		setEntityClass(SurveySection.class);
-		setServiceClass(ISurveyQuestionSectionService.class);
+		setServiceClass(ISurveySectionService.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_SECTIONS_.NAME);
@@ -52,6 +52,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 	@Override
 	public void setUpCustomColumns() {
+		addContainerProperty(SurveySection::getCode, SurveySectionProperty.CODE);
 		addContainerProperty(SurveySection::getName, SurveySectionProperty.NAME);
 		addContainerProperty(SurveySection::getDescription, SurveySectionProperty.DESCRIPTION);
 		addComponentContainerProperty(new ValueProvider<SurveySection, CCheckBox>() {
@@ -76,6 +77,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 		private static final long serialVersionUID = 117780868467918033L;
 
+		private CStringIntervalLayout codeFld;
 		private CStringIntervalLayout nameFld;
 		private CStringIntervalLayout descriptionFld;
 		private SurveyLookUpField surveyFld;
@@ -86,7 +88,9 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 			surveyFld = addField(SurveyLookUpField.class, SurveySectionProperty.SURVEY, 0, 0);
 
-			nameFld = addField(CStringIntervalLayout.class, SurveySectionProperty.NAME, 0, 1);
+			codeFld = addField(CStringIntervalLayout.class, SurveySectionProperty.CODE, 0, 1);
+
+			nameFld = addField(CStringIntervalLayout.class, SurveySectionProperty.NAME, 0, 2);
 
 			descriptionFld = addField(CStringIntervalLayout.class, SurveySectionProperty.DESCRIPTION, 1, 0);
 
@@ -98,6 +102,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 		public Object getCriteria() {
 			SurveySectionVO vo = new SurveySectionVO();
 			vo.setSurveyId(surveyFld.getItemId());
+			vo.setCodeInterval(codeFld.getValue());
 			vo.setNameInterval(nameFld.getValue());
 			vo.setDescriptionInterval(descriptionFld.getValue());
 			vo.setPinned(pinnedFld.getItemId());
@@ -113,6 +118,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 		private static final long serialVersionUID = 6109727427163734676L;
 
 		private CGridLayout formGrid;
+		private CTextField codeFld;
 		private CTextField nameFld;
 		private CTextArea descriptionFld;
 		private CCheckBox activeFld;
@@ -131,9 +137,11 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 			surveyFld = formGrid.addField(SurveyLookUpField.class, SurveySectionProperty.SURVEY, 0, 0);
 			surveyFld.handleForParentEntity(getParentEntity());
 
-			nameFld = formGrid.addField(CTextField.class, SurveySectionProperty.NAME, 0, 1);
+			codeFld = formGrid.addField(CTextField.class, SurveySectionProperty.CODE, 0, 1);
 
-			descriptionFld = formGrid.addField(CTextArea.class, SurveySectionProperty.DESCRIPTION, 0, 2);
+			nameFld = formGrid.addField(CTextField.class, SurveySectionProperty.NAME, 0, 2);
+
+			descriptionFld = formGrid.addField(CTextArea.class, SurveySectionProperty.DESCRIPTION, 0, 3);
 
 			activeFld = formGrid.addField(CCheckBox.class, SystemProperty.SYSTEM_ENTITY_ACTIVE, 1, 0);
 
@@ -154,6 +162,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 		@Override
 		public SurveySection setFormValues(Object entity) throws FrameworkException {
 			surveySection = (SurveySection) entity;
+			codeFld.setValue(surveySection.getCode());
 			nameFld.setValue(surveySection.getName());
 			descriptionFld.setValue(surveySection.getDescription());
 			activeFld.setValue(surveySection.getActive());
@@ -170,6 +179,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 			vo.setId(surveySection == null ? null : surveySection.getId());
 			vo.setSurveyId(surveyFld.getItemId());
+			vo.setCode(codeFld.getValue());
 			vo.setName(nameFld.getValue());
 			vo.setDescription(descriptionFld.getValue());
 			vo.setActive(activeFld.getValue());

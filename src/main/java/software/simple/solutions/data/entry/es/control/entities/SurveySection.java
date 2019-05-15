@@ -47,6 +47,13 @@ public class SurveySection extends MappedSuperClass {
 	@JoinColumn(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.SURVEY_ID_)
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Survey survey;
+	
+	/**
+	 * The name of the group.
+	 */
+	@FilterFieldProperty(fieldProperty = SurveySectionProperty.NAME)
+	@Column(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.CODE_)
+	private String code;
 
 	/**
 	 * The name of the group.
@@ -129,6 +136,14 @@ public class SurveySection extends MappedSuperClass {
 
 	public void setEnableApplicability(Boolean enableApplicability) {
 		this.enableApplicability = enableApplicability;
+	}
+
+	public String getCode() {
+		return code;
+	}
+
+	public void setCode(String code) {
+		this.code = code;
 	}
 
 }

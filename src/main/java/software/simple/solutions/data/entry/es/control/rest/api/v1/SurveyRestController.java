@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,7 @@ import software.simple.solutions.data.entry.es.control.rest.model.SurveySectionM
 import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSectionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -38,7 +39,7 @@ public class SurveyRestController {
 	private ISurveyService surveyService;
 
 	@Autowired
-	private ISurveyQuestionSectionService surveyQuestionSectionService;
+	private ISurveySectionService surveyQuestionSectionService;
 
 	@Autowired
 	private ISurveyGroupService surveyGroupService;
@@ -54,7 +55,9 @@ public class SurveyRestController {
 
 	@GetMapping(path = "/", produces = "application/json")
 	public List<SurveyRestModel> getSurveys() throws FrameworkException {
-		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = user.getUsername();
 		List<Survey> surveys = surveyService.findAllSurveysByUser(username);
 		List<SurveyRestModel> surveyRestModels = new ArrayList<SurveyRestModel>();
 		if (surveys != null) {

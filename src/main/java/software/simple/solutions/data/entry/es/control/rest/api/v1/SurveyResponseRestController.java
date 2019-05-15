@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,7 +50,9 @@ public class SurveyResponseRestController {
 
 	@GetMapping(path = "/", produces = "application/json")
 	public List<SurveyResponseRestModel> getSurveyResponse() throws FrameworkException {
-		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = user.getUsername();
 		List<SurveyResponse> surveyResponses = surveyResponseService.findAllSurveyResponsesByUser(username);
 		List<SurveyResponseRestModel> surveyResponseRestModels = new ArrayList<SurveyResponseRestModel>();
 		if (surveyResponses != null) {
