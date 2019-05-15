@@ -37,6 +37,7 @@ public class SurveyQuestionAnswerChoiceSelectionService extends SuperService
 		surveyQuestionAnswerChoiceSelection.setSurveyQuestionAnswerChoice(
 				get(SurveyQuestionAnswerChoice.class, vo.getSurveyQuestionAnswerChoiceId()));
 		surveyQuestionAnswerChoiceSelection.setLabel(vo.getLabel());
+		surveyQuestionAnswerChoiceSelection.setIndex(vo.getIndex());
 
 		return (T) saveOrUpdate(surveyQuestionAnswerChoiceSelection, false);
 	}
@@ -49,9 +50,11 @@ public class SurveyQuestionAnswerChoiceSelectionService extends SuperService
 	}
 
 	@Override
-	public SurveyQuestionAnswerChoiceSelection create(Long surveyQuestionAnswerChoiceId) throws FrameworkException {
+	public SurveyQuestionAnswerChoiceSelection create(Long surveyQuestionAnswerChoiceId, Integer index)
+			throws FrameworkException {
 		SurveyQuestionAnswerChoiceSelectionVO vo = new SurveyQuestionAnswerChoiceSelectionVO();
 		vo.setSurveyQuestionAnswerChoiceId(surveyQuestionAnswerChoiceId);
+		vo.setIndex(index);
 		vo.setNew(true);
 		return updateSingle(vo);
 	}
@@ -67,5 +70,14 @@ public class SurveyQuestionAnswerChoiceSelectionService extends SuperService
 	@Override
 	public List<SurveyQuestionAnswerChoiceSelection> findBySurvey(Long surveyId) throws FrameworkException {
 		return surveyQuestionAnswerChoiceSelectionRepository.findBySurvey(surveyId);
+	}
+
+	@Override
+	public void deleteAndUpdateIndex(
+			Class<SurveyQuestionAnswerChoiceSelection> surveyQuestionAnswerChoiceSelectionClass,
+			Long surveyQuestionAnswerChoiceSelectionId, Long surveyQuestionAnswerChoiceId, Integer componentIndex)
+			throws FrameworkException {
+		delete(surveyQuestionAnswerChoiceSelectionClass, surveyQuestionAnswerChoiceSelectionId);
+		surveyQuestionAnswerChoiceSelectionRepository.updateIndexes(surveyQuestionAnswerChoiceId, componentIndex);
 	}
 }

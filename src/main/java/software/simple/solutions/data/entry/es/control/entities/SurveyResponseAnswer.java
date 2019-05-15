@@ -60,8 +60,8 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_CHOICE_SELECTION_ID_)
 	private SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection;
 
-	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_TYPE_)
-	private String questionType;
+//	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_TYPE_)
+//	private String questionType;
 
 	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.MATRIX_COLUMN_TYPE_)
 	private String matrixColumnType;
@@ -140,13 +140,13 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 		this.surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelection;
 	}
 
-	public String getQuestionType() {
-		return questionType;
-	}
+//	public String getQuestionType() {
+//		return questionType;
+//	}
 
-	public void setQuestionType(String questionType) {
-		this.questionType = questionType;
-	}
+//	public void setQuestionType(String questionType) {
+//		this.questionType = questionType;
+//	}
 
 	public String getMatrixColumnType() {
 		return matrixColumnType;

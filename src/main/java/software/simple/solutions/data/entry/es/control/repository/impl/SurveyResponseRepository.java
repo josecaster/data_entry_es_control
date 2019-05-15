@@ -23,8 +23,8 @@ public class SurveyResponseRepository extends GenericRepository implements ISurv
 
 	@Override
 	public List<SurveyResponse> findAllSurveyResponsesByUser(String username) throws FrameworkException {
-		String query = "from SurveyResponse sr " + "left join Survey surv on surv.id=sr.survey.id"
-				+ "left SurveyApplicationUser sau on sau.applicationUser.id = sr.applicationUser.id and sau.survey.id=surv.id "
+		String query = "select sr from SurveyResponse sr " + "left join Survey surv on surv.id=sr.survey.id "
+				+ "left join SurveyApplicationUser sau on sau.applicationUser.id = sr.applicationUser.id and sau.survey.id=surv.id "
 				+ "where lower(sr.applicationUser.username)=lower(:username)";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("username", username);

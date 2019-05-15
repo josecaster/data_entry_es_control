@@ -147,9 +147,9 @@ public class SurveyQuestionAnswerChoiceService extends SuperService implements I
 	}
 
 	@Override
-	public <T> Integer delete(Class<T> cl, Long id, Long userId) throws FrameworkException {
+	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException {
 		surveyQuestionAnswerChoiceSelectionRepository.deleteBySurveyQuestionAnswerChoice(id);
-		return super.delete(cl, id, userId);
+		return super.delete(cl, id);
 	}
 
 	@Override
@@ -176,5 +176,12 @@ public class SurveyQuestionAnswerChoiceService extends SuperService implements I
 	@Override
 	public List<SurveyQuestionAnswerChoice> findBySurvey(Long surveyId) throws FrameworkException {
 		return surveyQuestionAnswerChoiceRepository.findBySurvey(surveyId);
+	}
+
+	@Override
+	public void deleteAndUpdateIndex(Class<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoiceClass,
+			Long surveyQuestionAnswerChoiceId, Long surveyQuestionId, String axis, Integer componentIndex) throws FrameworkException {
+		delete(surveyQuestionAnswerChoiceClass, surveyQuestionAnswerChoiceId);
+		surveyQuestionAnswerChoiceRepository.updateIndexesForDelete(surveyQuestionId, axis, componentIndex);
 	}
 }

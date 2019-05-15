@@ -162,8 +162,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 						try {
 							ISurveyQuestionService surveyQuestionService = ContextProvider
 									.getBean(ISurveyQuestionService.class);
-							surveyQuestionService.delete(SurveyQuestion.class, surveyQuestion.getId(),
-									sessionHolder.getApplicationUser().getId());
+							surveyQuestionService.delete(SurveyQuestion.class, surveyQuestion.getId());
 							NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 							deletedObserver.onNext(true);
 						} catch (FrameworkException e) {

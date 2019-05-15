@@ -9,6 +9,7 @@ public class SurveyQuestionAnswerChoiceSelectionVO extends SuperVO {
 	private Long id;
 	private Long surveyQuestionAnswerChoiceId;
 	private String label;
+	private Integer index;
 
 	public Long getId() {
 		return id;
@@ -32,6 +33,14 @@ public class SurveyQuestionAnswerChoiceSelectionVO extends SuperVO {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 }

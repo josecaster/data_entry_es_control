@@ -15,4 +15,6 @@ public interface ISurveyQuestionAnswerChoiceSelectionRepository extends IGeneric
 
 	List<SurveyQuestionAnswerChoiceSelection> findBySurvey(Long surveyId) throws FrameworkException;
 
+	void updateIndexes(Long surveyQuestionAnswerChoiceId, Integer index) throws FrameworkException;
+
 }

@@ -108,6 +108,8 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		List<SurveyResponseAnswerModel> surveyResponseAnswers = surveyResponseRestModel.getSurveyResponseAnswers();
 		if (surveyResponseAnswers != null) {
 			for (SurveyResponseAnswerModel surveyResponseAnswerModel : surveyResponseAnswers) {
+				System.out.println(surveyResponseAnswerModel);
+				
 				String uniqueId = surveyResponseAnswerModel.getUniqueId();
 				SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerRepository.getByUniqueId(uniqueId);
 				boolean isNew = false;
@@ -118,7 +120,6 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 				surveyResponseAnswer.setActive(surveyResponseAnswerModel.getActive());
 				surveyResponseAnswer.setMatrixColumnType(surveyResponseAnswerModel.getMatrixColumnType());
 				surveyResponseAnswer.setOtherValue(surveyResponseAnswerModel.getOtherValue());
-				surveyResponseAnswer.setQuestionType(surveyResponseAnswerModel.getQuestionType());
 				surveyResponseAnswer.setResponseText(surveyResponseAnswerModel.getResponseText());
 				surveyResponseAnswer.setSelected(surveyResponseAnswerModel.getSelected());
 				surveyResponseAnswer.setSurveyQuestion(surveyQuestionRepository.get(SurveyQuestion.class,
@@ -133,7 +134,7 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 						surveyQuestionAnswerChoiceSelectionRepository.get(SurveyQuestionAnswerChoiceSelection.class,
 								surveyResponseAnswerModel.getSurveyQuestionAnswerChoiceSelectionId()));
 				surveyResponseAnswer.setSurveyResponse(surveyResponse);
-				surveyResponseAnswer.setUniqueId(surveyResponseAnswer.getUniqueId());
+				surveyResponseAnswer.setUniqueId(surveyResponseAnswerModel.getUniqueId());
 				surveyResponseAnswerRepository.updateSingle(surveyResponseAnswer, isNew);
 			}
 		}

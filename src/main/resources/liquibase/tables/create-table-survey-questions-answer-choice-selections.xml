@@ -15,6 +15,7 @@
 			</column>
 			<column name="SURVEY_QUESTION_ANSWER_CHOICE_ID_" type="BIGINT" />
 			<column name="LABEL_" type="VARCHAR(4000)" />
+			<column name="INDEX_" type="BIGINT" />
 		</createTable>
 	</changeSet>
 	<changeSet onValidationFail="MARK_RAN" failOnError="true"
@@ -35,6 +36,7 @@
 			
 			<column name="SURVEY_QUESTION_ANSWER_CHOICE_ID_" type="BIGINT" />
 			<column name="LABEL_" type="VARCHAR(4000)" />
+			<column name="INDEX_" type="BIGINT" />
 		</createTable>
 	</changeSet>
 

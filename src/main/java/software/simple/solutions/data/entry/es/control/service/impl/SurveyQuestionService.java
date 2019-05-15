@@ -184,12 +184,12 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	}
 
 	@Override
-	public <T> Integer delete(Class<T> cl, Long id, Long userId) throws FrameworkException {
+	public <T> Integer delete(Class<T> cl, Long id) throws FrameworkException {
 		surveyQuestionAnswerChoiceRepository.deleteBySurveyQuestion(id);
 
 		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, id);
 		Long order = surveyQuestion.getOrder();
-		Integer deleted = super.delete(cl, id, userId);
+		Integer deleted = super.delete(cl, id);
 		updateOrderAfterDelete(order);
 		return deleted;
 	}

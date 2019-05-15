@@ -13,8 +13,13 @@ public interface ISurveyQuestionAnswerChoiceSelectionService extends ISuperServi
 
 	void updateLabel(Long id, String value) throws FrameworkException;
 
-	SurveyQuestionAnswerChoiceSelection create(Long surveyQuestionAnswerChoiceId) throws FrameworkException;
+	SurveyQuestionAnswerChoiceSelection create(Long surveyQuestionAnswerChoiceId, Integer index)
+			throws FrameworkException;
 
 	List<SurveyQuestionAnswerChoiceSelection> findBySurvey(Long surveyId) throws FrameworkException;
+
+	void deleteAndUpdateIndex(Class<SurveyQuestionAnswerChoiceSelection> surveyQuestionAnswerChoiceSelectionClass,
+			Long surveyQuestionAnswerChoiceSelectionId, Long surveyQuestionAnswerChoiceId, Integer componentIndex)
+			throws FrameworkException;
 
 }

@@ -38,4 +38,13 @@ public class SurveyQuestionAnswerChoiceSelectionRepository extends GenericReposi
 		paramMap.put("surveyId", surveyId);
 		return createListQuery(query, paramMap);
 	}
+
+	@Override
+	public void updateIndexes(Long surveyQuestionAnswerChoiceId, Integer index) throws FrameworkException {
+		String update = "update SurveyQuestionAnswerChoiceSelection set index = index-1 where index>=:index and surveyQuestionAnswerChoice.id=:surveyQuestionAnswerChoiceId";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("index", index);
+		paramMap.put("surveyQuestionAnswerChoiceId", surveyQuestionAnswerChoiceId);
+		updateByHql(update, paramMap);
+	}
 }

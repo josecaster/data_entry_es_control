@@ -256,12 +256,11 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			rowContainerLayout.removeComponent(rowLayout);
-
+			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
-				surveyQuestionAnswerChoiceService.delete(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(), sessionHolder.getApplicationUser().getId());
-
+				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
+						surveyQuestionAnswerChoice.getId(),surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.ROW, componentIndex+1);
+				rowContainerLayout.removeComponent(rowLayout);
 				createRowIfNonExists();
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);

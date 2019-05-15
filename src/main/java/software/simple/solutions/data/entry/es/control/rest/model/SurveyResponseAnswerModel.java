@@ -14,7 +14,6 @@ public class SurveyResponseAnswerModel implements Serializable {
 	Long surveyQuestionAnswerChoiceRowId;
 	Long surveyQuestionAnswerChoiceColumnId;
 	Long surveyQuestionAnswerChoiceSelectionId;
-	String questionType;
 	String matrixColumnType;
 	String responseText;
 	String otherValue;
@@ -30,7 +29,6 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.id = surveyResponseAnswer.getId();
 		this.matrixColumnType = surveyResponseAnswer.getMatrixColumnType();
 		this.otherValue = surveyResponseAnswer.getOtherValue();
-		this.questionType = surveyResponseAnswer.getQuestionType();
 		this.responseText = surveyResponseAnswer.getResponseText();
 		this.selected = surveyResponseAnswer.getSelected();
 		this.surveyQuestionAnswerChoiceColumnId = surveyResponseAnswer.getSurveyQuestionAnswerChoiceColumn() == null
@@ -109,14 +107,6 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.surveyQuestionAnswerChoiceSelectionId = surveyQuestionAnswerChoiceSelectionId;
 	}
 
-	public String getQuestionType() {
-		return questionType;
-	}
-
-	public void setQuestionType(String questionType) {
-		this.questionType = questionType;
-	}
-
 	public String getMatrixColumnType() {
 		return matrixColumnType;
 	}
@@ -147,6 +137,17 @@ public class SurveyResponseAnswerModel implements Serializable {
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+
+	@Override
+	public String toString() {
+		return "SurveyResponseAnswerModel [id=" + id + ", active=" + active + ", uniqueId=" + uniqueId
+				+ ", surveyResponseUniqueId=" + surveyResponseUniqueId + ", surveyQuestionId=" + surveyQuestionId
+				+ ", surveyQuestionAnswerChoiceRowId=" + surveyQuestionAnswerChoiceRowId
+				+ ", surveyQuestionAnswerChoiceColumnId=" + surveyQuestionAnswerChoiceColumnId
+				+ ", surveyQuestionAnswerChoiceSelectionId=" + surveyQuestionAnswerChoiceSelectionId
+				+ ", matrixColumnType=" + matrixColumnType + ", responseText=" + responseText + ", otherValue="
+				+ otherValue + ", selected=" + selected + "]";
 	}
 
 }

@@ -103,6 +103,7 @@ public class EsControlTables extends CxodeTables {
 		public final class COLUMNS {
 			public static final String SURVEY_QUESTION_ANSWER_CHOICE_ID_ = "SURVEY_QUESTION_ANSWER_CHOICE_ID_";
 			public static final String LABEL_ = "LABEL_";
+			public static final String INDEX_ = "INDEX_";
 		}
 	}
 

@@ -27,7 +27,7 @@ import software.simple.solutions.data.entry.es.control.service.ISurveyResponseSe
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 
 @RestController
-@RequestMapping(path = "rest/api/v1/surveyResponse")
+@RequestMapping(path = "rest/api/v1/surveyResponses")
 public class SurveyResponseRestController {
 
 	@Autowired
@@ -39,7 +39,7 @@ public class SurveyResponseRestController {
 	@Autowired
 	private ISurveyResponseSectionService surveyResponseSectionService;
 
-	@PostMapping(path = "/create", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+	@PostMapping(path = "/", consumes = { MediaType.APPLICATION_FORM_URLENCODED_VALUE,
 			MediaType.APPLICATION_JSON_UTF8_VALUE, MediaType.TEXT_PLAIN_VALUE })
 	public int createSurveyResponse(@RequestBody SurveyResponseRestModel surveyResponseRestModel)
 			throws FrameworkException {

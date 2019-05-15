@@ -131,4 +131,7 @@ public interface ISurveyQuestionAnswerChoiceService extends ISuperService {
 
 	List<SurveyQuestionAnswerChoice> findBySurvey(Long surveyId) throws FrameworkException;
 
+	void deleteAndUpdateIndex(Class<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoiceClass,
+			Long surveyQuestionAnswerChoiceId, Long surveyQuestionId, String axis, Integer componentIndex) throws FrameworkException;
+
 }

@@ -12,13 +12,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import software.simple.solutions.data.entry.es.control.entities.Survey;
+import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyRepository;
+import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.constants.Constants;
+import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.exceptions.Arg;
@@ -27,6 +30,8 @@ import software.simple.solutions.framework.core.properties.SystemMessageProperty
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.impl.SuperService;
+import software.simple.solutions.framework.core.util.ThreadAttributes;
+import software.simple.solutions.framework.core.util.ThreadContext;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
@@ -59,8 +64,20 @@ public class SurveyService extends SuperService implements ISurveyService {
 		survey.setName(vo.getName());
 		survey.setDescription(vo.getDescription());
 		survey.setActive(vo.getActive());
+		survey = saveOrUpdate(survey, vo.isNew());
 
-		return (T) saveOrUpdate(survey, vo.isNew());
+		ThreadAttributes threadAttributes = ThreadContext.get();
+		Long userId = threadAttributes.getUserId();
+
+		if (vo.isNew()) {
+			SurveyApplicationUser surveyApplicationUser = new SurveyApplicationUser();
+			surveyApplicationUser.setActive(true);
+			surveyApplicationUser.setApplicationUser(get(ApplicationUser.class, userId));
+			surveyApplicationUser.setSurvey(survey);
+			saveOrUpdate(surveyApplicationUser, true);
+		}
+
+		return (T) survey;
 	}
 
 	@Override

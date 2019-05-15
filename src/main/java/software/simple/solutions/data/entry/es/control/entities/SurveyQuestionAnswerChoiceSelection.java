@@ -44,6 +44,9 @@ public class SurveyQuestionAnswerChoiceSelection extends MappedSuperClass {
 	@Column(name = EsControlTables.SURVEY_QUESTION_ANSWER_CHOICE_SELECTIONS_.COLUMNS.LABEL_)
 	private String label;
 
+	@Column(name = EsControlTables.SURVEY_QUESTION_ANSWER_CHOICE_SELECTIONS_.COLUMNS.INDEX_)
+	private Integer index;
+
 	public Long getId() {
 		return id;
 	}
@@ -66,6 +69,14 @@ public class SurveyQuestionAnswerChoiceSelection extends MappedSuperClass {
 
 	public void setLabel(String label) {
 		this.label = label;
+	}
+
+	public Integer getIndex() {
+		return index;
+	}
+
+	public void setIndex(Integer index) {
+		this.index = index;
 	}
 
 	@Override

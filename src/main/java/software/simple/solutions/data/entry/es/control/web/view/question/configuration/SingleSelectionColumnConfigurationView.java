@@ -48,19 +48,22 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 
 		private SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection;
 		private HorizontalLayout h1;
+		private Integer componentIndex;
 
 		public DeleteSelection(SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection,
-				HorizontalLayout h1) {
+				HorizontalLayout h1, Integer componentIndex) {
 			this.surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelection;
 			this.h1 = h1;
+			this.componentIndex = componentIndex;
 		}
 
 		@Override
 		public void buttonClick(ClickEvent event) {
 			selectionContainer.removeComponent(h1);
 			try {
-				surveyQuestionAnswerChoiceSelectionService.delete(SurveyQuestionAnswerChoiceSelection.class,
-						surveyQuestionAnswerChoiceSelection.getId(), sessionHolder.getApplicationUser().getId());
+				surveyQuestionAnswerChoiceSelectionService.deleteAndUpdateIndex(
+						SurveyQuestionAnswerChoiceSelection.class, surveyQuestionAnswerChoiceSelection.getId(),
+						surveyQuestionAnswerChoiceSelection.getSurveyQuestionAnswerChoice().getId(), componentIndex);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -130,21 +133,23 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 	}
 
 	private void createSelectionLayout(SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection) {
-		if (surveyQuestionAnswerChoiceSelection == null) {
-			try {
-				surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelectionService
-						.create(surveyQuestionAnswerChoice.getId());
-			} catch (FrameworkException e) {
-				logger.error(e.getMessage(), e);
-				new MessageWindowHandler(e);
-			}
-		}
-
 		HorizontalLayout h1 = new HorizontalLayout();
 		h1.setWidth("-1px");
 		h1.setSpacing(false);
 		h1.addStyleName(ValoTheme.LAYOUT_COMPONENT_GROUP);
 		selectionContainer.addComponent(h1);
+
+		int componentIndex = selectionContainer.getComponentIndex(h1);
+
+		if (surveyQuestionAnswerChoiceSelection == null) {
+			try {
+				surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelectionService
+						.create(surveyQuestionAnswerChoice.getId(), componentIndex);
+			} catch (FrameworkException e) {
+				logger.error(e.getMessage(), e);
+				new MessageWindowHandler(e);
+			}
+		}
 
 		CTextField labelFld = new CTextField();
 		labelFld.setWidth("150px");
@@ -158,7 +163,7 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 		delBtn.setIcon(CxodeIcons.DELETE);
 		delBtn.addStyleName(Style.RESIZED_ICON_80);
 		h1.addComponent(delBtn);
-		delBtn.addClickListener(new DeleteSelection(surveyQuestionAnswerChoiceSelection, h1));
+		delBtn.addClickListener(new DeleteSelection(surveyQuestionAnswerChoiceSelection, h1, componentIndex));
 	}
 
 }

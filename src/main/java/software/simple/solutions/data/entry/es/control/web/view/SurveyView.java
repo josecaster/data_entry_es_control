@@ -308,8 +308,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 						public void handlePositive() {
 							try {
 								IFileService fileService = ContextProvider.getBean(IFileService.class);
-								fileService.delete(EntityFile.class, entityFile.getId(),
-										sessionHolder.getApplicationUser().getId());
+								fileService.delete(EntityFile.class, entityFile.getId());
 								fileActionLayout.setVisible(false);
 								uploadFileLayout.setMargin(false);
 								uploadFileLayout.removeStyleName(ValoTheme.LAYOUT_CARD);
