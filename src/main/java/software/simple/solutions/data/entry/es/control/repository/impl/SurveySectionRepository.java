@@ -59,4 +59,19 @@ public class SurveySectionRepository extends GenericRepository implements ISurve
 		return createListQuery(query, paramMap);
 	}
 
+	@Override
+	public Boolean isSectionCodeUniqueForSurvey(Long surveyId, Long surveySectionId, String sectionCode)
+			throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select count(ss) from SurveySection ss where ss.survey.id=:surveyId and lower(ss.code) = lower(:code) ";
+		paramMap.put("surveyId", surveyId);
+		paramMap.put("code", sectionCode);
+		if (surveySectionId != null) {
+			query += " and ss.id !=:surveySectionId ";
+			paramMap.put("surveySectionId", surveySectionId);
+		}
+		Long count = getByQuery(query, paramMap);
+		return (count == null || count.compareTo(0L) == 0);
+	}
+
 }

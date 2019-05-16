@@ -39,6 +39,12 @@ public class SurveySectionService extends SuperService implements ISurveySection
 					new Arg().key(SurveySectionProperty.NAME));
 		}
 
+		boolean isCodeUnique = isSectionCodeUniqueForSurvey(vo.getSurveyId(), null, vo.getCode());
+		if (!isCodeUnique) {
+			throw new FrameworkException(SystemMessageProperty.FIELD_MUST_BE_UNIQUE,
+					new Arg().key(SurveySectionProperty.CODE));
+		}
+
 		SurveySection surveyQuestionSection = new SurveySection();
 		if (!vo.isNew()) {
 			surveyQuestionSection = get(SurveySection.class, vo.getId());
@@ -56,6 +62,11 @@ public class SurveySectionService extends SuperService implements ISurveySection
 		surveyQuestionSection.setPinned(vo.getPinned());
 
 		return (T) saveOrUpdate(surveyQuestionSection, vo.isNew());
+	}
+
+	private Boolean isSectionCodeUniqueForSurvey(Long surveyId, Long surveySectionId, String sectionCode)
+			throws FrameworkException {
+		return surveyQuestionSectionRepository.isSectionCodeUniqueForSurvey(surveyId, surveySectionId, sectionCode);
 	}
 
 	private void updateSectionsToUnPinned(Long surveyId, Long surveySectionId) throws FrameworkException {

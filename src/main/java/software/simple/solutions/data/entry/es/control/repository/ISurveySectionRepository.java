@@ -17,4 +17,6 @@ public interface ISurveySectionRepository extends IGenericRepository {
 
 	SurveySection getPinnedSectionBySurvey(Long surveyId) throws FrameworkException;
 
+	Boolean isSectionCodeUniqueForSurvey(Long surveyId, Long surveySectionId, String sectionCode) throws FrameworkException;
+
 }
