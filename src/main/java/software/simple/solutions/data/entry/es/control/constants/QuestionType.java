@@ -6,5 +6,6 @@ public class QuestionType {
 	public static final String CHOICES = "CHOICES";
 	public static final String MATRIX = "MATRIX";
 	public static final String AREA_FT_INCH = "AREA_FT_INCH";
+	public static final String LENGTH_FT_INCH = "LENGTH_FT_INCH";
 
 }

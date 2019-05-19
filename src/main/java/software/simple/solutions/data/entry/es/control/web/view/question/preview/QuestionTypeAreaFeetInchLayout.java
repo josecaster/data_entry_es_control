@@ -7,7 +7,7 @@ import com.vaadin.ui.VerticalLayout;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.framework.core.components.CDecimalField;
 
-public class QuestionTypeAreaFtInchLayout extends VerticalLayout {
+public class QuestionTypeAreaFeetInchLayout extends VerticalLayout {
 
 	private CDecimalField lenghtFeetFld;
 	private CDecimalField lenghtInchFld;
@@ -17,11 +17,11 @@ public class QuestionTypeAreaFtInchLayout extends VerticalLayout {
 
 	private SurveyQuestion surveyQuestion;
 
-	private QuestionTypeAreaFtInchLayout() {
+	private QuestionTypeAreaFeetInchLayout() {
 		buildMainLayout();
 	}
 
-	public QuestionTypeAreaFtInchLayout(SurveyQuestion surveyQuestion) {
+	public QuestionTypeAreaFeetInchLayout(SurveyQuestion surveyQuestion) {
 		this();
 		this.surveyQuestion = surveyQuestion;
 	}
@@ -42,7 +42,7 @@ public class QuestionTypeAreaFtInchLayout extends VerticalLayout {
 		lenghtInchFld.setWidth("100px");
 		horizontalLayout.addComponent(lenghtInchFld);
 
-		horizontalLayout.addComponent(new Label("in by"));
+		horizontalLayout.addComponent(new Label("inch by"));
 
 		widthFeetFld = new CDecimalField();
 		widthFeetFld.setWidth("100px");
@@ -54,7 +54,7 @@ public class QuestionTypeAreaFtInchLayout extends VerticalLayout {
 		widthInchFld.setWidth("100px");
 		horizontalLayout.addComponent(widthInchFld);
 
-		horizontalLayout.addComponent(new Label("in"));
+		horizontalLayout.addComponent(new Label("inch"));
 	}
 
 	public void setPreviewMode() {

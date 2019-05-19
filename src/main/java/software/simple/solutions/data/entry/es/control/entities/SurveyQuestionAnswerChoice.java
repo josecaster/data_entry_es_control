@@ -55,6 +55,7 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 	 * <ul>
 	 * <li>single text question. {@link QuestionType#SINGLE}</li> *
 	 * <li>Area ft-inch question. {@link QuestionType#AREA_FT_INCH}</li>
+	 * <li>Length ft-inch question. {@link QuestionType#LENGTH_FT_INCH}</li>
 	 * <li>multiple choice with just one permissible answer.
 	 * {@link QuestionType#CHOICES}</li>
 	 * <li>multiple choice with just more than one permissible answer.

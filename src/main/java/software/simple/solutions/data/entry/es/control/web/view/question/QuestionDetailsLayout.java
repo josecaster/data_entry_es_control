@@ -250,6 +250,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 			String id = comboItem.getId();
 			switch (id) {
 			case QuestionType.SINGLE:
+			case QuestionType.LENGTH_FT_INCH:
 			case QuestionType.AREA_FT_INCH:
 				createSingleLayout();
 				break;

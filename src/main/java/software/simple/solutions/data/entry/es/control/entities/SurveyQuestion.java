@@ -69,6 +69,7 @@ public class SurveyQuestion extends MappedSuperClass {
 	 * Indicates the type of question.
 	 * <ul>
 	 * <li>{@link QuestionType#SINGLE}</li> *
+	 * <li>{@link QuestionType#LENGTH_FT_INCH}</li>
 	 * <li>{@link QuestionType#AREA_FT_INCH}</li>
 	 * <li>{@link QuestionType#CHOICES}</li>
 	 * <li>{@link QuestionType#MATRIX}</li>

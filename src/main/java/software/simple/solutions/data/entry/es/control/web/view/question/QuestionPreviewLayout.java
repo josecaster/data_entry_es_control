@@ -15,8 +15,9 @@ import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
-import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFtInchLayout;
+import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFeetInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeChoiceLayout;
+import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeLengthFeetInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeMatrixLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeSingleLayout;
 import software.simple.solutions.framework.core.components.CaptionLabel;
@@ -101,10 +102,16 @@ public class QuestionPreviewLayout extends VerticalLayout {
 				addComponent(questionTypeSingleLayout);
 				break;
 			case QuestionType.AREA_FT_INCH:
-				QuestionTypeAreaFtInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFtInchLayout(
+				QuestionTypeAreaFeetInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFeetInchLayout(
 						surveyQuestion);
 				questionTypeAreaFtInchLayout.setPreviewMode();
 				addComponent(questionTypeAreaFtInchLayout);
+				break;
+			case QuestionType.LENGTH_FT_INCH:
+				QuestionTypeLengthFeetInchLayout questionTypeLengthFeetInchLayout = new QuestionTypeLengthFeetInchLayout(
+						surveyQuestion);
+				questionTypeLengthFeetInchLayout.setPreviewMode();
+				addComponent(questionTypeLengthFeetInchLayout);
 				break;
 			case QuestionType.CHOICES:
 				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(surveyQuestion);
