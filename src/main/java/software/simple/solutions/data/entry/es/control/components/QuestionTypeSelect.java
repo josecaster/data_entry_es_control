@@ -17,6 +17,8 @@ public class QuestionTypeSelect extends CComboBox {
 		List<ComboItem> comboItems = new ArrayList<ComboItem>();
 		comboItems.add(new ComboItem(QuestionType.SINGLE,
 				PropertyResolver.getPropertyValueByLocale(QuestionTypeProperty.SINGLE)));
+		comboItems.add(new ComboItem(QuestionType.DATE,
+				PropertyResolver.getPropertyValueByLocale(QuestionTypeProperty.DATE)));
 		comboItems.add(new ComboItem(QuestionType.LENGTH_FT_INCH,
 				PropertyResolver.getPropertyValueByLocale(QuestionTypeProperty.LENGTH_FT_INCH)));
 		comboItems.add(new ComboItem(QuestionType.AREA_FT_INCH,

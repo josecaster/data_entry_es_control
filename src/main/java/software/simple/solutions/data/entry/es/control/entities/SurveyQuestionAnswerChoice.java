@@ -53,7 +53,8 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 	/**
 	 * Indicate if the question is a:
 	 * <ul>
-	 * <li>single text question. {@link QuestionType#SINGLE}</li> *
+	 * <li>Single text question. {@link QuestionType#SINGLE}</li>
+	 * <li>Date question. {@link QuestionType#DATE}</li>
 	 * <li>Area ft-inch question. {@link QuestionType#AREA_FT_INCH}</li>
 	 * <li>Length ft-inch question. {@link QuestionType#LENGTH_FT_INCH}</li>
 	 * <li>multiple choice with just one permissible answer.
