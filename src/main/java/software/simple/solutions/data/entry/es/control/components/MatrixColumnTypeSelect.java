@@ -17,6 +17,8 @@ public class MatrixColumnTypeSelect extends CComboBox {
 		List<ComboItem> comboItems = new ArrayList<ComboItem>();
 		comboItems.add(new ComboItem(MatrixColumnType.TEXT,
 				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.TEXT)));
+		comboItems.add(new ComboItem(MatrixColumnType.DATE,
+				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.DATE)));
 //		comboItems.add(new ComboItem(MatrixColumnType.WHOLE_NUMBER,
 //				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.WHOLE_NUMBER)));
 //		comboItems.add(new ComboItem(MatrixColumnType.DECIMAL_NUMBER,

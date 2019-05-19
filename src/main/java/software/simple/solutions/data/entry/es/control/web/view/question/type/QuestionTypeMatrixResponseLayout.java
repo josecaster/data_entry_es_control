@@ -27,6 +27,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAn
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionAnswerChoiceVO;
+import software.simple.solutions.data.entry.es.control.web.view.question.configuration.DateColumnConfigurationView;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.DecimalNumberColumnConfigurationView;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.SingleSelectionColumnConfigurationView;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.TextColumnConfigurationView;
@@ -284,6 +285,11 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 			TextColumnConfigurationView textColumnConfigurationView = new TextColumnConfigurationView(
 					surveyQuestionAnswerChoice);
 			mainLayout.addComponent(textColumnConfigurationView);
+			break;
+		case MatrixColumnType.DATE:
+			DateColumnConfigurationView dateColumnConfigurationView = new DateColumnConfigurationView(
+					surveyQuestionAnswerChoice);
+			mainLayout.addComponent(dateColumnConfigurationView);
 			break;
 		case MatrixColumnType.WHOLE_NUMBER:
 			WholeNumberColumnConfigurationView wholeNumberColumnConfigurationView = new WholeNumberColumnConfigurationView(

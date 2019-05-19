@@ -28,6 +28,7 @@ import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAn
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CDecimalField;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
+import software.simple.solutions.framework.core.components.CPopupDateField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -144,6 +145,10 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 				textField.setWidth("100%");
 				textField.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 				return textField;
+			case MatrixColumnType.DATE:
+				CPopupDateField dateField = new CPopupDateField();
+				dateField.addStyleName(ValoTheme.DATEFIELD_SMALL);
+				return dateField;
 			case MatrixColumnType.DECIMAL_NUMBER:
 				CDecimalField decimalField = new CDecimalField();
 				decimalField.setWidth("100%");

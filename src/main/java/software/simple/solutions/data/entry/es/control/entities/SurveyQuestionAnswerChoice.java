@@ -81,6 +81,7 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 	 * Indicates the type of field the column will carry.
 	 * <ul>
 	 * <li>A text field. {@link MatrixColumnType#TEXT}</li>
+	 * <li>A date field. {@link MatrixColumnType#DATE}</li>
 	 * <li>A whole number. {@link MatrixColumnType#WHOLE_NUMBER}</li>
 	 * <li>A decimal number. {@link MatrixColumnType#DECIMAL_NUMBER}</li>
 	 * <li>A single selection, which is to be compared to a radiogroup. Only one

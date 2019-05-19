@@ -4,6 +4,7 @@ package software.simple.solutions.data.entry.es.control.constants;
  * Manages the type of fields a matrix can support within its column.
  * <ul>
  * <li>{@link MatrixColumnType#TEXT}</li>
+ * <li>{@link MatrixColumnType#DATE}</li>
  * <li>{@link MatrixColumnType#WHOLE_NUMBER}</li>
  * <li>{@link MatrixColumnType#DECIMAL_NUMBER}</li>
  * <li>{@link MatrixColumnType#SINGLE_SELECTION}</li>
@@ -16,6 +17,7 @@ package software.simple.solutions.data.entry.es.control.constants;
 public class MatrixColumnType {
 
 	public static final String TEXT = "TEXT";
+	public static final String DATE = "DATE";
 	public static final String WHOLE_NUMBER = "WHOLE_NUMBER";
 	public static final String DECIMAL_NUMBER = "DECIMAL_NUMBER";
 	public static final String SINGLE_SELECTION = "SINGLE_SELECTION";
