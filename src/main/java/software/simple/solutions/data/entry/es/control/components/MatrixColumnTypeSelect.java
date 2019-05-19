@@ -17,14 +17,14 @@ public class MatrixColumnTypeSelect extends CComboBox {
 		List<ComboItem> comboItems = new ArrayList<ComboItem>();
 		comboItems.add(new ComboItem(MatrixColumnType.TEXT,
 				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.TEXT)));
-		comboItems.add(new ComboItem(MatrixColumnType.WHOLE_NUMBER,
-				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.WHOLE_NUMBER)));
-		comboItems.add(new ComboItem(MatrixColumnType.DECIMAL_NUMBER,
-				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.DECIMAL_NUMBER)));
-		comboItems.add(new ComboItem(MatrixColumnType.SINGLE_SELECTION,
-				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.SINGLE_SELECTION)));
-		comboItems.add(new ComboItem(MatrixColumnType.MULTIPLE_SELECTION,
-				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.MULTIPLE_SELECTION)));
+//		comboItems.add(new ComboItem(MatrixColumnType.WHOLE_NUMBER,
+//				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.WHOLE_NUMBER)));
+//		comboItems.add(new ComboItem(MatrixColumnType.DECIMAL_NUMBER,
+//				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.DECIMAL_NUMBER)));
+//		comboItems.add(new ComboItem(MatrixColumnType.SINGLE_SELECTION,
+//				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.SINGLE_SELECTION)));
+//		comboItems.add(new ComboItem(MatrixColumnType.MULTIPLE_SELECTION,
+//				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.MULTIPLE_SELECTION)));
 		comboItems.add(new ComboItem(MatrixColumnType.SINGLE_COMPOSITE_SELECTION,
 				PropertyResolver.getPropertyValueByLocale(MatrixColumnTypeProperty.SINGLE_COMPOSITE_SELECTION)));
 		comboItems.add(new ComboItem(MatrixColumnType.MULTIPLE_COMPOSITE_SELECTION,
