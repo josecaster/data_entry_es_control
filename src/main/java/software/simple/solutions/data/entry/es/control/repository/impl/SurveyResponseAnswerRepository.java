@@ -29,4 +29,13 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 		return createListQuery(query, paramMap);
 	}
 
+	@Override
+	public void removeAllBySurveyResponse(Long surveyResponseId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String delete = "delete from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		deleteByHql(delete, paramMap);
+
+	}
+
 }

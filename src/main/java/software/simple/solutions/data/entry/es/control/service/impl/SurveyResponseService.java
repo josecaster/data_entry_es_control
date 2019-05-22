@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
@@ -70,14 +71,21 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 
 	@Override
 	public SurveyResponse updateFromRest(SurveyResponseRestModel surveyResponseRestModel) throws FrameworkException {
-
+		
 		SurveyResponse surveyResponse = updateSurveyResponse(surveyResponseRestModel);
+
+		cleanPreviousResponses(surveyResponse.getId());
 
 		updateSurveyResponseAnswer(surveyResponseRestModel, surveyResponse);
 
 		updateSurveyResponseSection(surveyResponseRestModel, surveyResponse);
 
 		return surveyResponse;
+	}
+	
+	private void cleanPreviousResponses(Long surveyResponseId) throws FrameworkException{
+		surveyResponseSectionRepository.removeAllBySurveyResponse(surveyResponseId);
+		surveyResponseAnswerRepository.removeAllBySurveyResponse(surveyResponseId);
 	}
 
 	private void updateSurveyResponseSection(SurveyResponseRestModel surveyResponseRestModel,
@@ -122,8 +130,11 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 				surveyResponseAnswer.setOtherValue(surveyResponseAnswerModel.getOtherValue());
 				surveyResponseAnswer.setResponseText(surveyResponseAnswerModel.getResponseText());
 				surveyResponseAnswer.setSelected(surveyResponseAnswerModel.getSelected());
-				surveyResponseAnswer.setSurveyQuestion(surveyQuestionRepository.get(SurveyQuestion.class,
-						surveyResponseAnswerModel.getSurveyQuestionId()));
+				
+				SurveyQuestion surveyQuestion = surveyQuestionRepository.get(SurveyQuestion.class,
+						surveyResponseAnswerModel.getSurveyQuestionId());
+				surveyResponseAnswer.setSurveyQuestion(surveyQuestion);
+				
 				surveyResponseAnswer.setSurveyQuestionAnswerChoiceColumn(
 						surveyQuestionAnswerChoiceRepository.get(SurveyQuestionAnswerChoice.class,
 								surveyResponseAnswerModel.getSurveyQuestionAnswerChoiceColumnId()));
