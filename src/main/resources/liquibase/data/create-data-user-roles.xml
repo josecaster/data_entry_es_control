@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+	
+	<changeSet onValidationFail="MARK_RAN" id="data_user_role_1000" author="i-frontier"><customChange class="software.simple.solutions.framework.core.liquibase.DataUserRole"><param name="id" value="1000"></param><param name="userId" value="1"></param><param name="roleId" value="1000"></param></customChange></changeSet>
+</databaseChangeLog>

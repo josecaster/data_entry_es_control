@@ -26,18 +26,21 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.SurveySectionSelect;
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
+import software.simple.solutions.data.entry.es.control.constants.EscontrolPrivileges;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
-import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
+import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.web.view.question.QuestionCardLayout;
+import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.constants.Privileges;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
@@ -45,6 +48,9 @@ import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
+@SupportedPrivileges(extraPrivileges = { EscontrolPrivileges.SURVEY_SHOW_MOVE_TAB,
+		EscontrolPrivileges.SURVEY_SHOW_OPTIONS_TAB, EscontrolPrivileges.SURVEY_SHOW_PREVIEW_TAB,
+		EscontrolPrivileges.SURVEY_SHOW_QUESTION_TAB })
 public class SurveyQuestionView extends AbstractBaseView {
 
 	private static final long serialVersionUID = 1L;
@@ -91,10 +97,14 @@ public class SurveyQuestionView extends AbstractBaseView {
 		newQuestionBtn.addStyleName(Style.RESIZED_ICON_80);
 		newQuestionBtn.addStyleName(ValoTheme.BUTTON_SMALL);
 		v1.addComponent(newQuestionBtn);
+		newQuestionBtn.setVisible(false);
+		if (getViewDetail().getPrivileges().contains(Privileges.INSERT)) {
+			newQuestionBtn.setVisible(true);
+		}
 
 		surveySectionFld = new SurveySectionSelect();
-		surveySectionFld
-				.setPlaceholder(PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.FILTER_BY_SURVEY_SECTION));
+		surveySectionFld.setPlaceholder(
+				PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.FILTER_BY_SURVEY_SECTION));
 		surveySectionFld.setWidth("100%");
 		v1.addComponent(surveySectionFld);
 		BehaviorSubject<SurveySection> surveySectionObserver = getReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER);
@@ -205,7 +215,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 
 		questionPanelLayout.iterator().forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
 
-		QuestionCardLayout questionCardLayout = new QuestionCardLayout();
+		QuestionCardLayout questionCardLayout = new QuestionCardLayout(getViewDetail().getPrivileges());
 		questionCardLayout.setSelectedTabIndex(selectedTabIndex);
 		questionLayout.addComponent(questionCardLayout);
 		questionCardLayout.setSurvey(survey);
@@ -243,7 +253,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 					selectedTabIndex = index;
 				}
 			});
-			
+
 		}
 	}
 

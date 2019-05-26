@@ -33,9 +33,11 @@ public class QuestionPreviewLayout extends VerticalLayout {
 	private static final Logger logger = LogManager.getLogger(QuestionPreviewLayout.class);
 
 	private CaptionLabel sectionFld;
+	private Label infoFld;
 	private CaptionLabel questionFld;
 	private CaptionLabel questionDescriptionFld;
-	private Label infoFld;
+	private boolean showSection = true;
+	private boolean showInfo = true;
 
 	private SurveyQuestion surveyQuestion;
 	private SessionHolder sessionHolder;
@@ -65,6 +67,9 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		infoFld.addStyleName(ValoTheme.LABEL_COLORED);
 		infoFld.addStyleName(ValoTheme.LABEL_H4);
 		addComponent(infoFld);
+		if (!showInfo) {
+			infoFld.setVisible(false);
+		}
 
 		Label hrFld = new Label("<hr>");
 		hrFld.setWidth("100%");
@@ -79,6 +84,9 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		sectionFld.addStyleName(ValoTheme.LABEL_H3);
 		sectionFld.addStyleName(EsControlStyle.SECTION_LABEL);
 		addComponent(sectionFld);
+		if (!showSection) {
+			sectionFld.setVisible(false);
+		}
 
 		questionFld = new CaptionLabel();
 		questionFld.addStyleName(Style.WORD_WRAP);
@@ -138,7 +146,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			questionFld.setValue(surveyQuestion.getOrder() + ". " + surveyQuestion.getQuestion());
 
 			if (surveyQuestion.getSurveySection() != null) {
-				sectionFld.setVisible(true);
+//				sectionFld.setVisible(true);
 				sectionFld.setValue(surveyQuestion.getSurveySection().getName());
 			}
 
@@ -155,6 +163,22 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		removeAllComponents();
 		setUpLayout();
 		setValue();
+	}
+
+	public boolean isShowSection() {
+		return showSection;
+	}
+
+	public void setShowSection(boolean showSection) {
+		this.showSection = showSection;
+	}
+
+	public boolean isShowInfo() {
+		return showInfo;
+	}
+
+	public void setShowInfo(boolean showInfo) {
+		this.showInfo = showInfo;
 	}
 
 }

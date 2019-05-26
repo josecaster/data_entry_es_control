@@ -28,6 +28,7 @@ import com.whitestein.vaadin.widgets.wtpdfviewer.WTPdfViewer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
+import software.simple.solutions.data.entry.es.control.constants.EscontrolPrivileges;
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
@@ -65,7 +66,7 @@ import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
-@SupportedPrivileges
+@SupportedPrivileges(extraPrivileges = { EscontrolPrivileges.SURVEY_UPLOAD_FORM })
 public class SurveyView extends BasicTemplate<Survey> {
 
 	private static final Logger logger = LogManager.getLogger(SurveyView.class);
@@ -154,7 +155,10 @@ public class SurveyView extends BasicTemplate<Survey> {
 
 			uploadFileLayout = createUploadFileLayout();
 			h1.addComponent(uploadFileLayout);
-			// formGrid.addComponent(uploadFileLayout, 5, 0, 5, 3);
+			uploadFileLayout.setVisible(false);
+			if (getViewDetail().getPrivileges().contains(EscontrolPrivileges.SURVEY_UPLOAD_FORM)) {
+				uploadFileLayout.setVisible(true);
+			}
 		}
 
 		@Override
@@ -176,7 +180,9 @@ public class SurveyView extends BasicTemplate<Survey> {
 			Configuration configuration = configurationService
 					.getByCode(EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION);
 			if (configuration != null && configuration.getValue() != null) {
-				uploadFileLayout.setVisible(true);
+				if (getViewDetail().getPrivileges().contains(EscontrolPrivileges.SURVEY_UPLOAD_FORM)) {
+					uploadFileLayout.setVisible(true);
+				}
 
 				IFileService fileService = ContextProvider.getBean(IFileService.class);
 				entityFile = fileService.findFileByEntityAndType(survey.getId().toString(),
@@ -184,8 +190,11 @@ public class SurveyView extends BasicTemplate<Survey> {
 
 				if (entityFile != null && entityFile.getFilePath() != null) {
 					try {
-						byte[] fileContent = Files.readAllBytes(new File(entityFile.getFilePath()).toPath());
-						setPdfViewerContent(fileContent, entityFile.getName());
+						File file = new File(entityFile.getFilePath());
+						if (file.exists()) {
+							byte[] fileContent = Files.readAllBytes(file.toPath());
+							setPdfViewerContent(fileContent, entityFile.getName());
+						}
 					} catch (IOException e) {
 						new MessageWindowHandler(e);
 					}
