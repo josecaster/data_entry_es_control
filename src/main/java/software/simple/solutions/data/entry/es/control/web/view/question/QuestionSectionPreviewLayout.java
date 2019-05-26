@@ -28,7 +28,8 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 
 	private CaptionLabel sectionFld;
 	private Label infoFld;
-	private SurveyQuestion surveyQuestion;
+	// private SurveyQuestion surveyQuestion;
+	private SurveySection surveySection;
 	private SessionHolder sessionHolder;
 
 	@Override
@@ -40,20 +41,20 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 	}
 
-	public void setSurveyQuestion(SurveyQuestion surveyQuestion) {
-		this.surveyQuestion = surveyQuestion;
-		try {
-			setUpLayout();
-		} catch (FrameworkException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+//	public void setSurveyQuestion(SurveySection surveySection) {
+//		this.surveySection = surveySection;
+//		try {
+//			setUpLayout();
+//		} catch (FrameworkException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//	}
 
 	public void setUpLayout() throws FrameworkException {
 		setSpacing(false);
 		removeAllComponents();
-		
+
 		infoFld = new Label();
 		infoFld.setWidth("100%");
 		infoFld.setValue(
@@ -61,7 +62,7 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 		infoFld.addStyleName(ValoTheme.LABEL_COLORED);
 		infoFld.addStyleName(ValoTheme.LABEL_H4);
 		addComponent(infoFld);
-		
+
 		sectionFld = new CaptionLabel();
 		sectionFld.setWidth("100%");
 		sectionFld.addStyleName(Style.WORD_WRAP);
@@ -69,13 +70,12 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 		sectionFld.addStyleName(ValoTheme.LABEL_H3);
 		sectionFld.addStyleName(EsControlStyle.SECTION_LABEL);
 		addComponent(sectionFld);
-		
 
-		SurveySection surveySection = surveyQuestion.getSurveySection();
+		// SurveySection surveySection = surveyQuestion.getSurveySection();
 		sectionFld.setValue(surveySection.getName());
-		
+
 		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		List<SurveyQuestion> questionList = surveyQuestionService.getQuestionList(surveyQuestion.getSurvey().getId(),
+		List<SurveyQuestion> questionList = surveyQuestionService.getQuestionList(surveySection.getSurvey().getId(),
 				null, surveySection.getId());
 		for (SurveyQuestion question : questionList) {
 			QuestionPreviewLayout questionPreviewLayout = new QuestionPreviewLayout();
@@ -87,10 +87,26 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 	}
 
 	public void reset() throws FrameworkException {
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		surveyQuestion = surveyQuestionService.getById(SurveyQuestion.class, surveyQuestion.getId());
+		// ISurveyQuestionService surveyQuestionService =
+		// ContextProvider.getBean(ISurveyQuestionService.class);
+		// surveyQuestion = surveyQuestionService.getById(SurveyQuestion.class,
+		// surveyQuestion.getId());
 		removeAllComponents();
 		setUpLayout();
+	}
+
+	public SurveySection getSurveySection() {
+		return surveySection;
+	}
+
+	public void setSurveySection(SurveySection surveySection) {
+		this.surveySection = surveySection;
+		try {
+			setUpLayout();
+		} catch (FrameworkException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

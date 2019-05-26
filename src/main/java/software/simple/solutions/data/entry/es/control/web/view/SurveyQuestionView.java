@@ -34,6 +34,7 @@ import software.simple.solutions.data.entry.es.control.properties.SurveyProperty
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.web.view.question.QuestionCardLayout;
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
@@ -170,7 +171,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				selectedTabIndex = 0;
-				createQuestionCard(null);
+				createQuestionCard(null, null);
 			}
 		});
 
@@ -202,15 +203,18 @@ public class SurveyQuestionView extends AbstractBaseView {
 				}
 			});
 		}
-		if (surveyQuestion != null) {
-			createQuestionCard(surveyQuestion);
-		}
+		Long sectionId = surveySectionFld.getLongValue();
+		ISurveySectionService surveySectionService = ContextProvider.getBean(ISurveySectionService.class);
+		SurveySection surveySection = surveySectionService.get(SurveySection.class, sectionId);
+		// if (surveyQuestion != null) {
+		createQuestionCard(surveyQuestion, surveySection);
+		// }
 		if (lastMenuLayout != null) {
 			UI.getCurrent().scrollIntoView(lastMenuLayout);
 		}
 	}
 
-	private void createQuestionCard(SurveyQuestion surveyQuestion) {
+	private void createQuestionCard(SurveyQuestion surveyQuestion, SurveySection surveySection) {
 		questionLayout.removeAllComponents();
 
 		questionPanelLayout.iterator().forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
@@ -219,7 +223,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 		questionCardLayout.setSelectedTabIndex(selectedTabIndex);
 		questionLayout.addComponent(questionCardLayout);
 		questionCardLayout.setSurvey(survey);
-		if (surveyQuestion == null) {
+		if (surveyQuestion == null && surveySection == null) {
 			questionCardLayout.doForNew();
 			questionCardLayout.getObserver().subscribe(new Consumer<SurveyQuestion>() {
 
@@ -230,7 +234,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 			});
 		} else {
 			questionCardLayout.setSurveyGroupObserver(getReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER));
-			questionCardLayout.setSurveyQuestion(surveyQuestion);
+			questionCardLayout.setSurveyQuestion(surveyQuestion, surveySection);
 			questionCardLayout.getObserver().subscribe(new Consumer<SurveyQuestion>() {
 
 				@Override
@@ -276,7 +280,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 						ISurveyQuestionService surveyQuestionService = ContextProvider
 								.getBean(ISurveyQuestionService.class);
 						SurveyQuestion sq = surveyQuestionService.getById(SurveyQuestion.class, surveyQuestion.getId());
-						createQuestionCard(sq);
+						createQuestionCard(sq, sq.getSurveySection());
 						questionPanelLayout.iterator()
 								.forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
 						menuLayout.addStyleName(EsControlStyle.QUESTION_MENU_SELECTED);
