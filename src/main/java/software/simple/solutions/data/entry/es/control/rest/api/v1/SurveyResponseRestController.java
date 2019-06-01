@@ -79,8 +79,10 @@ public class SurveyResponseRestController {
 		List<SurveyResponseAnswerModel> surveyResponseAnswerModels = new ArrayList<SurveyResponseAnswerModel>();
 		if (surveyResponseAnswers != null) {
 			for (SurveyResponseAnswer surveyResponseAnswer : surveyResponseAnswers) {
-				if(surveyResponseAnswer.getSurveyQuestion()!=null){
+				if (surveyResponseAnswer.getSurveyQuestion() != null) {
 					surveyResponseAnswerModels.add(new SurveyResponseAnswerModel(surveyResponseAnswer));
+				} else {
+					surveyResponseAnswerService.delete(SurveyResponseAnswer.class, surveyResponseAnswer.getId());
 				}
 			}
 		}
