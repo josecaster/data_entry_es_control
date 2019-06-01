@@ -14,6 +14,8 @@ public class SurveyResponseVO extends SuperVO {
 	private Long id;
 	private Boolean active;
 	private String formName;
+
+	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Long surveyId;
 
 	@FilterFieldProperty(fieldProperty = SurveyProperty.NAME)

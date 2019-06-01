@@ -55,7 +55,8 @@ public class SurveyResponse extends MappedSuperClass {
 	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.CREATED_ON_)
 	private LocalDateTime createdOn;
 
-	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = SurveyProperty.NAME),
+	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = SurveyProperty.ID),
+			@FilterFieldProperty(fieldProperty = SurveyProperty.NAME),
 			@FilterFieldProperty(fieldProperty = SurveyProperty.DESCRIPTION) })
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.SURVEY_ID_)

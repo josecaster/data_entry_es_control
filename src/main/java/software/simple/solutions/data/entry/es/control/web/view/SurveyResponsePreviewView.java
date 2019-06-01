@@ -19,6 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
+import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
@@ -35,6 +36,8 @@ import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
+import software.simple.solutions.framework.core.entities.ILocalized;
+import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.ComponentUtil;
@@ -101,6 +104,15 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			surveyNameFld = addField(CStringIntervalLayout.class, SurveyResponseProperty.SURVEY, 0, 0);
 			surveyDescriptionFld = addField(CStringIntervalLayout.class, SurveyResponseProperty.SURVEY_DESCRIPTION, 0,
 					1);
+			MappedSuperClass parentEntity = getParentEntity();
+			if (parentEntity != null && parentEntity instanceof Survey) {
+				Survey survey = (Survey) getParentEntity();
+				surveyNameFld.setValue(survey.getName());
+				surveyNameFld.setReadOnly(true);
+				
+				surveyDescriptionFld.setValue(survey.getDescription());
+				surveyDescriptionFld.setReadOnly(true);
+			}
 
 			formNameFld = addField(CStringIntervalLayout.class, SurveyResponseProperty.FORM_NAME, 1, 0);
 			userNameFld = addField(CStringIntervalLayout.class, SurveyResponseProperty.APPLICATION_USER, 1, 1);
@@ -113,6 +125,11 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			vo.setSurveyDescriptionInterval(surveyDescriptionFld.getValue());
 			vo.setFormNameInterval(formNameFld.getValue());
 			vo.setUserNameInInterval(userNameFld.getValue());
+			MappedSuperClass parentEntity = getParentEntity();
+			if (parentEntity != null && parentEntity instanceof Survey) {
+				Survey survey = (Survey) getParentEntity();
+				vo.setSurveyId(survey.getId());
+			}
 			return vo;
 		}
 	}
