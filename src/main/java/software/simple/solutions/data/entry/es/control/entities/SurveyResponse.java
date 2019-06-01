@@ -18,8 +18,13 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperties;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
+import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -43,16 +48,20 @@ public class SurveyResponse extends MappedSuperClass {
 	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.UNIQUE_ID_)
 	private String uniqueId;
 
+	@FilterFieldProperty(fieldProperty = SurveyResponseProperty.FORM_NAME)
 	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.FORM_NAME_)
 	private String formName;
 
 	@Column(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.CREATED_ON_)
 	private LocalDateTime createdOn;
 
+	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = SurveyProperty.NAME),
+			@FilterFieldProperty(fieldProperty = SurveyProperty.DESCRIPTION) })
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.SURVEY_ID_)
 	private Survey survey;
 
+	@FilterFieldProperties(fieldProperties = { @FilterFieldProperty(fieldProperty = ApplicationUserProperty.USERNAME) })
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_.COLUMNS.APPLICATION_USER_ID_)
 	private ApplicationUser applicationUser;

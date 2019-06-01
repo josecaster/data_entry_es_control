@@ -219,7 +219,8 @@ public class SurveyQuestionView extends AbstractBaseView {
 
 		questionPanelLayout.iterator().forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
 
-		QuestionCardLayout questionCardLayout = new QuestionCardLayout(getViewDetail().getPrivileges());
+		QuestionCardLayout questionCardLayout = new QuestionCardLayout(getSessionHolder(),
+				getViewDetail().getPrivileges());
 		questionCardLayout.setSelectedTabIndex(selectedTabIndex);
 		questionLayout.addComponent(questionCardLayout);
 		questionCardLayout.setSurvey(survey);

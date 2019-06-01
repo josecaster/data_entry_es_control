@@ -13,7 +13,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -56,13 +55,10 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 
 	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
 
-	{
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
-	}
-
-	public QuestionTypeMatrixResponseLayout(SurveyQuestion surveyQuestion) {
+	public QuestionTypeMatrixResponseLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion) {
+		this.sessionHolder = sessionHolder;
 		this.surveyQuestion = surveyQuestion;
+		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
 		setMargin(false);
 		buildMainLayout();
 	}
@@ -298,7 +294,7 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 			break;
 		case MatrixColumnType.DECIMAL_NUMBER:
 			DecimalNumberColumnConfigurationView decimalNumberColumnConfigurationView = new DecimalNumberColumnConfigurationView(
-					surveyQuestionAnswerChoice);
+					sessionHolder, surveyQuestionAnswerChoice);
 			mainLayout.addComponent(decimalNumberColumnConfigurationView);
 			break;
 		case MatrixColumnType.SINGLE_COMPOSITE_SELECTION:
@@ -435,11 +431,12 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			
+
 			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
 				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(),surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.COLUMN, componentIndex+1);
+						surveyQuestionAnswerChoice.getId(), surveyQuestionAnswerChoice.getSurveyQuestion().getId(),
+						Axis.COLUMN, componentIndex + 1);
 
 				columContainerLayout.removeComponent(rowLayout);
 				createColumnIfNonExists();
@@ -462,11 +459,12 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 
 		@Override
 		public void buttonClick(ClickEvent event) {
-			
+
 			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
 				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(),surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.ROW, componentIndex+1);
+						surveyQuestionAnswerChoice.getId(), surveyQuestionAnswerChoice.getSurveyQuestion().getId(),
+						Axis.ROW, componentIndex + 1);
 				rowContainerLayout.removeComponent(rowLayout);
 				createRowIfNonExists();
 			} catch (FrameworkException e) {

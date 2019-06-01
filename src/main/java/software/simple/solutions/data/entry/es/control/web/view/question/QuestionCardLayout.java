@@ -16,6 +16,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class QuestionCardLayout extends VerticalLayout {
@@ -41,8 +42,10 @@ public class QuestionCardLayout extends VerticalLayout {
 	private List<String> privileges;
 
 	private int selectedTabIndex;
+	private SessionHolder sessionHolder;
 
-	public QuestionCardLayout(List<String> privileges) {
+	public QuestionCardLayout(SessionHolder sessionHolder, List<String> privileges) {
+		this.sessionHolder = sessionHolder;
 		this.privileges = privileges;
 		addStyleName(ValoTheme.LAYOUT_CARD);
 		observer = BehaviorSubject.create();
@@ -81,7 +84,7 @@ public class QuestionCardLayout extends VerticalLayout {
 	}
 
 	private void setValues() {
-		if (surveyQuestion!=null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_OPTIONS_TAB)) {
+		if (surveyQuestion != null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_OPTIONS_TAB)) {
 			questionDetailsLayout.setSurveyQuestion(surveyQuestion);
 			questionDetailsLayout.getDeletedObserver().subscribe(new Consumer<Boolean>() {
 
@@ -96,8 +99,8 @@ public class QuestionCardLayout extends VerticalLayout {
 	}
 
 	private void createQuestionDetailsLayout() {
-		if (surveyQuestion!=null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_QUESTION_TAB)) {
-			questionDetailsLayout = new QuestionDetailsLayout();
+		if (surveyQuestion != null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_QUESTION_TAB)) {
+			questionDetailsLayout = new QuestionDetailsLayout(sessionHolder);
 			questionDetailsLayout.setSurveyGroupObserver(surveyGroupObserver);
 			questionDetailsLayout.build();
 			tabSheet.addComponent(questionDetailsLayout);
@@ -118,7 +121,7 @@ public class QuestionCardLayout extends VerticalLayout {
 	}
 
 	private void createQuestionOrderLayout() {
-		if (surveyQuestion!=null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_MOVE_TAB)) {
+		if (surveyQuestion != null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_MOVE_TAB)) {
 			questionOrderLayout = new QuestionOrderLayout();
 			questionOrderLayout.setSurveyQuestion(surveyQuestion);
 			tabSheet.addComponent(questionOrderLayout);
@@ -136,7 +139,7 @@ public class QuestionCardLayout extends VerticalLayout {
 	}
 
 	private void createQuestionOptionsLayout() {
-		if (surveyQuestion!=null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_OPTIONS_TAB)) {
+		if (surveyQuestion != null && privileges.contains(EscontrolPrivileges.SURVEY_SHOW_OPTIONS_TAB)) {
 			questionOptionsLayout = new QuestionOptionsLayout();
 			questionOptionsLayout.setSurveyQuestion(surveyQuestion);
 			tabSheet.addComponent(questionOptionsLayout);
@@ -189,7 +192,7 @@ public class QuestionCardLayout extends VerticalLayout {
 
 	public void doForNew() {
 		if (privileges.contains(EscontrolPrivileges.SURVEY_SHOW_QUESTION_TAB)) {
-			questionDetailsLayout = new QuestionDetailsLayout();
+			questionDetailsLayout = new QuestionDetailsLayout(sessionHolder);
 			questionDetailsLayout.setSurveyGroupObserver(surveyGroupObserver);
 			questionDetailsLayout.build();
 			questionDetailsLayout.doForNew();

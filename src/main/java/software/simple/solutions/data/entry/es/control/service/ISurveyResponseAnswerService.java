@@ -10,4 +10,8 @@ public interface ISurveyResponseAnswerService extends ISuperService {
 
 	List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId) throws FrameworkException;
 
+	SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId) throws FrameworkException;
+
+	List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId) throws FrameworkException;
+
 }

@@ -27,4 +27,16 @@ public class SurveyResponseAnswerService extends SuperService implements ISurvey
 		return surveyResponseAnswerRepository.getSurveyResponseAnswers(surveyResponseId);
 	}
 
+	@Override
+	public SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException {
+		return surveyResponseAnswerRepository.getSurveyResponse(surveyResponseId, surveyQuestionId);
+	}
+
+	@Override
+	public List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException {
+		return surveyResponseAnswerRepository.getSurveyResponseAnswers(surveyResponseId, surveyQuestionId);
+	}
+
 }

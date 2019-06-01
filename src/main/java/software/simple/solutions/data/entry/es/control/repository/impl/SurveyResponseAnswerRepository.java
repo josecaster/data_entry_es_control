@@ -38,4 +38,24 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 
 	}
 
+	@Override
+	public SurveyResponseAnswer getSurveyResponse(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId and surveyQuestion.id=:surveyQuestionId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId and surveyQuestion.id=:surveyQuestionId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		return createListQuery(query, paramMap);
+	}
+
 }

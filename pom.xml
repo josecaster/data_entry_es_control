@@ -20,7 +20,7 @@
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<java.version>1.8</java.version>
-		<vaadin.version>8.6.4</vaadin.version>
+		<vaadin.version>8.8.2</vaadin.version>
 		<spring.security.oauth2>2.3.5.RELEASE</spring.security.oauth2>
 		<parent.framework.version>1.0.0-SNAPSHOT</parent.framework.version>
 	</properties>

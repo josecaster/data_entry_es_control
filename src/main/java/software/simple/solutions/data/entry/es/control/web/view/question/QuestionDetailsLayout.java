@@ -9,7 +9,6 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -21,8 +20,8 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeChoicesResponseLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeMatrixResponseLayout;
@@ -71,8 +70,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		super.detach();
 	}
 
-	public QuestionDetailsLayout() {
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
+	public QuestionDetailsLayout(SessionHolder sessionHolder) {
+		this.sessionHolder = sessionHolder;
 		observer = BehaviorSubject.create();
 		deletedObserver = BehaviorSubject.create();
 	}
@@ -211,8 +210,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
 		try {
-			ISurveySectionService surveyQuestionSectionService = ContextProvider
-					.getBean(ISurveySectionService.class);
+			ISurveySectionService surveyQuestionSectionService = ContextProvider.getBean(ISurveySectionService.class);
 			SurveySection surveySection = surveyQuestionSectionService.getPinnedSectionBySurvey(survey.getId());
 			setSurveySection(surveySection);
 		} catch (FrameworkException e) {
@@ -284,7 +282,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 
 		private void createMatrixLayout() {
 			QuestionTypeMatrixResponseLayout questionTypeMatrixResponseLayout = new QuestionTypeMatrixResponseLayout(
-					surveyQuestion);
+					sessionHolder, surveyQuestion);
 			containerLayout.setVisible(true);
 			containerLayout.addComponent(questionTypeMatrixResponseLayout);
 		}

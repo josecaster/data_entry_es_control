@@ -32,5 +32,4 @@ public class SurveyResponseRestModel implements Serializable {
 	public void setSurveyResponseSections(List<SurveyResponseSectionModel> surveyResponseSections) {
 		this.surveyResponseSections = surveyResponseSections;
 	}
-
 }

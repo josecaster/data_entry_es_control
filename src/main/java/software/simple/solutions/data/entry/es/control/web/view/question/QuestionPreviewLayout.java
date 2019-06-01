@@ -6,13 +6,13 @@ import org.apache.logging.log4j.Logger;
 
 import com.vaadin.shared.ui.ContentMode;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFeetInchLayout;
@@ -38,21 +38,27 @@ public class QuestionPreviewLayout extends VerticalLayout {
 	private CaptionLabel questionDescriptionFld;
 	private boolean showSection = true;
 	private boolean showInfo = true;
+	private SessionHolder sessionHolder;
 
 	private SurveyQuestion surveyQuestion;
-	private SessionHolder sessionHolder;
+	private SurveyResponse surveyResponse;
 
 	@Override
 	public void detach() {
 		super.detach();
 	}
 
-	public QuestionPreviewLayout() {
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
+	public QuestionPreviewLayout(SessionHolder sessionHolder) {
+		this.sessionHolder = sessionHolder;
 	}
 
 	public void setSurveyQuestion(SurveyQuestion surveyQuestion) {
+		setSurveyQuestion(surveyQuestion, null);
+	}
+
+	public void setSurveyQuestion(SurveyQuestion surveyQuestion, SurveyResponse surveyResponse) {
 		this.surveyQuestion = surveyQuestion;
+		this.surveyResponse = surveyResponse;
 		setUpLayout();
 	}
 
@@ -62,8 +68,8 @@ public class QuestionPreviewLayout extends VerticalLayout {
 
 		infoFld = new Label();
 		infoFld.setWidth("100%");
-		infoFld.setValue(
-				PropertyResolver.getPropertyValueByLocale(SurveyQuestionProperty.QUESTION_SAVE_BEFORE_PREVIEW));
+		infoFld.setValue(PropertyResolver.getPropertyValueByLocale(SurveyQuestionProperty.QUESTION_SAVE_BEFORE_PREVIEW,
+				sessionHolder.getLocale()));
 		infoFld.addStyleName(ValoTheme.LABEL_COLORED);
 		infoFld.addStyleName(ValoTheme.LABEL_H4);
 		addComponent(infoFld);
@@ -106,34 +112,36 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			String questionType = surveyQuestion.getQuestionType();
 			switch (questionType) {
 			case QuestionType.SINGLE:
-				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(surveyQuestion);
+				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(surveyQuestion,surveyResponse);
 				questionTypeSingleLayout.setPreviewMode();
 				addComponent(questionTypeSingleLayout);
 				break;
 			case QuestionType.DATE:
-				QuestionTypeDateLayout questionTypeDateLayout = new QuestionTypeDateLayout(surveyQuestion);
+				QuestionTypeDateLayout questionTypeDateLayout = new QuestionTypeDateLayout(surveyQuestion,surveyResponse);
 				questionTypeDateLayout.setPreviewMode();
 				addComponent(questionTypeDateLayout);
 				break;
 			case QuestionType.AREA_FT_INCH:
 				QuestionTypeAreaFeetInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFeetInchLayout(
-						surveyQuestion);
+						sessionHolder, surveyQuestion, surveyResponse);
 				questionTypeAreaFtInchLayout.setPreviewMode();
 				addComponent(questionTypeAreaFtInchLayout);
 				break;
 			case QuestionType.LENGTH_FT_INCH:
 				QuestionTypeLengthFeetInchLayout questionTypeLengthFeetInchLayout = new QuestionTypeLengthFeetInchLayout(
-						surveyQuestion);
+						sessionHolder, surveyQuestion, surveyResponse);
 				questionTypeLengthFeetInchLayout.setPreviewMode();
 				addComponent(questionTypeLengthFeetInchLayout);
 				break;
 			case QuestionType.CHOICES:
-				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(surveyQuestion);
+				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(
+						sessionHolder, surveyQuestion, surveyResponse);
 				questionTypeChoicesLayout.setPreviewMode();
 				addComponent(questionTypeChoicesLayout);
 				break;
 			case QuestionType.MATRIX:
-				QuestionTypeMatrixLayout questionTypeMatrixLayout = new QuestionTypeMatrixLayout(surveyQuestion);
+				QuestionTypeMatrixLayout questionTypeMatrixLayout = new QuestionTypeMatrixLayout(
+						sessionHolder, surveyQuestion, surveyResponse);
 				questionTypeMatrixLayout.setPreviewMode();
 				addComponent(questionTypeMatrixLayout);
 				break;
@@ -146,7 +154,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			questionFld.setValue(surveyQuestion.getOrder() + ". " + surveyQuestion.getQuestion());
 
 			if (surveyQuestion.getSurveySection() != null) {
-//				sectionFld.setVisible(true);
+				// sectionFld.setVisible(true);
 				sectionFld.setValue(surveyQuestion.getSurveySection().getName());
 			}
 

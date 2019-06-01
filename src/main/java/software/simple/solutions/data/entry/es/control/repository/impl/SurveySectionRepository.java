@@ -24,7 +24,7 @@ public class SurveySectionRepository extends GenericRepository implements ISurve
 
 	@Override
 	public List<SurveySection> findAllBySurveyId(Long surveyId) throws FrameworkException {
-		String query = "from SurveySection sg where sg.survey.id=:surveyId";
+		String query = "from SurveySection sg where sg.survey.id=:surveyId order by id";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("surveyId", surveyId);
 		return createListQuery(query, paramMap);

@@ -15,10 +15,13 @@ import software.simple.solutions.data.entry.es.control.properties.SurveyQuestion
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.framework.core.components.CDecimalField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
+import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class DecimalNumberColumnConfigurationView extends VerticalLayout {
+
+	private SessionHolder sessionHolder;
 
 	private final class MinValueChangeListener implements ValueChangeListener<String> {
 		@Override
@@ -54,11 +57,10 @@ public class DecimalNumberColumnConfigurationView extends VerticalLayout {
 
 	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
 
-	{
+	public DecimalNumberColumnConfigurationView(SessionHolder sessionHolder,
+			SurveyQuestionAnswerChoice surveyQuestionAnswerChoice) {
+		this.sessionHolder = sessionHolder;
 		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-	}
-
-	public DecimalNumberColumnConfigurationView(SurveyQuestionAnswerChoice surveyQuestionAnswerChoice) {
 		this.surveyQuestionAnswerChoice = surveyQuestionAnswerChoice;
 		try {
 			buildMainLayout();
@@ -79,7 +81,7 @@ public class DecimalNumberColumnConfigurationView extends VerticalLayout {
 		horizontalLayout.setMargin(false);
 		addComponent(horizontalLayout);
 
-		minValueFld = new CDecimalField();
+		minValueFld = new CDecimalField(sessionHolder);
 		minValueFld.setWidth("100px");
 		minValueFld.setCaptionByKey(SurveyQuestionAnswerChoiceProperty.VALIDATE_MIN_VALUE);
 		horizontalLayout.addComponent(minValueFld);
@@ -87,7 +89,7 @@ public class DecimalNumberColumnConfigurationView extends VerticalLayout {
 		minValueFld.setValueChangeMode(ValueChangeMode.BLUR);
 		minValueFld.addValueChangeListener(new MinValueChangeListener());
 
-		maxValueFld = new CDecimalField();
+		maxValueFld = new CDecimalField(sessionHolder);
 		maxValueFld.setWidth("100px");
 		maxValueFld.setCaptionByKey(SurveyQuestionAnswerChoiceProperty.VALIDATE_MAX_VALUE);
 		horizontalLayout.addComponent(maxValueFld);

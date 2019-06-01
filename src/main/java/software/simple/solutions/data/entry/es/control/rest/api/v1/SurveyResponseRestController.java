@@ -50,7 +50,8 @@ public class SurveyResponseRestController {
 
 	@GetMapping(path = "/", produces = "application/json")
 	public List<SurveyResponseRestModel> getSurveyResponse() throws FrameworkException {
-//		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		// String username = (String)
+		// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = user.getUsername();
 		List<SurveyResponse> surveyResponses = surveyResponseService.findAllSurveyResponsesByUser(username);
