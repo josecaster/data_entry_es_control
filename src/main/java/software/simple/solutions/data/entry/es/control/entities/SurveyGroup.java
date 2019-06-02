@@ -11,11 +11,14 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.properties.SurveyApplicationUserProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
@@ -35,6 +38,7 @@ public class SurveyGroup extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Long id;
 
 	@Column(name = EsControlTables.SURVEY_GROUPS_.COLUMNS.ACTIVE_)
@@ -43,6 +47,7 @@ public class SurveyGroup extends MappedSuperClass {
 	/**
 	 * The {@link Survey} this question is linked to.
 	 */
+	@NotFound(action=NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_GROUPS_.COLUMNS.SURVEY_ID_)
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)

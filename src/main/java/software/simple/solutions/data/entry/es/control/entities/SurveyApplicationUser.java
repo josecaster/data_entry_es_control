@@ -11,15 +11,19 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.properties.SurveyApplicationUserProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
+import software.simple.solutions.framework.core.properties.ApplicationUserProperty;
 
 @Audited
 @AuditOverride(forClass = MappedSuperClass.class)
@@ -35,11 +39,13 @@ public class SurveyApplicationUser extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveyApplicationUserProperty.ID)
 	private Long id;
 
 	/**
 	 * The {@link Survey} this question is linked to.
 	 */
+	@NotFound(action=NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_APPLICATION_USERS_.COLUMNS.SURVEY_ID_)
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
@@ -47,7 +53,7 @@ public class SurveyApplicationUser extends MappedSuperClass {
 
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_APPLICATION_USERS_.COLUMNS.APPLICATION_USER_ID_)
-	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
+	@FilterFieldProperty(fieldProperty = ApplicationUserProperty.ID)
 	private ApplicationUser applicationUser;
 
 	public Long getId() {

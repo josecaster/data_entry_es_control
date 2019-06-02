@@ -11,13 +11,15 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
-import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
@@ -35,6 +37,7 @@ public class SurveySection extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveySectionProperty.ID)
 	private Long id;
 
 	@Column(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.ACTIVE_)
@@ -43,11 +46,12 @@ public class SurveySection extends MappedSuperClass {
 	/**
 	 * The {@link Survey} this question is linked to.
 	 */
+	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.SURVEY_ID_)
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Survey survey;
-	
+
 	/**
 	 * The name of the group.
 	 */
@@ -72,7 +76,7 @@ public class SurveySection extends MappedSuperClass {
 	@FilterFieldProperty(fieldProperty = SurveySectionProperty.PINNED)
 	@Column(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.PINNED_)
 	private Boolean pinned;
-	
+
 	@FilterFieldProperty(fieldProperty = SurveySectionProperty.ENABLE_APPLICABILITY)
 	@Column(name = EsControlTables.SURVEY_SECTIONS_.COLUMNS.ENABLE_APPLICABILITY_)
 	private Boolean enableApplicability;

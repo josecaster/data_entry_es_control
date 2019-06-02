@@ -2,6 +2,7 @@ package software.simple.solutions.data.entry.es.control.properties;
 
 public class SurveyQuestionAnswerChoiceProperty {
 	
+	public static final String ID = "model.survey.question.answer.choice.id";
 	public static final String LABEL = "model.survey.question.answer.choice.label";
 	public static final String CHOICE_TYPE = "model.survey.question.answer.choice.choice.type";
 	public static final String CHOICE_TYPE_SINGLE_ANSWER = "model.survey.question.answer.choice.type.single.answer";

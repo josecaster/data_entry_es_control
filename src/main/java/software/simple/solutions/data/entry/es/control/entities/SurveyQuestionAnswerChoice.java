@@ -22,6 +22,9 @@ import software.simple.solutions.data.entry.es.control.constants.Axis;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.MatrixColumnType;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
+import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionAnswerChoiceProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
 @Audited
@@ -38,6 +41,7 @@ public class SurveyQuestionAnswerChoice extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveyQuestionAnswerChoiceProperty.ID)
 	private Long id;
 
 	@ManyToOne

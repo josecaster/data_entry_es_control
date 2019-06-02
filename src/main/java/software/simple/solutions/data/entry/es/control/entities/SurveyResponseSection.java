@@ -16,6 +16,8 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
 @Audited

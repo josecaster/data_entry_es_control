@@ -3,6 +3,7 @@ package software.simple.solutions.data.entry.es.control.properties;
 public class SurveyQuestionProperty {
 
 	public static final String QUESTION = "model.survey.question";
+	public static final String ID = "model.survey.question.id";
 	public static final String QUESTION_ORDER = "model.survey.question.order";
 	public static final String QUESTION_MOVE = "model.survey.question.move";
 	public static final String QUESTION_OPTIONS = "model.survey.question.options";

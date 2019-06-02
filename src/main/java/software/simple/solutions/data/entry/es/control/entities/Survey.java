@@ -32,6 +32,7 @@ public class Survey extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Long id;
 
 	@Column(name = EsControlTables.SURVEYS_.COLUMNS.ACTIVE_)

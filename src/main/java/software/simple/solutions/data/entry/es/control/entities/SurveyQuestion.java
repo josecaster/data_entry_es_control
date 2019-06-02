@@ -11,12 +11,17 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
+import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
 @Audited
@@ -33,6 +38,7 @@ public class SurveyQuestion extends MappedSuperClass {
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)
 	@GeneratedValue(generator = "table", strategy = GenerationType.TABLE)
 	@Column(name = ID_)
+	@FilterFieldProperty(fieldProperty = SurveyQuestionProperty.ID)
 	private Long id;
 
 	@Column(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.ACTIVE_)
@@ -41,6 +47,7 @@ public class SurveyQuestion extends MappedSuperClass {
 	/**
 	 * The {@link Survey} this question is linked to.
 	 */
+	@NotFound(action=NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_QUESTIONS_.COLUMNS.SURVEY_ID_)
 	private Survey survey;
