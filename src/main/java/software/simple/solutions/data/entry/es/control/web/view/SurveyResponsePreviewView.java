@@ -154,13 +154,8 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 		@Override
 		public void executeBuild() {
-			// setWidth("100%");
-			h1 = new HorizontalLayout();
-			h1.setMargin(false);
-			addComponent(h1);
-
 			newFormGrid = ComponentUtil.createGrid();
-			h1.addComponent(newFormGrid);
+			addComponent(newFormGrid);
 
 			formNameFld = newFormGrid.addField(CTextField.class, SurveyResponseProperty.FORM_NAME, 0, 0);
 			formNameFld.addStyleName(ValoTheme.LABEL_COLORED);
@@ -320,6 +315,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 		@Override
 		public Object getFormValues() throws FrameworkException {
 			SurveyResponseVO vo = new SurveyResponseVO();
+			vo.setId(surveyResponse == null ? null : surveyResponse.getId());
 			vo.setFormName(formNameFld.getValue());
 			vo.setSurveyId(surveyFld.getItemId());
 			vo.setApplicationUserId(userNameFld.getItemId());
