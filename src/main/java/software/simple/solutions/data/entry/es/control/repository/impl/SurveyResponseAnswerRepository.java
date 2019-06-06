@@ -42,9 +42,56 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 	public SurveyResponseAnswer getSurveyResponse(Long surveyResponseId, Long surveyQuestionId)
 			throws FrameworkException {
 		ConcurrentMap<String, Object> paramMap = createParamMap();
-		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId and surveyQuestion.id=:surveyQuestionId";
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId";
 		paramMap.put("surveyResponseId", surveyResponseId);
 		paramMap.put("surveyQuestionId", surveyQuestionId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId "
+				+ "and surveyQuestionAnswerChoiceRow.id=:surveyQuestionAnswerChoiceRowId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		paramMap.put("surveyQuestionAnswerChoiceRowId", surveyQuestionAnswerChoiceRowId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId, Long surveyQuestionAnswerChoiceColumnId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId "
+				+ "and surveyQuestionAnswerChoiceRow.id=:surveyQuestionAnswerChoiceRowId "
+				+ "and surveyQuestionAnswerChoiceColumn.id=:surveyQuestionAnswerChoiceColumnId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		paramMap.put("surveyQuestionAnswerChoiceRowId", surveyQuestionAnswerChoiceRowId);
+		paramMap.put("surveyQuestionAnswerChoiceColumnId", surveyQuestionAnswerChoiceColumnId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId, Long surveyQuestionAnswerChoiceColumnId,
+			Long surveyQuestionAnswerChoiceSelectionId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId "
+				+ "and surveyQuestionAnswerChoiceRow.id=:surveyQuestionAnswerChoiceRowId "
+				+ "and surveyQuestionAnswerChoiceColumn.id=:surveyQuestionAnswerChoiceColumnId "
+				+ "and surveyQuestionAnswerChoiceSelection.id=:surveyQuestionAnswerChoiceSelectionId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		paramMap.put("surveyQuestionAnswerChoiceRowId", surveyQuestionAnswerChoiceRowId);
+		paramMap.put("surveyQuestionAnswerChoiceColumnId", surveyQuestionAnswerChoiceColumnId);
+		paramMap.put("surveyQuestionAnswerChoiceSelectionId", surveyQuestionAnswerChoiceSelectionId);
 		return getByQuery(query, paramMap);
 	}
 
@@ -52,10 +99,22 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 	public List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
 			throws FrameworkException {
 		ConcurrentMap<String, Object> paramMap = createParamMap();
-		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId and surveyQuestion.id=:surveyQuestionId";
+		String query = "from SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId";
 		paramMap.put("surveyResponseId", surveyResponseId);
 		paramMap.put("surveyQuestionId", surveyQuestionId);
 		return createListQuery(query, paramMap);
+	}
+
+	@Override
+	public void deleteFromSurveyResponseAnswerByResponse(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "delete SurveyResponseAnswer where surveyResponse.id=:surveyResponseId "
+				+ "and surveyQuestion.id=:surveyQuestionId";
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		deleteByHql(query, paramMap);
 	}
 
 }

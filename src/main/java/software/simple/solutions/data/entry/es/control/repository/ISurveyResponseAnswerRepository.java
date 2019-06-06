@@ -19,4 +19,17 @@ public interface ISurveyResponseAnswerRepository extends IGenericRepository {
 	List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
 			throws FrameworkException;
 
+	void deleteFromSurveyResponseAnswerByResponse(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException;
+
+	SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId) throws FrameworkException;
+
+	SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId, Long surveyQuestionAnswerChoiceColumnId) throws FrameworkException;
+
+	SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
+			Long surveyQuestionAnswerChoiceRowId, Long surveyQuestionAnswerChoiceColumnId,
+			Long surveyQuestionAnswerChoiceSelectionId) throws FrameworkException;
+
 }

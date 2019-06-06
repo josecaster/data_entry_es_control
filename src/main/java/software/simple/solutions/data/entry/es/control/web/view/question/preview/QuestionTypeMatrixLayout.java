@@ -11,7 +11,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.data.HasValue.ValueChangeEvent;
+import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
+import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.shared.ui.grid.HeightMode;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.Grid;
@@ -32,6 +35,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAn
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
+import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CDecimalField;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
@@ -47,23 +51,16 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 	private static final Logger logger = LogManager.getLogger(QuestionTypeMatrixLayout.class);
 
 	private VerticalLayout matrixContainerLayout;
-	private boolean previewMode = false;
 
 	private SurveyQuestion surveyQuestion;
 	private SurveyResponse surveyResponse;
 	private SessionHolder sessionHolder;
+	private Grid<MatrixRow> grid;
 
 	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
 	private ISurveyQuestionAnswerChoiceSelectionService surveyQuestionAnswerChoiceSelectionService;
 
-	// private QuestionTypeMatrixLayout(SessionHolder sessionHolder) {
-	// surveyQuestionAnswerChoiceService =
-	// ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-	// surveyQuestionAnswerChoiceSelectionService = ContextProvider
-	// .getBean(ISurveyQuestionAnswerChoiceSelectionService.class);
-	// this.sessionHolder = sessionHolder;
-	// buildMainLayout();
-	// }
+	private boolean editable = false;
 
 	public QuestionTypeMatrixLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion,
 			SurveyResponse surveyResponse) {
@@ -73,7 +70,11 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
 		surveyQuestionAnswerChoiceSelectionService = ContextProvider
 				.getBean(ISurveyQuestionAnswerChoiceSelectionService.class);
+	}
+
+	public void build() {
 		buildMainLayout();
+		setUpFields();
 	}
 
 	private void buildMainLayout() {
@@ -98,21 +99,20 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 		matrixContainerLayout.removeAllComponents();
 
 		List<SurveyResponseAnswer> surveyResponseAnswers = null;
-		if(surveyResponse!=null){
+		if (surveyResponse != null) {
 			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
 					.getBean(ISurveyResponseAnswerService.class);
-			surveyResponseAnswers = surveyResponseAnswerService
-					.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
+			surveyResponseAnswers = surveyResponseAnswerService.getSurveyResponseAnswers(surveyResponse.getId(),
+					surveyQuestion.getId());
 		}
 
 		List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
 				.findBySurveyQuestion(surveyQuestion.getId());
 		if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
-			Grid<MatrixRow> grid = new Grid<MatrixRow>();
+			grid = new Grid<MatrixRow>();
 			grid.setHeightMode(HeightMode.UNDEFINED);
 			grid.setSelectionMode(SelectionMode.NONE);
 			grid.setWidth("100%");
-			// grid.setEnabled(false);
 			matrixContainerLayout.addComponent(grid);
 
 			List<SurveyQuestionAnswerChoice> columns = surveyQuestionAnswerChoices.stream()
@@ -129,13 +129,16 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 									return source.surveyQuestionAnswerChoice.getLabel();
 								}
 							});
+							column.setSortable(false);
 							column.setCaption(surveyQuestionAnswerChoice.getLabel())
 									.setId(surveyQuestionAnswerChoice.getLabel());
 							usedRowHeader = true;
 						} else {
-							grid.addComponentColumn(new ComponentColumn(surveyQuestionAnswerChoice))
+							Column<MatrixRow, Component> column = grid
+									.addComponentColumn(new ComponentColumn(surveyQuestionAnswerChoice))
 									.setId(surveyQuestionAnswerChoice.getId().toString())
 									.setCaption(surveyQuestionAnswerChoice.getLabel());
+							column.setSortable(false);
 						}
 					}
 				}
@@ -162,20 +165,10 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 		}
 	}
 
-	private class MatrixRow {
-		private String responseText;
-		private SurveyQuestionAnswerChoice surveyQuestionAnswerChoice;
-		private Map<Long, List<SurveyResponseAnswer>> responseMap;
-	}
-
-	public void setPreviewMode() {
-		previewMode = true;
-		setUpFields();
-	}
-
 	private final class ComponentColumn implements ValueProvider<MatrixRow, Component> {
 
 		private SurveyQuestionAnswerChoice column;
+		private SurveyResponseAnswer surveyResponseAnswer;
 
 		public ComponentColumn(SurveyQuestionAnswerChoice column) {
 			this.column = column;
@@ -187,66 +180,191 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 			if (source.responseMap != null) {
 				answers = source.responseMap.get(column.getId());
 			}
+			SurveyQuestionAnswerChoice row = source.surveyQuestionAnswerChoice;
 			String matrixColumnType = column.getMatrixColumnType();
 			switch (matrixColumnType) {
 			case MatrixColumnType.TEXT:
 				TextField textField = new TextField();
+				textField.setValueChangeMode(ValueChangeMode.BLUR);
 				textField.setWidth("100%");
+				textField.setEnabled(editable);
 				textField.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 
 				if (answers != null && answers.size() == 1) {
-					SurveyResponseAnswer surveyResponseAnswer = answers.get(0);
+					surveyResponseAnswer = answers.get(0);
 					textField.setValue(surveyResponseAnswer.getResponseText());
 				}
+
+				textField.addValueChangeListener(new ValueChangeListener<String>() {
+
+					@Override
+					public void valueChange(ValueChangeEvent<String> event) {
+						String value = event.getValue();
+						ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+								.getBean(ISurveyResponseAnswerService.class);
+						SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
+						surveyResponseAnswerVO
+								.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
+						surveyResponseAnswerVO.setActive(true);
+						surveyResponseAnswerVO
+								.setUniqueId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getUniqueId());
+						surveyResponseAnswerVO.setSurveyResponseId(surveyResponse.getId());
+						surveyResponseAnswerVO.setSurveyQuestionId(surveyQuestion.getId());
+						surveyResponseAnswerVO.setCurrentRoleId(sessionHolder.getSelectedRole().getId());
+						surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
+						surveyResponseAnswerVO.setResponseText(value);
+						try {
+							surveyResponseAnswer = surveyResponseAnswerService
+									.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+						} catch (FrameworkException e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
 
 				return textField;
 			case MatrixColumnType.DATE:
 				CPopupDateField dateField = new CPopupDateField();
+				dateField.setEnabled(editable);
 				dateField.addStyleName(ValoTheme.DATEFIELD_SMALL);
 				dateField.setDateFormat(Constants.SIMPLE_DATE_FORMAT.toPattern());
 
 				if (answers != null && answers.size() == 1) {
-					SurveyResponseAnswer surveyResponseAnswer = answers.get(0);
+					surveyResponseAnswer = answers.get(0);
 					if (StringUtils.isNotBlank(surveyResponseAnswer.getResponseText())) {
 						LocalDate localDate = LocalDate.parse(surveyResponseAnswer.getResponseText(),
 								DateTimeFormatter.ofPattern(Constants.SIMPLE_DATE_FORMAT.toPattern()));
 						dateField.setValue(localDate);
 					}
 				}
+				dateField.addValueChangeListener(new ValueChangeListener<LocalDate>() {
+
+					@Override
+					public void valueChange(ValueChangeEvent<LocalDate> event) {
+						LocalDate localDate = event.getValue();
+
+						ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+								.getBean(ISurveyResponseAnswerService.class);
+						SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
+						surveyResponseAnswerVO
+								.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
+						surveyResponseAnswerVO.setActive(true);
+						surveyResponseAnswerVO
+								.setUniqueId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getUniqueId());
+						surveyResponseAnswerVO.setSurveyResponseId(surveyResponse.getId());
+						surveyResponseAnswerVO.setSurveyQuestionId(surveyQuestion.getId());
+						surveyResponseAnswerVO.setCurrentRoleId(sessionHolder.getSelectedRole().getId());
+						surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
+						surveyResponseAnswerVO.setResponseText(localDate == null ? null
+								: localDate
+										.format(DateTimeFormatter.ofPattern(Constants.SIMPLE_DATE_FORMAT.toPattern())));
+						try {
+							surveyResponseAnswerService.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+						} catch (FrameworkException e) {
+							e.printStackTrace();
+						}
+					}
+				});
 
 				return dateField;
 			case MatrixColumnType.DECIMAL_NUMBER:
 				CDecimalField decimalField = new CDecimalField(sessionHolder);
+				decimalField.setEnabled(editable);
+				decimalField.setValueChangeMode(ValueChangeMode.BLUR);
 				decimalField.setWidth("100%");
 				decimalField.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 
 				if (answers != null && answers.size() == 1) {
-					SurveyResponseAnswer surveyResponseAnswer = answers.get(0);
+					surveyResponseAnswer = answers.get(0);
 					decimalField.setValue(surveyResponseAnswer.getResponseText());
 				}
+
+				decimalField.addValueChangeListener(new ValueChangeListener<String>() {
+
+					@Override
+					public void valueChange(ValueChangeEvent<String> event) {
+						String value = event.getValue();
+						ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+								.getBean(ISurveyResponseAnswerService.class);
+						SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
+						surveyResponseAnswerVO
+								.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
+						surveyResponseAnswerVO.setActive(true);
+						surveyResponseAnswerVO
+								.setUniqueId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getUniqueId());
+						surveyResponseAnswerVO.setSurveyResponseId(surveyResponse.getId());
+						surveyResponseAnswerVO.setSurveyQuestionId(surveyQuestion.getId());
+						surveyResponseAnswerVO.setCurrentRoleId(sessionHolder.getSelectedRole().getId());
+						surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
+						surveyResponseAnswerVO.setResponseText(value);
+						try {
+							surveyResponseAnswer = surveyResponseAnswerService
+									.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+						} catch (FrameworkException e) {
+							e.printStackTrace();
+						}
+					}
+				});
 
 				return decimalField;
 			case MatrixColumnType.WHOLE_NUMBER:
 				CDiscreetNumberField discreetNumberField = new CDiscreetNumberField();
+				discreetNumberField.setValueChangeMode(ValueChangeMode.BLUR);
+				discreetNumberField.setEnabled(editable);
 				discreetNumberField.setWidth("100%");
 				discreetNumberField.addStyleName(ValoTheme.TEXTFIELD_SMALL);
 
 				if (answers != null && answers.size() == 1) {
-					SurveyResponseAnswer surveyResponseAnswer = answers.get(0);
+					surveyResponseAnswer = answers.get(0);
 					discreetNumberField.setValue(surveyResponseAnswer.getResponseText());
 				}
 
+				discreetNumberField.addValueChangeListener(new ValueChangeListener<String>() {
+
+					@Override
+					public void valueChange(ValueChangeEvent<String> event) {
+						String value = event.getValue();
+						ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+								.getBean(ISurveyResponseAnswerService.class);
+						SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
+						surveyResponseAnswerVO
+								.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
+						surveyResponseAnswerVO.setActive(true);
+						surveyResponseAnswerVO
+								.setUniqueId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getUniqueId());
+						surveyResponseAnswerVO.setSurveyResponseId(surveyResponse.getId());
+						surveyResponseAnswerVO.setSurveyQuestionId(surveyQuestion.getId());
+						surveyResponseAnswerVO.setCurrentRoleId(sessionHolder.getSelectedRole().getId());
+						surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
+						surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
+						surveyResponseAnswerVO.setResponseText(value);
+						try {
+							surveyResponseAnswerService.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+						} catch (FrameworkException e) {
+							e.printStackTrace();
+						}
+
+					}
+				});
 				return discreetNumberField;
 			case MatrixColumnType.SINGLE_SELECTION:
 			case MatrixColumnType.MULTIPLE_SELECTION:
-				CCheckBox singleSelectionFld = new CCheckBox();
-
-				if (answers != null && answers.size() == 1) {
-					SurveyResponseAnswer surveyResponseAnswer = answers.get(0);
-					singleSelectionFld.setValue(surveyResponseAnswer.getSelected());
-				}
-
-				return singleSelectionFld;
+//				CCheckBox singleSelectionFld = new CCheckBox();
+//
+//				if (answers != null && answers.size() == 1) {
+//					surveyResponseAnswer = answers.get(0);
+//					singleSelectionFld.setValue(surveyResponseAnswer.getSelected());
+//				}
+//
+//				return singleSelectionFld;
 			case MatrixColumnType.SINGLE_COMPOSITE_SELECTION:
 			case MatrixColumnType.MULTIPLE_COMPOSITE_SELECTION:
 				HorizontalLayout horizontalLayout = new HorizontalLayout();
@@ -265,17 +383,48 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 						}
 						for (SurveyQuestionAnswerChoiceSelection selection : selections) {
 							CCheckBox checkBox = new CCheckBox();
+							checkBox.setEnabled(editable);
 							checkBox.setCaption(selection.getLabel());
 							horizontalLayout.addComponent(checkBox);
 
 							if (selectionMap != null) {
 								List<SurveyResponseAnswer> responses = selectionMap.get(selection.getId());
 								if (responses != null && responses.size() == 1) {
-									SurveyResponseAnswer surveyResponseAnswer = responses.get(0);
+									surveyResponseAnswer = responses.get(0);
 									checkBox.setValue(surveyResponseAnswer.getSelected());
 								}
 							}
 
+							checkBox.addValueChangeListener(new ValueChangeListener<Boolean>() {
+
+								@Override
+								public void valueChange(ValueChangeEvent<Boolean> event) {
+									Boolean selected = event.getValue();
+
+									ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+											.getBean(ISurveyResponseAnswerService.class);
+									SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
+									surveyResponseAnswerVO
+											.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
+									surveyResponseAnswerVO.setActive(true);
+									surveyResponseAnswerVO.setUniqueId(
+											surveyResponseAnswer == null ? null : surveyResponseAnswer.getUniqueId());
+									surveyResponseAnswerVO.setSurveyResponseId(surveyResponse.getId());
+									surveyResponseAnswerVO.setSurveyQuestionId(surveyQuestion.getId());
+									surveyResponseAnswerVO.setCurrentRoleId(sessionHolder.getSelectedRole().getId());
+									surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
+									surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
+									surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
+									surveyResponseAnswerVO.setQuestionAnswerChoiceSelectionId(selection.getId());
+									surveyResponseAnswerVO.setSelected(selected);
+									try {
+										surveyResponseAnswer = surveyResponseAnswerService
+												.updateAnswerMatrixCellForSelection(surveyResponseAnswerVO);
+									} catch (FrameworkException e) {
+										e.printStackTrace();
+									}
+								}
+							});
 						}
 					}
 				} catch (FrameworkException e) {
@@ -289,4 +438,30 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 			return null;
 		}
 	}
+
+	private class MatrixRow {
+		private String responseText;
+		private SurveyQuestionAnswerChoice surveyQuestionAnswerChoice;
+		private Map<Long, List<SurveyResponseAnswer>> responseMap;
+	}
+
+	public void setPreviewMode() {
+		setUpFields();
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
+		updateFields();
+	}
+
+	private void updateFields() {
+		if (grid != null) {
+			grid.setEnabled(editable);
+		}
+	}
+
 }

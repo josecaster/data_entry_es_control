@@ -2,13 +2,14 @@ package software.simple.solutions.data.entry.es.control.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
@@ -17,6 +18,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseSection;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
+import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceSelectionRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionRepository;
@@ -30,12 +32,16 @@ import software.simple.solutions.data.entry.es.control.rest.model.SurveyResponse
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyResponseRestModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyResponseSectionModel;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseService;
+import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.constants.DateConstant;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
+import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.repository.IApplicationUserRepository;
 import software.simple.solutions.framework.core.service.impl.SuperService;
+import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
 @Transactional
 @Service
@@ -70,8 +76,45 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 	private ISurveySectionRepository surveySectionRepository;
 
 	@Override
+	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
+		SurveyResponseVO vo = (SurveyResponseVO) valueObject;
+
+		if (StringUtils.isBlank(vo.getFormName())) {
+			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(SurveyResponseProperty.FORM_NAME));
+		}
+
+		if (vo.getSurveyId() == null) {
+			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(SurveyResponseProperty.SURVEY));
+		}
+
+		if (vo.getApplicationUserId() == null) {
+			throw new FrameworkException(SystemMessageProperty.FIELD_IS_REQUIRED,
+					new Arg().key(SurveyResponseProperty.APPLICATION_USER));
+		}
+
+		SurveyResponse surveyResponse = new SurveyResponse();
+		if (!vo.isNew()) {
+			surveyResponse = get(SurveyResponse.class, vo.getId());
+			surveyResponse
+			.setCreatedOn(LocalDateTime.now());
+			surveyResponse.setUniqueId(UUID.randomUUID().toString());
+		}
+		surveyResponse.setActive(vo.getActive());
+		surveyResponse.setFormName(vo.getFormName());
+		ApplicationUser applicationUser = getById(ApplicationUser.class, vo.getApplicationUserId());
+		surveyResponse.setApplicationUser(applicationUser);
+		surveyResponse.setSurvey(surveyRepository.getById(Survey.class, vo.getSurveyId()));
+		surveyResponse.setUpdatedByUser(applicationUser);
+		surveyResponse.setUpdatedDate(LocalDateTime.now());
+
+		return (T) saveOrUpdate(surveyResponse, vo.isNew());
+	}
+
+	@Override
 	public SurveyResponse updateFromRest(SurveyResponseRestModel surveyResponseRestModel) throws FrameworkException {
-		
+
 		SurveyResponse surveyResponse = updateSurveyResponse(surveyResponseRestModel);
 
 		cleanPreviousResponses(surveyResponse.getId());
@@ -82,8 +125,8 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 
 		return surveyResponse;
 	}
-	
-	private void cleanPreviousResponses(Long surveyResponseId) throws FrameworkException{
+
+	private void cleanPreviousResponses(Long surveyResponseId) throws FrameworkException {
 		surveyResponseSectionRepository.removeAllBySurveyResponse(surveyResponseId);
 		surveyResponseAnswerRepository.removeAllBySurveyResponse(surveyResponseId);
 	}
@@ -117,7 +160,7 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		if (surveyResponseAnswers != null) {
 			for (SurveyResponseAnswerModel surveyResponseAnswerModel : surveyResponseAnswers) {
 				System.out.println(surveyResponseAnswerModel);
-				
+
 				String uniqueId = surveyResponseAnswerModel.getUniqueId();
 				SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerRepository.getByUniqueId(uniqueId);
 				boolean isNew = false;
@@ -130,11 +173,11 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 				surveyResponseAnswer.setOtherValue(surveyResponseAnswerModel.getOtherValue());
 				surveyResponseAnswer.setResponseText(surveyResponseAnswerModel.getResponseText());
 				surveyResponseAnswer.setSelected(surveyResponseAnswerModel.getSelected());
-				
+
 				SurveyQuestion surveyQuestion = surveyQuestionRepository.get(SurveyQuestion.class,
 						surveyResponseAnswerModel.getSurveyQuestionId());
 				surveyResponseAnswer.setSurveyQuestion(surveyQuestion);
-				
+
 				surveyResponseAnswer.setSurveyQuestionAnswerChoiceColumn(
 						surveyQuestionAnswerChoiceRepository.get(SurveyQuestionAnswerChoice.class,
 								surveyResponseAnswerModel.getSurveyQuestionAnswerChoiceColumnId()));

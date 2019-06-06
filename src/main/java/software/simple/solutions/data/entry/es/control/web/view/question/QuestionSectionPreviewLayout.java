@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.vaadin.ui.Accordion;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
@@ -34,6 +33,7 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 	private SessionHolder sessionHolder;
 	private boolean showInfo = false;
 	private boolean useGrid = false;
+	private boolean editable = false;
 
 	private SurveySection surveySection;
 	private SurveyResponse surveyResponse;
@@ -73,7 +73,7 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 		addComponent(sectionFld);
 
 		sectionFld.setValue(surveySection.getName());
-		
+
 		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
 		List<SurveyQuestion> questionList = surveyQuestionService.getQuestionList(surveySection.getSurvey().getId(),
 				null, surveySection.getId());
@@ -88,7 +88,8 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 			QuestionPreviewLayout questionPreviewLayout = new QuestionPreviewLayout(sessionHolder);
 			questionPreviewLayout.setShowInfo(showInfo);
 			questionPreviewLayout.setShowSection(false);
-			questionPreviewLayout.setSurveyQuestion(question,surveyResponse);
+			questionPreviewLayout.setEditable(editable);
+			questionPreviewLayout.setSurveyQuestion(question, surveyResponse);
 			if (useGrid) {
 				gridLayout.addComponent(questionPreviewLayout);
 			} else {
@@ -109,7 +110,7 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 	public void setSurveySection(SurveySection surveySection) {
 		setSurveySection(surveySection, null);
 	}
-	
+
 	public void setSurveySection(SurveySection surveySection, SurveyResponse surveyResponse) {
 		this.surveySection = surveySection;
 		this.surveyResponse = surveyResponse;
@@ -134,6 +135,14 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 
 	public void setUseGrid(boolean useGrid) {
 		this.useGrid = useGrid;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 
 }

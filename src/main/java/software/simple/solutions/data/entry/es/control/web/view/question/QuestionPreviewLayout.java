@@ -38,6 +38,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 	private CaptionLabel questionDescriptionFld;
 	private boolean showSection = true;
 	private boolean showInfo = true;
+	private boolean editable = false;
 	private SessionHolder sessionHolder;
 
 	private SurveyQuestion surveyQuestion;
@@ -112,37 +113,41 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			String questionType = surveyQuestion.getQuestionType();
 			switch (questionType) {
 			case QuestionType.SINGLE:
-				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(surveyQuestion,surveyResponse);
-				questionTypeSingleLayout.setPreviewMode();
+				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(sessionHolder,
+						surveyQuestion, surveyResponse);
+				questionTypeSingleLayout.setEditable(editable);
 				addComponent(questionTypeSingleLayout);
 				break;
 			case QuestionType.DATE:
-				QuestionTypeDateLayout questionTypeDateLayout = new QuestionTypeDateLayout(surveyQuestion,surveyResponse);
-				questionTypeDateLayout.setPreviewMode();
+				QuestionTypeDateLayout questionTypeDateLayout = new QuestionTypeDateLayout(sessionHolder,
+						surveyQuestion, surveyResponse);
+				questionTypeDateLayout.setEditable(editable);
 				addComponent(questionTypeDateLayout);
 				break;
 			case QuestionType.AREA_FT_INCH:
 				QuestionTypeAreaFeetInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFeetInchLayout(
 						sessionHolder, surveyQuestion, surveyResponse);
-				questionTypeAreaFtInchLayout.setPreviewMode();
+				questionTypeAreaFtInchLayout.setEditable(editable);
 				addComponent(questionTypeAreaFtInchLayout);
 				break;
 			case QuestionType.LENGTH_FT_INCH:
 				QuestionTypeLengthFeetInchLayout questionTypeLengthFeetInchLayout = new QuestionTypeLengthFeetInchLayout(
 						sessionHolder, surveyQuestion, surveyResponse);
-				questionTypeLengthFeetInchLayout.setPreviewMode();
+				questionTypeLengthFeetInchLayout.setEditable(editable);
 				addComponent(questionTypeLengthFeetInchLayout);
 				break;
 			case QuestionType.CHOICES:
-				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(
-						sessionHolder, surveyQuestion, surveyResponse);
-				questionTypeChoicesLayout.setPreviewMode();
+				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(sessionHolder,
+						surveyQuestion, surveyResponse);
+				questionTypeChoicesLayout.setEditable(editable);
+				questionTypeChoicesLayout.build();
 				addComponent(questionTypeChoicesLayout);
 				break;
 			case QuestionType.MATRIX:
-				QuestionTypeMatrixLayout questionTypeMatrixLayout = new QuestionTypeMatrixLayout(
-						sessionHolder, surveyQuestion, surveyResponse);
-				questionTypeMatrixLayout.setPreviewMode();
+				QuestionTypeMatrixLayout questionTypeMatrixLayout = new QuestionTypeMatrixLayout(sessionHolder,
+						surveyQuestion, surveyResponse);
+				questionTypeMatrixLayout.setEditable(editable);
+				questionTypeMatrixLayout.build();
 				addComponent(questionTypeMatrixLayout);
 				break;
 			}
@@ -187,6 +192,14 @@ public class QuestionPreviewLayout extends VerticalLayout {
 
 	public void setShowInfo(boolean showInfo) {
 		this.showInfo = showInfo;
+	}
+
+	public boolean isEditable() {
+		return editable;
+	}
+
+	public void setEditable(boolean editable) {
+		this.editable = editable;
 	}
 
 }

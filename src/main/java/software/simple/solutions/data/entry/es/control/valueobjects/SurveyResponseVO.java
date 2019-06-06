@@ -12,11 +12,14 @@ public class SurveyResponseVO extends SuperVO {
 	private static final long serialVersionUID = -2008276944089219114L;
 
 	private Long id;
-	private Boolean active;
 	private String formName;
+	private Boolean active;
 
 	@FilterFieldProperty(fieldProperty = SurveyProperty.ID)
 	private Long surveyId;
+
+	@FilterFieldProperty(fieldProperty = ApplicationUserProperty.ID)
+	private Long applicationUserId;
 
 	@FilterFieldProperty(fieldProperty = SurveyProperty.NAME)
 	private StringInterval surveyNameInterval;
@@ -91,6 +94,14 @@ public class SurveyResponseVO extends SuperVO {
 
 	public void setUserNameInInterval(StringInterval userNameInInterval) {
 		this.userNameInInterval = userNameInInterval;
+	}
+
+	public Long getApplicationUserId() {
+		return applicationUserId;
+	}
+
+	public void setApplicationUserId(Long applicationUserId) {
+		this.applicationUserId = applicationUserId;
 	}
 
 }
