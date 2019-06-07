@@ -19,12 +19,16 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
+import io.reactivex.functions.Consumer;
+import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyLookUpField;
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
+import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
+import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseService;
 import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseVO;
@@ -35,13 +39,14 @@ import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
+import software.simple.solutions.framework.core.components.select.ApplicationUserSelect;
+import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.web.BasicTemplate;
-import software.simple.solutions.framework.core.web.lookup.ApplicationUserLookUpField;
 
 public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
@@ -100,7 +105,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			surveyDescriptionFld = addField(CStringIntervalLayout.class, SurveyResponseProperty.SURVEY_DESCRIPTION, 0,
 					1);
 			MappedSuperClass parentEntity = getParentEntity();
-			if (parentEntity != null && parentEntity instanceof Survey) {
+			if (parentEntity instanceof Survey) {
 				Survey survey = (Survey) getParentEntity();
 				surveyNameFld.setValue(survey.getName());
 				surveyNameFld.setReadOnly(true);
@@ -121,7 +126,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			vo.setFormNameInterval(formNameFld.getValue());
 			vo.setUserNameInInterval(userNameFld.getValue());
 			MappedSuperClass parentEntity = getParentEntity();
-			if (parentEntity != null && parentEntity instanceof Survey) {
+			if (parentEntity instanceof Survey) {
 				Survey survey = (Survey) getParentEntity();
 				vo.setSurveyId(survey.getId());
 			}
@@ -136,7 +141,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 		private CGridLayout newFormGrid;
 		private CTextField formNameFld;
 		private SurveyLookUpField surveyFld;
-		private ApplicationUserLookUpField userNameFld;
+		private ApplicationUserSelect applicationUserFld;
 		private CCheckBox activeFld;
 		private Switch editAnswersSwitch;
 
@@ -158,20 +163,20 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			addComponent(newFormGrid);
 
 			formNameFld = newFormGrid.addField(CTextField.class, SurveyResponseProperty.FORM_NAME, 0, 0);
-			formNameFld.addStyleName(ValoTheme.LABEL_COLORED);
-			formNameFld.addStyleName(ValoTheme.LABEL_H3);
+			formNameFld.setRequiredIndicatorVisible(true);
 
 			surveyFld = newFormGrid.addField(SurveyLookUpField.class, SurveyResponseProperty.SURVEY, 0, 1);
 			surveyFld.handleForParentEntity(getParentEntity());
-			surveyFld.addStyleName(ValoTheme.LABEL_COLORED);
+			surveyFld.setRequiredIndicatorVisible(true);
 
 			activeFld = newFormGrid.addField(CCheckBox.class, SystemProperty.SYSTEM_ENTITY_ACTIVE, 1, 0);
 			activeFld.setReadOnly(true);
 
-			userNameFld = newFormGrid.addField(ApplicationUserLookUpField.class,
-					SurveyResponseProperty.APPLICATION_USER, 1, 1);
-			userNameFld.addStyleName(ValoTheme.LABEL_COLORED);
-			userNameFld.handleForParentEntity(sessionHolder.getApplicationUser());
+			applicationUserFld = newFormGrid.addField(ApplicationUserSelect.class,
+					SurveyResponseProperty.APPLICATION_USER, 1, 1, 2, 1);
+			applicationUserFld.setEmptySelectionAllowed(false);
+			applicationUserFld.setRequiredIndicatorVisible(true);
+			applicationUserFld.setWidth("200px");
 
 			editAnswersSwitch = newFormGrid.addField(Switch.class, SurveyResponseProperty.EDIT_ANSWERS, 2, 0);
 			editAnswersSwitch.setVisible(false);
@@ -275,6 +280,42 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			activeFld.setValue(true);
 			newFormGrid.setVisible(true);
 			sectionMainLayout.setVisible(false);
+
+			surveyFld.addValueChangeListener(new ValueChangeListener<Object>() {
+
+				@Override
+				public void valueChange(ValueChangeEvent<Object> event) {
+					try {
+						populateApplicationUserFld();
+					} catch (FrameworkException e) {
+						logger.error(e.getMessage(), e);
+						updateErrorContent(e);
+					}
+				}
+			});
+
+			BehaviorSubject<Object> surveyApplicationUserObserver = getReferenceKey(
+					EsReferenceKey.SURVEY_APPLICATION_USER_OBSERVER);
+			surveyApplicationUserObserver.subscribe(new Consumer<Object>() {
+
+				@Override
+				public void accept(Object t) throws Exception {
+					populateApplicationUserFld();
+				}
+			});
+		}
+
+		protected void populateApplicationUserFld() throws FrameworkException {
+			applicationUserFld.removeAllItems();
+			Long surveyId = surveyFld.getItemId();
+			if (surveyId != null) {
+				ISurveyApplicationUserService surveyApplicationUserService = ContextProvider
+						.getBean(ISurveyApplicationUserService.class);
+				List<ApplicationUser> applicationUsers = surveyApplicationUserService
+						.findApplicationUserBySurvey(surveyId);
+				applicationUserFld.setValues(applicationUsers);
+			}
+
 		}
 
 		@SuppressWarnings("unchecked")
@@ -284,9 +325,22 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 			createMenu();
 
+			surveyFld.addValueChangeListener(new ValueChangeListener<Object>() {
+
+				@Override
+				public void valueChange(ValueChangeEvent<Object> event) {
+					try {
+						populateApplicationUserFld();
+					} catch (FrameworkException e) {
+						logger.error(e.getMessage(), e);
+						updateErrorContent(e);
+					}
+				}
+			});
+
 			formNameFld.setValue(surveyResponse.getFormName());
-			userNameFld.setValue(surveyResponse.getApplicationUser());
 			surveyFld.setValue(surveyResponse.getSurvey());
+			applicationUserFld.setValue(surveyResponse.getApplicationUser());
 			activeFld.setValue(surveyResponse.getActive());
 			editAnswersSwitch.setVisible(true);
 			editAnswersSwitch.setValue(editAnswers);
@@ -299,13 +353,24 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 					try {
 						createMenu();
 					} catch (FrameworkException e) {
-						e.printStackTrace();
+						logger.error(e.getMessage(), e);
+						updateErrorContent(e);
 					}
 					SurveySection surveySection = (SurveySection) selectedMenuLayout.getData();
 					createQuestionCard(surveySection);
 					sectionPanelLayout.iterator()
 							.forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
 					selectedMenuLayout.addStyleName(EsControlStyle.QUESTION_MENU_SELECTED);
+				}
+			});
+
+			BehaviorSubject<Object> surveyApplicationUserObserver = getReferenceKey(
+					EsReferenceKey.SURVEY_APPLICATION_USER_OBSERVER);
+			surveyApplicationUserObserver.subscribe(new Consumer<Object>() {
+
+				@Override
+				public void accept(Object t) throws Exception {
+					populateApplicationUserFld();
 				}
 			});
 
@@ -318,7 +383,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			vo.setId(surveyResponse == null ? null : surveyResponse.getId());
 			vo.setFormName(formNameFld.getValue());
 			vo.setSurveyId(surveyFld.getItemId());
-			vo.setApplicationUserId(userNameFld.getItemId());
+			vo.setApplicationUserId(applicationUserFld.getItemId());
 			vo.setActive(activeFld.getValue());
 			return vo;
 		}

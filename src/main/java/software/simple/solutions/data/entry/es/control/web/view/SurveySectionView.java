@@ -4,8 +4,6 @@ import org.vaadin.teemu.switchui.Switch;
 
 import com.vaadin.data.ValueProvider;
 
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyLookUpField;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
@@ -38,16 +36,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_SECTIONS_.NAME);
-
-		getUpdateObserver().subscribe(new Consumer<Object>() {
-
-			@Override
-			public void accept(Object t) throws Exception {
-				BehaviorSubject<SurveySection> surveySectionObserver = getReferenceKey(
-						EsReferenceKey.SURVEY_SECTION_OBSERVER);
-				surveySectionObserver.onNext((SurveySection) t);
-			}
-		});
+		setUpdateObserverReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER);
 	}
 
 	@Override
@@ -136,10 +125,13 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 			surveyFld = formGrid.addField(SurveyLookUpField.class, SurveySectionProperty.SURVEY, 0, 0);
 			surveyFld.handleForParentEntity(getParentEntity());
+			surveyFld.setRequiredIndicatorVisible(true);
 
 			codeFld = formGrid.addField(CTextField.class, SurveySectionProperty.CODE, 0, 1);
+			codeFld.setRequiredIndicatorVisible(true);
 
 			nameFld = formGrid.addField(CTextField.class, SurveySectionProperty.NAME, 0, 2);
+			nameFld.setRequiredIndicatorVisible(true);
 
 			descriptionFld = formGrid.addField(CTextArea.class, SurveySectionProperty.DESCRIPTION, 0, 3);
 

@@ -25,14 +25,11 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStateWindow;
 import com.whitestein.vaadin.widgets.wtpdfviewer.WTPdfViewer;
 
-import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.constants.EscontrolPrivileges;
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
-import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
@@ -72,8 +69,6 @@ public class SurveyView extends BasicTemplate<Survey> {
 	private static final Logger logger = LogManager.getLogger(SurveyView.class);
 
 	private static final long serialVersionUID = 6503015064562511801L;
-	private final BehaviorSubject<SurveySection> surveySectionObserver;
-	private final BehaviorSubject<SurveyGroup> surveyGroupObserver;
 
 	public SurveyView() {
 		setEntityClass(Survey.class);
@@ -81,11 +76,9 @@ public class SurveyView extends BasicTemplate<Survey> {
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 
-		surveySectionObserver = BehaviorSubject.create();
-		addReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER, surveySectionObserver);
-
-		surveyGroupObserver = BehaviorSubject.create();
-		addReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER, surveyGroupObserver);
+		addObserverReferenceKey(EsReferenceKey.SURVEY_SECTION_OBSERVER);
+		addObserverReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER);
+		addObserverReferenceKey(EsReferenceKey.SURVEY_APPLICATION_USER_OBSERVER);
 	}
 
 	@Override
@@ -148,6 +141,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 			h1.addComponent(formGrid);
 
 			nameFld = formGrid.addField(CTextField.class, SurveyProperty.NAME, 0, 0);
+			nameFld.setRequiredIndicatorVisible(true);
 
 			descriptionFld = formGrid.addField(CTextArea.class, SurveyProperty.DESCRIPTION, 0, 1);
 

@@ -1,5 +1,7 @@
 package software.simple.solutions.data.entry.es.control.service.impl;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,11 @@ public class SurveyApplicationUserService extends SuperService implements ISurve
 		surveyApplicationUser.setApplicationUser(get(ApplicationUser.class, vo.getApplicationUserId()));
 
 		return (T) saveOrUpdate(surveyApplicationUser, vo.isNew());
+	}
+
+	@Override
+	public List<ApplicationUser> findApplicationUserBySurvey(Long surveyId) throws FrameworkException {
+		return surveyApplicationUserRepository.findApplicationUserBySurvey(surveyId);
 	}
 
 }

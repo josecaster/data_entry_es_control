@@ -1,7 +1,5 @@
 package software.simple.solutions.data.entry.es.control.web.view;
 
-import io.reactivex.functions.Consumer;
-import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyLookUpField;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
@@ -33,18 +31,7 @@ public class SurveyGroupView extends BasicTemplate<SurveyGroup> {
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_GROUPS_.NAME);
-
-		getUpdateObserver().subscribe(new Consumer<Object>() {
-
-			@Override
-			public void accept(Object t) throws Exception {
-				BehaviorSubject<SurveyGroup> surveyGroupObserver = getReferenceKey(
-						EsReferenceKey.SURVEY_GROUP_OBSERVER);
-				if (surveyGroupObserver != null) {
-					surveyGroupObserver.onNext((SurveyGroup) t);
-				}
-			}
-		});
+		setUpdateObserverReferenceKey(EsReferenceKey.SURVEY_GROUP_OBSERVER);
 	}
 
 	@Override
@@ -109,8 +96,10 @@ public class SurveyGroupView extends BasicTemplate<SurveyGroup> {
 
 			surveyFld = formGrid.addField(SurveyLookUpField.class, SurveyGroupProperty.SURVEY, 0, 0);
 			surveyFld.handleForParentEntity(getParentEntity());
+			surveyFld.setRequiredIndicatorVisible(true);
 
 			nameFld = formGrid.addField(CTextField.class, SurveyGroupProperty.NAME, 0, 1);
+			nameFld.setRequiredIndicatorVisible(true);
 
 			descriptionFld = formGrid.addField(CTextArea.class, SurveyGroupProperty.DESCRIPTION, 0, 2);
 

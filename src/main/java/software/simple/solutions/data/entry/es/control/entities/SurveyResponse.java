@@ -38,6 +38,8 @@ import software.simple.solutions.framework.core.properties.ApplicationUserProper
 public class SurveyResponse extends MappedSuperClass {
 
 	private static final long serialVersionUID = -8974022530355774576L;
+	
+	public static final String VAR_APPLICATION_USER = "applicationUser";
 
 	@Id
 	@TableGenerator(name = "table", table = "sequences_", pkColumnName = "PK_NAME", valueColumnName = "PK_VALUE", initialValue = 1000000)

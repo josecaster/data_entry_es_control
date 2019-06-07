@@ -2,15 +2,14 @@ package software.simple.solutions.data.entry.es.control.web.view;
 
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyLookUpField;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
+import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.properties.SurveyApplicationUserProperty;
-import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyApplicationUserVO;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.FilterView;
 import software.simple.solutions.framework.core.components.FormView;
-import software.simple.solutions.framework.core.components.select.ActiveSelect;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -26,6 +25,7 @@ public class SurveyApplicationUserView extends BasicTemplate<SurveyApplicationUs
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_APPLICATION_USERS_.NAME);
+		setUpdateObserverReferenceKey(EsReferenceKey.SURVEY_APPLICATION_USER_OBSERVER);
 	}
 
 	@Override
@@ -55,7 +55,8 @@ public class SurveyApplicationUserView extends BasicTemplate<SurveyApplicationUs
 
 			surveyFld = addField(SurveyLookUpField.class, SurveyApplicationUserProperty.SURVEY, 0, 0);
 
-			applicationUserLookUpField = addField(ApplicationUserLookUpField.class, SurveyApplicationUserProperty.APPLICATION_USER, 0, 1);
+			applicationUserLookUpField = addField(ApplicationUserLookUpField.class,
+					SurveyApplicationUserProperty.APPLICATION_USER, 0, 1);
 
 		}
 
@@ -85,10 +86,12 @@ public class SurveyApplicationUserView extends BasicTemplate<SurveyApplicationUs
 
 			surveyFld = formGrid.addField(SurveyLookUpField.class, SurveyApplicationUserProperty.SURVEY, 0, 0);
 			surveyFld.handleForParentEntity(getParentEntity());
+			surveyFld.setRequiredIndicatorVisible(true);
 
 			applicationUserLookUpField = formGrid.addField(ApplicationUserLookUpField.class,
 					SurveyApplicationUserProperty.APPLICATION_USER, 0, 1);
 			applicationUserLookUpField.handleForParentEntity(getParentEntity());
+			applicationUserLookUpField.setRequiredIndicatorVisible(true);
 
 		}
 
