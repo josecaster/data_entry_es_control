@@ -12,7 +12,9 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
+import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
+import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CGridLayout;
@@ -45,8 +47,8 @@ public class EsControlConfiguration extends CGridLayout {
 		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		setSpacing(true);
 		int i = 0;
-		surveyFileStorageLocationFld = addField(CTextField.class, EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION, 0,
-				++i);
+		surveyFileStorageLocationFld = addField(CTextField.class,
+				EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION, 0, ++i);
 		surveyFileStorageLocationFld.setWidth("600px");
 
 		persistBtn = addField(CButton.class, 0, ++i);
@@ -60,7 +62,7 @@ public class EsControlConfiguration extends CGridLayout {
 			@Override
 			public void buttonClick(ClickEvent event) {
 				List<ConfigurationVO> configurations = new ArrayList<ConfigurationVO>();
-				configurations.add(getValue(EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION,
+				configurations.add(getValue(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION,
 						surveyFileStorageLocationFld.getValue()));
 				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
@@ -78,11 +80,11 @@ public class EsControlConfiguration extends CGridLayout {
 	}
 
 	private void setValues() throws FrameworkException {
-		IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-		List<Configuration> configurations = configurationService.getApplicationConfiguration();
+		ISurveyService surveyService = ContextProvider.getBean(ISurveyService.class);
+		List<Configuration> configurations = surveyService.getEsControlConfigurations();
 		configurations.forEach(configuration -> {
 			switch (configuration.getCode()) {
-			case EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION:
+			case EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION:
 				surveyFileStorageLocationFld.setValue(configuration.getValue());
 				break;
 			default:

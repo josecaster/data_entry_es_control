@@ -2,6 +2,7 @@ package software.simple.solutions.data.entry.es.control.service.impl;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,13 +12,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyRepository;
-import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
@@ -28,6 +29,7 @@ import software.simple.solutions.framework.core.entities.EntityFile;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
+import software.simple.solutions.framework.core.repository.IConfigurationRepository;
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.impl.SuperService;
@@ -49,6 +51,9 @@ public class SurveyService extends SuperService implements ISurveyService {
 
 	@Autowired
 	private IConfigurationService configurationService;
+	
+	@Autowired
+	private IConfigurationRepository configurationRepository;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -103,7 +108,7 @@ public class SurveyService extends SuperService implements ISurveyService {
 	private String placeFileInSurveyFileFolder(String surveyId, String fileName, byte[] fileObject)
 			throws FrameworkException {
 		Configuration configuration = configurationService
-				.getByCode(EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION);
+				.getByCode(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION);
 		if (configuration == null) {
 			return null;
 		}
@@ -125,6 +130,12 @@ public class SurveyService extends SuperService implements ISurveyService {
 	@Override
 	public List<Survey> findAllSurveysByUser(String username) throws FrameworkException {
 		return surveyRepository.findAllSurveysByUser(username);
+	}
+	
+	@Override
+	public List<Configuration> getEsControlConfigurations() throws FrameworkException {
+		return configurationRepository.getConfigurations(Arrays.asList(
+				EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION));
 	}
 
 }

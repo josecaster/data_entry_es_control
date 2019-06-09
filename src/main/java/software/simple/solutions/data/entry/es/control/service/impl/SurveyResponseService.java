@@ -94,11 +94,10 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 					new Arg().key(SurveyResponseProperty.APPLICATION_USER));
 		}
 
-		SurveyResponse surveyResponse = new SurveyResponse();
-		if (!vo.isNew()) {
-			surveyResponse = get(SurveyResponse.class, vo.getId());
-			surveyResponse
-			.setCreatedOn(LocalDateTime.now());
+		SurveyResponse surveyResponse = get(SurveyResponse.class, vo.getId());
+		if (surveyResponse == null) {
+			surveyResponse = new SurveyResponse();
+			surveyResponse.setCreatedOn(LocalDateTime.now());
 			surveyResponse.setUniqueId(UUID.randomUUID().toString());
 		}
 		surveyResponse.setActive(vo.getActive());
@@ -117,7 +116,7 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 
 		SurveyResponse surveyResponse = updateSurveyResponse(surveyResponseRestModel);
 
-		cleanPreviousResponses(surveyResponse.getId());
+//		cleanPreviousResponses(surveyResponse.getId());
 
 		updateSurveyResponseAnswer(surveyResponseRestModel, surveyResponse);
 
@@ -126,10 +125,10 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		return surveyResponse;
 	}
 
-	private void cleanPreviousResponses(Long surveyResponseId) throws FrameworkException {
-		surveyResponseSectionRepository.removeAllBySurveyResponse(surveyResponseId);
-		surveyResponseAnswerRepository.removeAllBySurveyResponse(surveyResponseId);
-	}
+//	private void cleanPreviousResponses(Long surveyResponseId) throws FrameworkException {
+//		surveyResponseSectionRepository.removeAllBySurveyResponse(surveyResponseId);
+//		surveyResponseAnswerRepository.removeAllBySurveyResponse(surveyResponseId);
+//	}
 
 	private void updateSurveyResponseSection(SurveyResponseRestModel surveyResponseRestModel,
 			SurveyResponse surveyResponse) throws FrameworkException {
@@ -159,8 +158,6 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		List<SurveyResponseAnswerModel> surveyResponseAnswers = surveyResponseRestModel.getSurveyResponseAnswers();
 		if (surveyResponseAnswers != null) {
 			for (SurveyResponseAnswerModel surveyResponseAnswerModel : surveyResponseAnswers) {
-				System.out.println(surveyResponseAnswerModel);
-
 				String uniqueId = surveyResponseAnswerModel.getUniqueId();
 				SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerRepository.getByUniqueId(uniqueId);
 				boolean isNew = false;
@@ -203,16 +200,16 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		if (surveyResponse == null) {
 			isNew = true;
 			surveyResponse = new SurveyResponse();
+			surveyResponse
+			.setCreatedOn(LocalDateTime.parse(surveyResponseModel.getCreatedOn(), DateConstant.DATE_TIME_FORMAT));
 		}
 		surveyResponse.setActive(surveyResponseModel.getActive());
 		surveyResponse.setUniqueId(surveyResponseModel.getUniqueId());
 		surveyResponse.setFormName(surveyResponseModel.getFormName());
-		surveyResponse
-				.setCreatedOn(LocalDateTime.parse(surveyResponseModel.getCreatedOn(), DateConstant.DATE_TIME_FORMAT));
-		ApplicationUser applicationUser = applicationUserRepository.getByUserName(surveyResponseModel.getUsername());
-		surveyResponse.setApplicationUser(applicationUser);
 		surveyResponse.setSurvey(surveyRepository.getById(Survey.class, surveyResponseModel.getSurveyId()));
-		surveyResponse.setUpdatedByUser(applicationUser);
+//		ApplicationUser applicationUser = applicationUserRepository.getByUserName(surveyResponseModel.getUsername());
+//		surveyResponse.setApplicationUser(applicationUser);
+//		surveyResponse.setUpdatedByUser(applicationUser);
 		surveyResponse.setUpdatedDate(LocalDateTime.now());
 		surveyResponse = surveyResponseRepository.updateSingle(surveyResponse, isNew);
 		return surveyResponse;
@@ -221,6 +218,11 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 	@Override
 	public List<SurveyResponse> findAllSurveyResponsesByUser(String username) throws FrameworkException {
 		return surveyResponseRepository.findAllSurveyResponsesByUser(username);
+	}
+
+	@Override
+	public List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException {
+		return surveyResponseRepository.findAllActiveSurveyResponseUuIdsByUser(username);
 	}
 
 }

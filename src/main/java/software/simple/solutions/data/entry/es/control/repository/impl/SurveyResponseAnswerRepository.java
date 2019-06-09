@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentMap;
 import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyResponseAnswerRepository;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.repository.impl.GenericRepository;
@@ -115,6 +116,17 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 		paramMap.put("surveyResponseId", surveyResponseId);
 		paramMap.put("surveyQuestionId", surveyQuestionId);
 		deleteByHql(query, paramMap);
+	}
+
+	@Override
+	public SurveyResponseAnswerHistory getAnswerHistory(SurveyResponseAnswer surveyResponseAnswer)
+			throws FrameworkException {
+		String query = "from SurveyResponseAnswerHistory srah " + "where srah.surveyResponse.id=:surveyResponseId "
+				+ "and srah.surveyQuestion.id=:surveyQuestionId";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("surveyResponseId", surveyResponseAnswer.getSurveyResponse().getId());
+		paramMap.put("surveyQuestionId", surveyResponseAnswer.getSurveyQuestion().getId());
+		return getByQuery(query, paramMap);
 	}
 
 }

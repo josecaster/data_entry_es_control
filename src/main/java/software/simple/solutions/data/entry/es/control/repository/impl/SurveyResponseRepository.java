@@ -35,7 +35,8 @@ public class SurveyResponseRepository extends GenericRepository implements ISurv
 			@Override
 			public CriteriaBuilder build(Root<?> root, CriteriaBuilder criteriaBuilder) throws FrameworkException {
 				SurveyResponseVO vo = (SurveyResponseVO) o;
-				List<ApplicationUser> applicationUsers = surveyApplicationUserRepository.findApplicationUserBySurvey(vo.getSurveyId());
+				List<ApplicationUser> applicationUsers = surveyApplicationUserRepository
+						.findApplicationUserBySurvey(vo.getSurveyId());
 				List<Long> applicationUserIds = null;
 				if (applicationUsers != null) {
 					applicationUserIds = applicationUsers.stream().map(p -> p.getId()).collect(Collectors.toList());
@@ -67,6 +68,17 @@ public class SurveyResponseRepository extends GenericRepository implements ISurv
 				+ "where lower(sr.applicationUser.username)=lower(:username)";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("username", username);
+		return createListQuery(query, paramMap);
+	}
+
+	@Override
+	public List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException {
+		String query = "select sr.uniqueId from SurveyResponse sr " + "left join Survey surv on surv.id=sr.survey.id "
+				+ "left join SurveyApplicationUser sau on sau.applicationUser.id = sr.applicationUser.id and sau.survey.id=surv.id "
+				+ "where lower(sr.applicationUser.username)=lower(:username) " + "and sr.active=:active";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("username", username);
+		paramMap.put("active", true);
 		return createListQuery(query, paramMap);
 	}
 

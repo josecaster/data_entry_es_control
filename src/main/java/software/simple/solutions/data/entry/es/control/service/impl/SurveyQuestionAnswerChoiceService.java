@@ -70,6 +70,12 @@ public class SurveyQuestionAnswerChoiceService extends SuperService implements I
 	}
 
 	@Override
+	public List<SurveyQuestionAnswerChoice> findBySurveyQuestionChoiceIds(List<Long> ids, String axis)
+			throws FrameworkException {
+		return surveyQuestionAnswerChoiceRepository.findBySurveyQuestionChoiceIds(ids, axis);
+	}
+
+	@Override
 	public SurveyQuestionAnswerChoice createNewRow(Long surveyQuestionId, String questionType, Integer index)
 			throws FrameworkException {
 		surveyQuestionAnswerChoiceRepository.updateIndexes(surveyQuestionId, Axis.ROW, index);
@@ -180,7 +186,8 @@ public class SurveyQuestionAnswerChoiceService extends SuperService implements I
 
 	@Override
 	public void deleteAndUpdateIndex(Class<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoiceClass,
-			Long surveyQuestionAnswerChoiceId, Long surveyQuestionId, String axis, Integer componentIndex) throws FrameworkException {
+			Long surveyQuestionAnswerChoiceId, Long surveyQuestionId, String axis, Integer componentIndex)
+			throws FrameworkException {
 		delete(surveyQuestionAnswerChoiceClass, surveyQuestionAnswerChoiceId);
 		surveyQuestionAnswerChoiceRepository.updateIndexesForDelete(surveyQuestionId, axis, componentIndex);
 	}

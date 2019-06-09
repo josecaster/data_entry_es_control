@@ -159,6 +159,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 		@Override
 		public void executeBuild() {
+			setWidth("100%");
 			newFormGrid = ComponentUtil.createGrid();
 			addComponent(newFormGrid);
 
@@ -189,6 +190,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 		private HorizontalLayout buildMainLayout() {
 			sectionMainLayout = new HorizontalLayout();
+			sectionMainLayout.setWidth("100%");
 			sectionMainLayout.setHeight("100%");
 			sectionMainLayout.setMargin(false);
 			sectionMainLayout.setSizeFull();
@@ -210,7 +212,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			sectionsPanel.setContent(sectionPanelLayout);
 
 			sectionLayout = new VerticalLayout();
-			sectionLayout.setWidth("800px");
+			sectionLayout.setWidth("100%");
 			sectionMainLayout.addComponent(sectionLayout);
 			sectionMainLayout.setExpandRatio(sectionLayout, 1);
 

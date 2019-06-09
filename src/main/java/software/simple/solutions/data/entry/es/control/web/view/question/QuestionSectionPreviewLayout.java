@@ -89,7 +89,7 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 			questionPreviewLayout.setShowInfo(showInfo);
 			questionPreviewLayout.setShowSection(false);
 			questionPreviewLayout.setEditable(editable);
-			questionPreviewLayout.setSurveyQuestion(question, surveyResponse);
+			questionPreviewLayout.setPreviewData(question, surveyResponse);
 			if (useGrid) {
 				gridLayout.addComponent(questionPreviewLayout);
 			} else {

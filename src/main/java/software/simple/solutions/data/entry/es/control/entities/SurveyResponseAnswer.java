@@ -18,8 +18,6 @@ import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
-import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
-import software.simple.solutions.framework.core.annotations.FilterFieldProperty;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 
 @Audited
@@ -48,7 +46,7 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.SURVEY_RESPONSE_ID_)
 	private SurveyResponse surveyResponse;
 
-	@NotFound(action=NotFoundAction.IGNORE)
+	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_ID_)
 	private SurveyQuestion surveyQuestion;
@@ -65,8 +63,8 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 	@JoinColumn(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_CHOICE_SELECTION_ID_)
 	private SurveyQuestionAnswerChoiceSelection surveyQuestionAnswerChoiceSelection;
 
-//	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_TYPE_)
-//	private String questionType;
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.QUESTION_TYPE_)
+	private String questionType;
 
 	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.MATRIX_COLUMN_TYPE_)
 	private String matrixColumnType;
@@ -79,6 +77,9 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 
 	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.SELECTED_)
 	private Boolean selected;
+
+	@Column(name = EsControlTables.SURVEY_RESPONSE_ANSWER_.COLUMNS.STATE_)
+	private String state;
 
 	public Long getId() {
 		return id;
@@ -145,13 +146,13 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 		this.surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelection;
 	}
 
-//	public String getQuestionType() {
-//		return questionType;
-//	}
+	public String getQuestionType() {
+		return questionType;
+	}
 
-//	public void setQuestionType(String questionType) {
-//		this.questionType = questionType;
-//	}
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
+	}
 
 	public String getMatrixColumnType() {
 		return matrixColumnType;
@@ -183,6 +184,14 @@ public class SurveyResponseAnswer extends MappedSuperClass {
 
 	public void setSelected(Boolean selected) {
 		this.selected = selected;
+	}
+
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
 	}
 
 }

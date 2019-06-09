@@ -25,12 +25,12 @@ import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadFinishedHandler;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.UploadStateWindow;
 import com.whitestein.vaadin.widgets.wtpdfviewer.WTPdfViewer;
 
+import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.constants.EsControlTables;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.constants.EscontrolPrivileges;
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
-import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyVO;
@@ -172,7 +172,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 
 			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 			Configuration configuration = configurationService
-					.getByCode(EsControlConfigurationProperty.SURVEY_FILE_STORAGE_LOCATION);
+					.getByCode(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION);
 			if (configuration != null && configuration.getValue() != null) {
 				if (getViewDetail().getPrivileges().contains(EscontrolPrivileges.SURVEY_UPLOAD_FORM)) {
 					uploadFileLayout.setVisible(true);

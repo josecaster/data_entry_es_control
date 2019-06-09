@@ -139,6 +139,20 @@ public class EsControlTables extends CxodeTables {
 			public static final String RESPONSE_TEXT_ = "RESPONSE_TEXT_";
 			public static final String OTHER_VALUE_ = "OTHER_VALUE_";
 			public static final String SELECTED_ = "SELECTED_";
+			public static final String STATE_ = "STATE_";
+		}
+	}
+
+	public final class SURVEY_RESPONSE_ANSWER_HISTORY_ {
+
+		public static final String NAME = "SURVEY_RESPONSE_ANSWER_HISTORY_";
+
+		public final class COLUMNS {
+			public static final String UNIQUE_ID_ = "UNIQUE_ID_";
+			public static final String SURVEY_RESPONSE_ID_ = "SURVEY_RESPONSE_ID_";
+			public static final String QUESTION_ID_ = "QUESTION_ID_";
+			public static final String QUESTION_TYPE_ = "QUESTION_TYPE_";
+			public static final String RESPONSE_JSON_ = "RESPONSE_JSON_";
 		}
 	}
 

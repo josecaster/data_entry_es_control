@@ -7,6 +7,7 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.google.gson.Gson;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.ui.Alignment;
@@ -14,10 +15,13 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.data.entry.es.control.components.SingleSelectField;
+import software.simple.solutions.data.entry.es.control.constants.Axis;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
+import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonPojo;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
@@ -36,16 +40,18 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 
 	private SurveyQuestion surveyQuestion;
 	private SurveyResponse surveyResponse;
+	private SurveyResponseAnswerHistory surveyResponseAnswerHistory;
 	private SessionHolder sessionHolder;
 	private boolean editable = false;
 
 	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
 
 	public QuestionTypeChoiceLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion,
-			SurveyResponse surveyResponse) {
+			SurveyResponse surveyResponse, SurveyResponseAnswerHistory surveyResponseAnswerHistory) {
 		this.sessionHolder = sessionHolder;
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponse = surveyResponse;
+		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
 		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
 	}
 
@@ -76,52 +82,86 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 	public void createRowsFromSurveyQuestion() throws FrameworkException {
 		Boolean multipleSelection = surveyQuestion.getMultipleSelection();
 		if (multipleSelection != null && multipleSelection) {
-			List<SurveyResponseAnswer> surveyResponseAnswers = null;
-			if (surveyResponse != null) {
-				ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-						.getBean(ISurveyResponseAnswerService.class);
-				surveyResponseAnswers = surveyResponseAnswerService.getSurveyResponseAnswers(surveyResponse.getId(),
-						surveyQuestion.getId());
-			}
-			if (surveyResponseAnswers == null) {
-				surveyResponseAnswers = new ArrayList<SurveyResponseAnswer>();
-			}
-			List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-					.findBySurveyQuestion(surveyQuestion.getId());
-			if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
-				for (SurveyQuestionAnswerChoice surveyQuestionAnswerChoice : surveyQuestionAnswerChoices) {
-					Optional<SurveyResponseAnswer> optional = surveyResponseAnswers.stream()
-							.filter(p -> (p.getSurveyQuestionAnswerChoiceRow().getId()
-									.compareTo(surveyQuestionAnswerChoice.getId()) == 0))
-							.findFirst();
-					SurveyResponseAnswer surveyResponseAnswer = null;
-					if (optional.isPresent()) {
-						surveyResponseAnswer = optional.get();
+			if (surveyResponseAnswerHistory != null) {
+				String responseJson = surveyResponseAnswerHistory.getResponseJson();
+				ResponseJsonPojo responseJsonPojo = new Gson().fromJson(responseJson, ResponseJsonPojo.class);
+				if (responseJsonPojo != null && responseJsonPojo.getSelectedChoices() != null) {
+					List<SurveyQuestionAnswerChoice> answerChoiceIds = surveyQuestionAnswerChoiceService
+							.findBySurveyQuestionChoiceIds(responseJsonPojo.getSelectedChoices(), Axis.ROW);
+					List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
+							.findBySurveyQuestion(surveyQuestion.getId());
+					if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
+						for (SurveyQuestionAnswerChoice surveyQuestionAnswerChoice : surveyQuestionAnswerChoices) {
+							Optional<SurveyQuestionAnswerChoice> optional = answerChoiceIds.stream()
+									.filter(p -> (p.getId().compareTo(surveyQuestionAnswerChoice.getId()) == 0))
+									.findFirst();
+							SurveyQuestionAnswerChoice answerChoice = null;
+							if (optional.isPresent()) {
+								answerChoice = optional.get();
+							}
+							createMultipleSelectionRow(null, surveyQuestionAnswerChoice, answerChoice,
+									responseJsonPojo.getOtherValue());
+						}
 					}
-					createMultipleSelectionRow(surveyResponseAnswer, surveyQuestionAnswerChoice);
+				}
+			} else {
+
+				List<SurveyResponseAnswer> surveyResponseAnswers = null;
+				if (surveyResponse != null) {
+					ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+							.getBean(ISurveyResponseAnswerService.class);
+					surveyResponseAnswers = surveyResponseAnswerService.getSurveyResponseAnswers(surveyResponse.getId(),
+							surveyQuestion.getId());
+				}
+				if (surveyResponseAnswers == null) {
+					surveyResponseAnswers = new ArrayList<SurveyResponseAnswer>();
+				}
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
+						.findBySurveyQuestion(surveyQuestion.getId());
+				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
+					for (SurveyQuestionAnswerChoice surveyQuestionAnswerChoice : surveyQuestionAnswerChoices) {
+						Optional<SurveyResponseAnswer> optional = surveyResponseAnswers.stream()
+								.filter(p -> (p.getSurveyQuestionAnswerChoiceRow().getId()
+										.compareTo(surveyQuestionAnswerChoice.getId()) == 0))
+								.findFirst();
+						SurveyResponseAnswer surveyResponseAnswer = null;
+						if (optional.isPresent()) {
+							surveyResponseAnswer = optional.get();
+						}
+						createMultipleSelectionRow(surveyResponseAnswer, surveyQuestionAnswerChoice, null, null);
+					}
 				}
 			}
 		} else {
-			SurveyResponseAnswer surveyResponseAnswer = null;
-			if (surveyResponse != null) {
-				ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-						.getBean(ISurveyResponseAnswerService.class);
-				List<SurveyResponseAnswer> surveyResponseAnswers = surveyResponseAnswerService
-						.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
-				if (surveyResponseAnswers != null && !surveyResponseAnswers.isEmpty()) {
-					surveyResponseAnswer = surveyResponseAnswers.get(0);
+			if (surveyResponseAnswerHistory != null) {
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
+						.findBySurveyQuestion(surveyQuestion.getId());
+				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
+					createSingleSelectionRow(surveyQuestionAnswerChoices, null, surveyResponseAnswerHistory);
 				}
-			}
-			List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-					.findBySurveyQuestion(surveyQuestion.getId());
-			if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
-				createSingleSelectionRow(surveyQuestionAnswerChoices, surveyResponseAnswer);
+			} else {
+				SurveyResponseAnswer surveyResponseAnswer = null;
+				if (surveyResponse != null) {
+					ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
+							.getBean(ISurveyResponseAnswerService.class);
+					List<SurveyResponseAnswer> surveyResponseAnswers = surveyResponseAnswerService
+							.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
+					if (surveyResponseAnswers != null && !surveyResponseAnswers.isEmpty()) {
+						surveyResponseAnswer = surveyResponseAnswers.get(0);
+					}
+				}
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
+						.findBySurveyQuestion(surveyQuestion.getId());
+				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
+					createSingleSelectionRow(surveyQuestionAnswerChoices, surveyResponseAnswer, null);
+				}
 			}
 		}
 	}
 
 	private void createMultipleSelectionRow(SurveyResponseAnswer surveyResponseAnswer,
-			SurveyQuestionAnswerChoice surveyQuestionAnswerChoice) throws FrameworkException {
+			SurveyQuestionAnswerChoice surveyQuestionAnswerChoice, SurveyQuestionAnswerChoice answerChoice,
+			String otherValue) throws FrameworkException {
 		HorizontalLayout rowLayout = new HorizontalLayout();
 		rowLayout.setWidth("-1px");
 
@@ -138,16 +178,24 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 			otherFld.setEnabled(false);
 			rowLayout.addComponent(otherFld);
 		}
-		if (surveyResponseAnswer != null && surveyResponseAnswer.getSelected() != null) {
-			checkBox.setValue(surveyResponseAnswer.getSelected());
-		}
-		if (otherFld != null) {
-			otherFld.setValue(surveyResponseAnswer.getOtherValue());
-		}
+		if (answerChoice != null) {
+			if (answerChoice.getId().compareTo(surveyQuestionAnswerChoice.getId()) == 0) {
+				checkBox.setValue(true);
+			}
+			if (otherFld != null) {
+				otherFld.setValue(otherValue);
+			}
+		} else {
+			if (surveyResponseAnswer != null && surveyResponseAnswer.getSelected() != null) {
+				checkBox.setValue(surveyResponseAnswer.getSelected());
+			}
+			if (otherFld != null) {
+				otherFld.setValue(surveyResponseAnswer.getOtherValue());
+			}
 
-		checkBox.addValueChangeListener(
-				new CheckValueChangeListener(surveyResponseAnswer, surveyQuestionAnswerChoice, otherFld));
-
+			checkBox.addValueChangeListener(
+					new CheckValueChangeListener(surveyResponseAnswer, surveyQuestionAnswerChoice, otherFld));
+		}
 		rowContainerLayout.addComponent(rowLayout);
 	}
 
@@ -197,9 +245,10 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 	}
 
 	private void createSingleSelectionRow(List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices,
-			SurveyResponseAnswer surveyResponseAnswer) throws FrameworkException {
+			SurveyResponseAnswer surveyResponseAnswer, SurveyResponseAnswerHistory surveyResponseAnswerHistory)
+			throws FrameworkException {
 		SingleSelectField singleSelectField = new SingleSelectField(sessionHolder, surveyQuestionAnswerChoices,
-				surveyResponse, surveyQuestion, surveyResponseAnswer);
+				surveyResponse, surveyQuestion, surveyResponseAnswer, surveyResponseAnswerHistory);
 		singleSelectField.setEnabled(editable);
 		singleSelectField.build();
 

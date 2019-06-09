@@ -15,7 +15,7 @@
 			</column>
 			<column name="ACTIVE_" type="BIT(1)" />
 			<column name="UNIQUE_ID_" type="VARCHAR(1000)" />
-			
+
 			<column name="SURVEY_RESPONSE_ID_" type="BIGINT" />
 			<column name="QUESTION_ID_" type="BIGINT" />
 			<column name="QUESTION_CHOICE_ROW_ID_" type="BIGINT" />
@@ -57,6 +57,22 @@
 			<column name="OTHER_VALUE_" type="VARCHAR(1000)" />
 			<column name="SELECTED_" type="BIT(1)" />
 		</createTable>
+	</changeSet>
+
+	<changeSet onValidationFail="MARK_RAN" failOnError="true"
+		author="simple.solutions" id="1559953372812">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<columnExists tableName="survey_response_answer_"
+					columnName="STATE_" />
+			</not>
+		</preConditions>
+		<addColumn tableName="survey_response_answer_">
+			<column name="STATE_" type="VARCHAR(100)"></column>
+		</addColumn>
+		<addColumn tableName="survey_response_answer_aud">
+			<column name="STATE_" type="VARCHAR(100)"></column>
+		</addColumn>
 	</changeSet>
 
 </databaseChangeLog>

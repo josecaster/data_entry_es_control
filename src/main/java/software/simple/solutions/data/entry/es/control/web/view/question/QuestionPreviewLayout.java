@@ -4,7 +4,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.ui.ContentMode;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Component;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
@@ -13,22 +18,67 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerHistoryService;
+import software.simple.solutions.data.entry.es.control.web.view.SurveyResponseHistoryPreviewGenerator;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFeetInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeChoiceLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeDateLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeLengthFeetInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeMatrixLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeSingleLayout;
+import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CaptionLabel;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.pojo.RevisionPojo;
 import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
+import software.simple.solutions.framework.core.web.view.audit.HistoryView;
+import software.simple.solutions.framework.core.web.view.audit.RevisionViewGenerator;
 
 public class QuestionPreviewLayout extends VerticalLayout {
+
+	private final class HistoryBtnClick implements ClickListener {
+
+		private Class<?> cl;
+		private Long id;
+
+		public HistoryBtnClick(Class<?> cl, Long id) {
+			this.cl = cl;
+			this.id = id;
+		}
+
+		@Override
+		public void buttonClick(ClickEvent event) {
+			try {
+				ISurveyResponseAnswerHistoryService surveyResponseAnswerHistoryService = ContextProvider
+						.getBean(ISurveyResponseAnswerHistoryService.class);
+				SurveyResponseAnswerHistory surveyResponseAnswerHistory = surveyResponseAnswerHistoryService
+						.getSurveyResponseAnswerHistoryByResponseAndQuestion(surveyResponse.getId(),
+								surveyQuestion.getId());
+				if (surveyResponseAnswerHistory != null) {
+					HistoryView historyView = new HistoryView(cl, surveyResponseAnswerHistory.getId());
+					historyView.setRevisionViewGenerator(new RevisionViewGenerator() {
+
+						@Override
+						public Component getRevisionView(RevisionPojo revisionPojo) {
+							SurveyResponseAnswerHistory surveyResponseAnswerHistory = (SurveyResponseAnswerHistory) revisionPojo
+									.getEntity();
+							SurveyResponseHistoryPreviewGenerator surveyResponseHistoryPreviewGenerator = new SurveyResponseHistoryPreviewGenerator(
+									sessionHolder, surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
+							return surveyResponseHistoryPreviewGenerator.getQuestionPreviewLayout();
+						}
+					});
+				}
+			} catch (FrameworkException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	private static final Logger logger = LogManager.getLogger(QuestionPreviewLayout.class);
 
@@ -43,6 +93,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 
 	private SurveyQuestion surveyQuestion;
 	private SurveyResponse surveyResponse;
+	private SurveyResponseAnswerHistory surveyResponseAnswerHistory;
 
 	@Override
 	public void detach() {
@@ -53,13 +104,20 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		this.sessionHolder = sessionHolder;
 	}
 
-	public void setSurveyQuestion(SurveyQuestion surveyQuestion) {
-		setSurveyQuestion(surveyQuestion, null);
+	public void setPreviewData(SurveyQuestion surveyQuestion) {
+		setPreviewData(surveyQuestion, null);
 	}
 
-	public void setSurveyQuestion(SurveyQuestion surveyQuestion, SurveyResponse surveyResponse) {
+	public void setPreviewData(SurveyQuestion surveyQuestion, SurveyResponse surveyResponse) {
+		setPreviewData(surveyQuestion, surveyResponse, null);
+	}
+
+	public void setPreviewData(SurveyQuestion surveyQuestion, SurveyResponse surveyResponse,
+			SurveyResponseAnswerHistory surveyResponseAnswerHistory) {
+
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponse = surveyResponse;
+		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
 		setUpLayout();
 	}
 
@@ -95,9 +153,19 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			sectionFld.setVisible(false);
 		}
 
+		HorizontalLayout questionHeaderLayout = new HorizontalLayout();
+		questionHeaderLayout.setMargin(false);
+		addComponent(questionHeaderLayout);
 		questionFld = new CaptionLabel();
 		questionFld.addStyleName(Style.WORD_WRAP);
-		addComponent(questionFld);
+		questionHeaderLayout.addComponent(questionFld);
+		if (surveyResponseAnswerHistory == null) {
+			CButton historyBtn = new CButton();
+			historyBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+			historyBtn.setIcon(VaadinIcons.TIME_BACKWARD);
+			questionHeaderLayout.addComponent(historyBtn);
+			historyBtn.addClickListener(new HistoryBtnClick(SurveyResponseAnswerHistory.class, surveyQuestion.getId()));
+		}
 
 		questionDescriptionFld = new CaptionLabel();
 		questionDescriptionFld.setVisible(false);
@@ -114,38 +182,38 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			switch (questionType) {
 			case QuestionType.SINGLE:
 				QuestionTypeSingleLayout questionTypeSingleLayout = new QuestionTypeSingleLayout(sessionHolder,
-						surveyQuestion, surveyResponse);
+						surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeSingleLayout.setEditable(editable);
 				addComponent(questionTypeSingleLayout);
 				break;
 			case QuestionType.DATE:
 				QuestionTypeDateLayout questionTypeDateLayout = new QuestionTypeDateLayout(sessionHolder,
-						surveyQuestion, surveyResponse);
+						surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeDateLayout.setEditable(editable);
 				addComponent(questionTypeDateLayout);
 				break;
 			case QuestionType.AREA_FT_INCH:
 				QuestionTypeAreaFeetInchLayout questionTypeAreaFtInchLayout = new QuestionTypeAreaFeetInchLayout(
-						sessionHolder, surveyQuestion, surveyResponse);
+						sessionHolder, surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeAreaFtInchLayout.setEditable(editable);
 				addComponent(questionTypeAreaFtInchLayout);
 				break;
 			case QuestionType.LENGTH_FT_INCH:
 				QuestionTypeLengthFeetInchLayout questionTypeLengthFeetInchLayout = new QuestionTypeLengthFeetInchLayout(
-						sessionHolder, surveyQuestion, surveyResponse);
+						sessionHolder, surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeLengthFeetInchLayout.setEditable(editable);
 				addComponent(questionTypeLengthFeetInchLayout);
 				break;
 			case QuestionType.CHOICES:
 				QuestionTypeChoiceLayout questionTypeChoicesLayout = new QuestionTypeChoiceLayout(sessionHolder,
-						surveyQuestion, surveyResponse);
+						surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeChoicesLayout.setEditable(editable);
 				questionTypeChoicesLayout.build();
 				addComponent(questionTypeChoicesLayout);
 				break;
 			case QuestionType.MATRIX:
 				QuestionTypeMatrixLayout questionTypeMatrixLayout = new QuestionTypeMatrixLayout(sessionHolder,
-						surveyQuestion, surveyResponse);
+						surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 				questionTypeMatrixLayout.setEditable(editable);
 				questionTypeMatrixLayout.build();
 				addComponent(questionTypeMatrixLayout);

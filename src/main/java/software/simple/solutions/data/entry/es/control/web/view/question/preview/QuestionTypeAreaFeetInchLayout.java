@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.gson.Gson;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.ValueChangeMode;
@@ -15,6 +16,7 @@ import com.vaadin.ui.VerticalLayout;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CDecimalField;
@@ -33,14 +35,16 @@ public class QuestionTypeAreaFeetInchLayout extends VerticalLayout {
 
 	private SurveyQuestion surveyQuestion;
 	private SurveyResponse surveyResponse;
+	private SurveyResponseAnswerHistory surveyResponseAnswerHistory;
 	private SessionHolder sessionHolder;
 	private boolean editable = false;
 
 	public QuestionTypeAreaFeetInchLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion,
-			SurveyResponse surveyResponse) {
+			SurveyResponse surveyResponse, SurveyResponseAnswerHistory surveyResponseAnswerHistory) {
 		this.sessionHolder = sessionHolder;
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponse = surveyResponse;
+		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
 		buildMainLayout();
 
 		updateFields();
@@ -84,38 +88,49 @@ public class QuestionTypeAreaFeetInchLayout extends VerticalLayout {
 			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
 					.getBean(ISurveyResponseAnswerService.class);
 			try {
-				SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerService
-						.getSurveyResponseAnswer(surveyResponse.getId(), surveyQuestion.getId());
-				if (surveyResponseAnswer != null && StringUtils.isNotBlank(surveyResponseAnswer.getResponseText())) {
-					String responseText = surveyResponseAnswer.getResponseText();
-					String[] split = responseText.split(":");
-					List<String> list = Arrays.asList(split);
-					for (int i = 0; i < list.size(); i++) {
-						switch (i) {
-						case 0:
-							lenghtFeetFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
-							break;
-						case 1:
-							lenghtInchFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
-							break;
-						case 2:
-							widthFeetFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
-							break;
-						case 3:
-							widthInchFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
-							break;
-						default:
-							break;
-						}
+				if (surveyResponseAnswerHistory != null) {
+					String responseJson = surveyResponseAnswerHistory.getResponseJson();
+					String fromJson = new Gson().fromJson(responseJson, String.class);
+					splitResponseText(fromJson);
+				} else {
+					SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerService
+							.getSurveyResponseAnswer(surveyResponse.getId(), surveyQuestion.getId());
+					if (surveyResponseAnswer != null
+							&& StringUtils.isNotBlank(surveyResponseAnswer.getResponseText())) {
+						String responseText = surveyResponseAnswer.getResponseText();
+						splitResponseText(responseText);
 					}
-				}
 
-				lenghtFeetFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
-				lenghtInchFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
-				widthFeetFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
-				widthInchFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
+					lenghtFeetFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
+					lenghtInchFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
+					widthFeetFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
+					widthInchFld.addValueChangeListener(new FieldValueChangeListener(surveyResponseAnswer));
+				}
 			} catch (FrameworkException e) {
 				e.printStackTrace();
+			}
+		}
+	}
+
+	private void splitResponseText(String fromJson) {
+		String[] split = fromJson.split(":");
+		List<String> list = Arrays.asList(split);
+		for (int i = 0; i < list.size(); i++) {
+			switch (i) {
+			case 0:
+				lenghtFeetFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
+				break;
+			case 1:
+				lenghtInchFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
+				break;
+			case 2:
+				widthFeetFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
+				break;
+			case 3:
+				widthInchFld.setBigDecimalValue(NumberUtil.getBigDecimal(list.get(i)));
+				break;
+			default:
+				break;
 			}
 		}
 	}

@@ -18,6 +18,7 @@ public class SurveyResponseAnswerModel implements Serializable {
 	String responseText;
 	String otherValue;
 	Boolean selected;
+	String state;
 
 	public SurveyResponseAnswerModel() {
 		super();
@@ -41,6 +42,7 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.surveyQuestionId = surveyResponseAnswer.getSurveyQuestion().getId();
 		this.surveyResponseUniqueId = surveyResponseAnswer.getSurveyResponse().getUniqueId();
 		this.uniqueId = surveyResponseAnswer.getUniqueId();
+		this.state = surveyResponseAnswer.getState();
 	}
 
 	public Long getId() {
@@ -139,6 +141,14 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.selected = selected;
 	}
 
+	public String getState() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state = state;
+	}
+
 	@Override
 	public String toString() {
 		return "SurveyResponseAnswerModel [id=" + id + ", active=" + active + ", uniqueId=" + uniqueId
@@ -147,7 +157,7 @@ public class SurveyResponseAnswerModel implements Serializable {
 				+ ", surveyQuestionAnswerChoiceColumnId=" + surveyQuestionAnswerChoiceColumnId
 				+ ", surveyQuestionAnswerChoiceSelectionId=" + surveyQuestionAnswerChoiceSelectionId
 				+ ", matrixColumnType=" + matrixColumnType + ", responseText=" + responseText + ", otherValue="
-				+ otherValue + ", selected=" + selected + "]";
+				+ otherValue + ", selected=" + selected + ", state=" + state + "]";
 	}
 
 }

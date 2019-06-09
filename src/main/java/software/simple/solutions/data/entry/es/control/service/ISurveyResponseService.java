@@ -13,4 +13,6 @@ public interface ISurveyResponseService extends ISuperService {
 
 	List<SurveyResponse> findAllSurveyResponsesByUser(String username) throws FrameworkException;
 
+	List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException;
+
 }

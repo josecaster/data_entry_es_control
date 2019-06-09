@@ -102,4 +102,11 @@ public class SurveyResponseRestController {
 		return surveyResponseSectionModels;
 	}
 
+	@GetMapping(path = "/getActiveSurveyResponseUuIds", produces = "application/json")
+	public List<String> getActiveSurveyResponseUuIds() throws FrameworkException {
+		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		String username = user.getUsername();
+		return surveyResponseService.findAllActiveSurveyResponseUuIdsByUser(username);
+	}
+
 }

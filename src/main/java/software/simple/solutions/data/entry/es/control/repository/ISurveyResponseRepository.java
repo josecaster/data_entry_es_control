@@ -12,4 +12,6 @@ public interface ISurveyResponseRepository extends IGenericRepository {
 
 	List<SurveyResponse> findAllSurveyResponsesByUser(String username) throws FrameworkException;
 
+	List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException;
+
 }

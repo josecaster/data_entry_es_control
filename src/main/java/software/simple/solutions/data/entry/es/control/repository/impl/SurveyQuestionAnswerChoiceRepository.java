@@ -67,13 +67,29 @@ public class SurveyQuestionAnswerChoiceRepository extends GenericRepository
 	}
 
 	@Override
-	public void updateIndexesForDelete(Long surveyQuestionId, String axis, Integer componentIndex) throws FrameworkException {
+	public void updateIndexesForDelete(Long surveyQuestionId, String axis, Integer componentIndex)
+			throws FrameworkException {
 		String update = "update SurveyQuestionAnswerChoice set index = index-1 where index>=:index and surveyQuestion.id=:surveyQuestionId and axis=:axis";
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		paramMap.put("index", componentIndex);
 		paramMap.put("surveyQuestionId", surveyQuestionId);
 		paramMap.put("axis", axis);
 		updateByHql(update, paramMap);
+	}
+
+	@Override
+	public List<SurveyQuestionAnswerChoice> findBySurveyQuestionChoiceIds(List<Long> ids, String axis)
+			throws FrameworkException {
+		String query = "from SurveyQuestionAnswerChoice where id in (:ids)";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("ids", ids);
+		if (StringUtils.isNotBlank(axis)) {
+			query += " and axis=:axis";
+			paramMap.put("axis", axis);
+		}
+		query += " order by index";
+
+		return createListQuery(query, paramMap);
 	}
 
 }

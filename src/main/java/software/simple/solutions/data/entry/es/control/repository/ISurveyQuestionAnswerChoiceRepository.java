@@ -20,4 +20,7 @@ public interface ISurveyQuestionAnswerChoiceRepository extends IGenericRepositor
 
 	void updateIndexesForDelete(Long surveyQuestionId, String axis, Integer componentIndex) throws FrameworkException;
 
+	List<SurveyQuestionAnswerChoice> findBySurveyQuestionChoiceIds(List<Long> ids, String axis)
+			throws FrameworkException;
+
 }

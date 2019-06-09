@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import com.google.gson.Gson;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.ui.Alignment;
@@ -14,10 +15,14 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ItemCaptionGenerator;
 import com.vaadin.ui.themes.ValoTheme;
 
+import software.simple.solutions.data.entry.es.control.constants.Axis;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
+import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonPojo;
+import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -39,21 +44,28 @@ public class SingleSelectField extends HorizontalLayout {
 	private boolean clearEnabled = true;
 	private boolean editable = false;
 	private SurveyQuestionAnswerChoice surveyQuestionAnswerChoice;
+	private SurveyResponseAnswerHistory surveyResponseAnswerHistory;
 
 	public SingleSelectField(SessionHolder sessionHolder, List<SurveyQuestionAnswerChoice> items,
-			SurveyResponse surveyResponse, SurveyQuestion surveyQuestion, SurveyResponseAnswer surveyResponseAnswer) {
+			SurveyResponse surveyResponse, SurveyQuestion surveyQuestion, SurveyResponseAnswer surveyResponseAnswer,
+			SurveyResponseAnswerHistory surveyResponseAnswerHistory) {
 		this.sessionHolder = sessionHolder;
 		this.items = items;
 		this.surveyResponse = surveyResponse;
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponseAnswer = surveyResponseAnswer;
+		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
 	}
 
 	public void build() {
-		initContent();
+		try {
+			initContent();
+		} catch (FrameworkException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void initContent() {
+	public void initContent() throws FrameworkException {
 		setMargin(false);
 		radioButtonGroup = new CheckBoxGroup<SurveyQuestionAnswerChoice>();
 		radioButtonGroup.addStyleName(ValoTheme.CHECKBOX_LARGE);
@@ -73,7 +85,34 @@ public class SingleSelectField extends HorizontalLayout {
 		addComponent(otherFld);
 		setComponentAlignment(otherFld, Alignment.BOTTOM_LEFT);
 
-		if (surveyResponseAnswer != null) {
+		if (surveyResponseAnswerHistory != null) {
+			String responseJson = surveyResponseAnswerHistory.getResponseJson();
+			ResponseJsonPojo responseJsonPojo = new Gson().fromJson(responseJson, ResponseJsonPojo.class);
+			List<Long> selectedChoices = responseJsonPojo.getSelectedChoices();
+			ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService = ContextProvider
+					.getBean(ISurveyQuestionAnswerChoiceService.class);
+			List<SurveyQuestionAnswerChoice> choiceIds = surveyQuestionAnswerChoiceService
+					.findBySurveyQuestionChoiceIds(selectedChoices, Axis.ROW);
+
+			if (choiceIds.size() == 1) {
+				SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceRow = choiceIds.get(0);
+				if (surveyQuestionAnswerChoiceRow != null) {
+					Optional<SurveyQuestionAnswerChoice> optional = items.stream()
+							.filter(p -> p.getId().compareTo(surveyQuestionAnswerChoiceRow.getId()) == 0).findFirst();
+					if (optional.isPresent()) {
+						radioButtonGroup
+								.setValue(new HashSet<SurveyQuestionAnswerChoice>(Arrays.asList(optional.get())));
+					}
+					if (surveyQuestionAnswerChoiceRow.getIsOther() != null
+							&& surveyQuestionAnswerChoiceRow.getIsOther()) {
+						if (otherFld != null) {
+							otherFld.setVisible(true);
+							otherFld.setValue(responseJsonPojo.getOtherValue());
+						}
+					}
+				}
+			}
+		} else if (surveyResponseAnswer != null) {
 			SurveyQuestionAnswerChoice surveyQuestionAnswerChoiceRow = surveyResponseAnswer
 					.getSurveyQuestionAnswerChoiceRow();
 			if (surveyQuestionAnswerChoiceRow != null) {

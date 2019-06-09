@@ -29,6 +29,9 @@
 	<include file="create-table-survey-response-answer.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-survey-response-answer-history.xml"
+		relativeToChangelogFile="true" />
+
 	<include file="create-table-survey-response-sections.xml"
 		relativeToChangelogFile="true" />
 
