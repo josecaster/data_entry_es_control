@@ -14,6 +14,7 @@ public class SurveyResponseAnswerModel implements Serializable {
 	Long surveyQuestionAnswerChoiceRowId;
 	Long surveyQuestionAnswerChoiceColumnId;
 	Long surveyQuestionAnswerChoiceSelectionId;
+	String questionType;
 	String matrixColumnType;
 	String responseText;
 	String otherValue;
@@ -29,6 +30,7 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.active = surveyResponseAnswer.getActive();
 		this.id = surveyResponseAnswer.getId();
 		this.matrixColumnType = surveyResponseAnswer.getMatrixColumnType();
+		this.questionType = surveyResponseAnswer.getSurveyQuestion().getQuestionType();
 		this.otherValue = surveyResponseAnswer.getOtherValue();
 		this.responseText = surveyResponseAnswer.getResponseText();
 		this.selected = surveyResponseAnswer.getSelected();
@@ -149,15 +151,23 @@ public class SurveyResponseAnswerModel implements Serializable {
 		this.state = state;
 	}
 
+	public String getQuestionType() {
+		return questionType;
+	}
+
+	public void setQuestionType(String questionType) {
+		this.questionType = questionType;
+	}
+
 	@Override
 	public String toString() {
 		return "SurveyResponseAnswerModel [id=" + id + ", active=" + active + ", uniqueId=" + uniqueId
 				+ ", surveyResponseUniqueId=" + surveyResponseUniqueId + ", surveyQuestionId=" + surveyQuestionId
 				+ ", surveyQuestionAnswerChoiceRowId=" + surveyQuestionAnswerChoiceRowId
 				+ ", surveyQuestionAnswerChoiceColumnId=" + surveyQuestionAnswerChoiceColumnId
-				+ ", surveyQuestionAnswerChoiceSelectionId=" + surveyQuestionAnswerChoiceSelectionId
-				+ ", matrixColumnType=" + matrixColumnType + ", responseText=" + responseText + ", otherValue="
-				+ otherValue + ", selected=" + selected + ", state=" + state + "]";
+				+ ", surveyQuestionAnswerChoiceSelectionId=" + surveyQuestionAnswerChoiceSelectionId + ", questionType="
+				+ questionType + ", matrixColumnType=" + matrixColumnType + ", responseText=" + responseText
+				+ ", otherValue=" + otherValue + ", selected=" + selected + ", state=" + state + "]";
 	}
 
 }

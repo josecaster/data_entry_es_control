@@ -282,6 +282,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			activeFld.setValue(true);
 			newFormGrid.setVisible(true);
 			sectionMainLayout.setVisible(false);
+			populateApplicationUserFld();
 
 			surveyFld.addValueChangeListener(new ValueChangeListener<Object>() {
 
@@ -358,11 +359,13 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 						logger.error(e.getMessage(), e);
 						updateErrorContent(e);
 					}
-					SurveySection surveySection = (SurveySection) selectedMenuLayout.getData();
-					createQuestionCard(surveySection);
-					sectionPanelLayout.iterator()
-							.forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
-					selectedMenuLayout.addStyleName(EsControlStyle.QUESTION_MENU_SELECTED);
+					if (selectedMenuLayout != null) {
+						SurveySection surveySection = (SurveySection) selectedMenuLayout.getData();
+						createQuestionCard(surveySection);
+						sectionPanelLayout.iterator()
+								.forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));
+						selectedMenuLayout.addStyleName(EsControlStyle.QUESTION_MENU_SELECTED);
+					}
 				}
 			});
 

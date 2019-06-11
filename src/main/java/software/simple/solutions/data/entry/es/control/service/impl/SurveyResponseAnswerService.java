@@ -81,7 +81,8 @@ public class SurveyResponseAnswerService extends SuperService implements ISurvey
 				surveyQuestionAnswerChoiceSelectionId);
 	}
 
-	private void createUpdateAnswerHistory(SurveyResponseAnswer surveyResponseAnswer) throws FrameworkException {
+	@Override
+	public void createUpdateAnswerHistory(SurveyResponseAnswer surveyResponseAnswer) throws FrameworkException {
 
 		SurveyResponseAnswerHistory surveyResponseAnswerHistory = surveyResponseAnswerRepository
 				.getAnswerHistory(surveyResponseAnswer);

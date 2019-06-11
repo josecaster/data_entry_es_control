@@ -13,14 +13,12 @@ public interface ISurveyResponseAnswerRepository extends IGenericRepository {
 
 	List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId) throws FrameworkException;
 
-	void removeAllBySurveyResponse(Long surveyResponseId) throws FrameworkException;
-
 	SurveyResponseAnswer getSurveyResponse(Long surveyResponseId, Long surveyQuestionId) throws FrameworkException;
 
 	List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
 			throws FrameworkException;
 
-	void deleteFromSurveyResponseAnswerByResponse(Long surveyResponseId, Long surveyQuestionId)
+	SurveyResponseAnswer getSurveyResponseAnswer(String surveyResponseUniqueId, Long surveyQuestionId)
 			throws FrameworkException;
 
 	SurveyResponseAnswer getSurveyResponseAnswer(Long surveyResponseId, Long surveyQuestionId,
@@ -34,5 +32,12 @@ public interface ISurveyResponseAnswerRepository extends IGenericRepository {
 			Long surveyQuestionAnswerChoiceSelectionId) throws FrameworkException;
 
 	SurveyResponseAnswerHistory getAnswerHistory(SurveyResponseAnswer surveyResponseAnswer) throws FrameworkException;
+
+	void deleteFromSurveyResponseAnswerByResponse(Long surveyResponseId, Long surveyQuestionId)
+			throws FrameworkException;
+
+	void removeAllBySurveyResponse(Long surveyResponseId) throws FrameworkException;
+
+	void removeByResponseUniqueIdAndQuestion(String first, Long second) throws FrameworkException;
 
 }

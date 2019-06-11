@@ -16,7 +16,6 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlConfig
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
-import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyRepository;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
@@ -33,8 +32,6 @@ import software.simple.solutions.framework.core.repository.IConfigurationReposit
 import software.simple.solutions.framework.core.service.IConfigurationService;
 import software.simple.solutions.framework.core.service.IFileService;
 import software.simple.solutions.framework.core.service.impl.SuperService;
-import software.simple.solutions.framework.core.util.ThreadAttributes;
-import software.simple.solutions.framework.core.util.ThreadContext;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
@@ -51,7 +48,7 @@ public class SurveyService extends SuperService implements ISurveyService {
 
 	@Autowired
 	private IConfigurationService configurationService;
-	
+
 	@Autowired
 	private IConfigurationRepository configurationRepository;
 
@@ -72,8 +69,8 @@ public class SurveyService extends SuperService implements ISurveyService {
 		survey.setActive(vo.getActive());
 		survey = saveOrUpdate(survey, vo.isNew());
 
-		ThreadAttributes threadAttributes = ThreadContext.get();
-		Long userId = threadAttributes.getUserId();
+		// ThreadAttributes threadAttributes = ThreadContext.get();
+		Long userId = vo.getCurrentUserId();
 
 		if (vo.isNew()) {
 			SurveyApplicationUser surveyApplicationUser = new SurveyApplicationUser();
@@ -82,8 +79,8 @@ public class SurveyService extends SuperService implements ISurveyService {
 			surveyApplicationUser.setSurvey(survey);
 			saveOrUpdate(surveyApplicationUser, true);
 		}
-		
-		if(vo.isNew()){
+
+		if (vo.isNew()) {
 			SurveySection surveySection = new SurveySection();
 			surveySection.setActive(true);
 			surveySection.setDescription("Page 1");
@@ -131,11 +128,11 @@ public class SurveyService extends SuperService implements ISurveyService {
 	public List<Survey> findAllSurveysByUser(String username) throws FrameworkException {
 		return surveyRepository.findAllSurveysByUser(username);
 	}
-	
+
 	@Override
 	public List<Configuration> getEsControlConfigurations() throws FrameworkException {
-		return configurationRepository.getConfigurations(Arrays.asList(
-				EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION));
+		return configurationRepository
+				.getConfigurations(Arrays.asList(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION));
 	}
 
 }

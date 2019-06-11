@@ -43,4 +43,6 @@ public interface ISurveyResponseAnswerService extends ISuperService {
 	SurveyResponseAnswer updateAnswerMatrixCellForSelection(SurveyResponseAnswerVO surveyResponseAnswerVO)
 			throws FrameworkException;
 
+	void createUpdateAnswerHistory(SurveyResponseAnswer surveyResponseAnswer) throws FrameworkException;
+
 }

@@ -97,6 +97,17 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 	}
 
 	@Override
+	public SurveyResponseAnswer getSurveyResponseAnswer(String surveyResponseUniqueId, Long surveyQuestionId)
+			throws FrameworkException {
+		String query = "from SurveyResponseAnswer where surveyResponse.uniqueId=:surveyResponseUniqueId "
+				+ "and surveyQuestion.id=:surveyQuestionId ";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("surveyResponseUniqueId", surveyResponseUniqueId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		return getByQuery(query, paramMap);
+	}
+
+	@Override
 	public List<SurveyResponseAnswer> getSurveyResponseAnswers(Long surveyResponseId, Long surveyQuestionId)
 			throws FrameworkException {
 		ConcurrentMap<String, Object> paramMap = createParamMap();
@@ -127,6 +138,17 @@ public class SurveyResponseAnswerRepository extends GenericRepository implements
 		paramMap.put("surveyResponseId", surveyResponseAnswer.getSurveyResponse().getId());
 		paramMap.put("surveyQuestionId", surveyResponseAnswer.getSurveyQuestion().getId());
 		return getByQuery(query, paramMap);
+	}
+
+	@Override
+	public void removeByResponseUniqueIdAndQuestion(String surveyResponseUniqueId, Long surveyQuestionId)
+			throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String delete = "delete from SurveyResponseAnswer where surveyResponse.id in (select id from SurveyResponse where uniqueId=:surveyResponseUniqueId) "
+				+ "and surveyQuestion.id=:surveyQuestionId";
+		paramMap.put("surveyResponseUniqueId", surveyResponseUniqueId);
+		paramMap.put("surveyQuestionId", surveyQuestionId);
+		deleteByHql(delete, paramMap);
 	}
 
 }
