@@ -5,7 +5,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyGroupServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyGroupVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
@@ -27,7 +27,7 @@ public class SurveyGroupView extends BasicTemplate<SurveyGroup> {
 
 	public SurveyGroupView() {
 		setEntityClass(SurveyGroup.class);
-		setServiceClass(ISurveyGroupService.class);
+		setServiceClass(SurveyGroupServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_GROUPS_.NAME);

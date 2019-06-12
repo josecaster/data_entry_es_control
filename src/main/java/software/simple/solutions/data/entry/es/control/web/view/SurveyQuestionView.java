@@ -33,8 +33,10 @@ import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
+import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.QuestionCardLayout;
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.AbstractBaseView;
@@ -104,6 +106,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 		}
 
 		surveySectionFld = new SurveySectionSelect();
+		refreshSurveySectionFld();
 		surveySectionFld.setPlaceholder(
 				PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.FILTER_BY_SURVEY_SECTION));
 		surveySectionFld.setWidth("100%");
@@ -113,7 +116,7 @@ public class SurveyQuestionView extends AbstractBaseView {
 
 			@Override
 			public void accept(SurveySection t) throws Exception {
-				surveySectionFld.refresh();
+				refreshSurveySectionFld();
 			}
 		});
 		surveySectionFld.addValueChangeListener(new ValueChangeListener<ComboItem>() {
@@ -183,6 +186,27 @@ public class SurveyQuestionView extends AbstractBaseView {
 		}
 	}
 
+	public void refreshSurveySectionFld() {
+		ISurveySectionService surveyQuestionSectionService = ContextProvider.getBean(ISurveySectionService.class);
+		List<ComboItem> items;
+		try {
+			SurveySectionVO vo = new SurveySectionVO();
+			vo.setSurveyId(survey.getId());
+			vo.setActive(true);
+			items = surveyQuestionSectionService.getForListing(vo);
+			items.add(createFilterByNoneForSurveySelection());
+			surveySectionFld.setItems(items);
+		} catch (FrameworkException e) {
+			new MessageWindowHandler(e);
+		}
+	}
+
+	private ComboItem createFilterByNoneForSurveySelection() {
+		ComboItem comboItem = new ComboItem(-1,
+				PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.UN_SECTIONED));
+		return comboItem;
+	}
+
 	private void createMenu() throws FrameworkException {
 		createMenu(null);
 	}
@@ -191,9 +215,8 @@ public class SurveyQuestionView extends AbstractBaseView {
 		questionPanelLayout.removeAllComponents();
 		questionsPanel.setVisible(false);
 		lastMenuLayout = null;
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		List<SurveyQuestion> questions = surveyQuestionService.getQuestionList(survey.getId(),
-				questionFilterFld.getValue(), surveySectionFld.getLongValue());
+		List<SurveyQuestion> questions = SurveyQuestionServiceFacade.get(UI.getCurrent())
+				.getQuestionList(survey.getId(), questionFilterFld.getValue(), surveySectionFld.getLongValue());
 		if (questions != null && !questions.isEmpty()) {
 			questionsPanel.setVisible(true);
 			questions.forEach(p -> {
@@ -204,8 +227,8 @@ public class SurveyQuestionView extends AbstractBaseView {
 			});
 		}
 		Long sectionId = surveySectionFld.getLongValue();
-		ISurveySectionService surveySectionService = ContextProvider.getBean(ISurveySectionService.class);
-		SurveySection surveySection = surveySectionService.get(SurveySection.class, sectionId);
+		SurveySection surveySection = SurveySectionServiceFacade.get(UI.getCurrent()).get(SurveySection.class,
+				sectionId);
 		// if (surveyQuestion != null) {
 		createQuestionCard(surveyQuestion, surveySection);
 		// }
@@ -278,9 +301,8 @@ public class SurveyQuestionView extends AbstractBaseView {
 			public void layoutClick(LayoutClickEvent event) {
 				if (event.getButton().compareTo(MouseButton.LEFT) == 0) {
 					try {
-						ISurveyQuestionService surveyQuestionService = ContextProvider
-								.getBean(ISurveyQuestionService.class);
-						SurveyQuestion sq = surveyQuestionService.getById(SurveyQuestion.class, surveyQuestion.getId());
+						SurveyQuestion sq = SurveyQuestionServiceFacade.get(UI.getCurrent())
+								.getById(SurveyQuestion.class, surveyQuestion.getId());
 						createQuestionCard(sq, sq.getSurveySection());
 						questionPanelLayout.iterator()
 								.forEachRemaining(p -> p.removeStyleName(EsControlStyle.QUESTION_MENU_SELECTED));

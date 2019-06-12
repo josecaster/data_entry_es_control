@@ -5,7 +5,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyApplicationUser;
 import software.simple.solutions.data.entry.es.control.properties.SurveyApplicationUserProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyApplicationUserServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyApplicationUserVO;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.FilterView;
@@ -21,7 +21,7 @@ public class SurveyApplicationUserView extends BasicTemplate<SurveyApplicationUs
 
 	public SurveyApplicationUserView() {
 		setEntityClass(SurveyApplicationUser.class);
-		setServiceClass(ISurveyApplicationUserService.class);
+		setServiceClass(SurveyApplicationUserServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_APPLICATION_USERS_.NAME);

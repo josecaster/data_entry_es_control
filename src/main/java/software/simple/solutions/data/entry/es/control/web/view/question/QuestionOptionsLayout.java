@@ -19,13 +19,12 @@ import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CTextArea;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionOptionsLayout extends VerticalLayout {
 
@@ -122,8 +121,6 @@ public class QuestionOptionsLayout extends VerticalLayout {
 	// vo.setUpdatedBy(sessionHolder.getApplicationUser().getId());
 	//
 	// ISurveyQuestionService surveyQuestionService =
-	// ContextProvider.getBean(ISurveyQuestionService.class);
-	// surveyQuestion = surveyQuestionService.updateOptions(vo);
 	// }
 
 	public BehaviorSubject<SurveyQuestion> getObserver() {
@@ -147,10 +144,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 			@Override
 			public void valueChange(ValueChangeEvent<String> event) {
 				try {
-					ISurveyQuestionService surveyQuestionService = ContextProvider
-							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateDescription(surveyQuestion.getId(),
-							questionDescriptionFld.getValue());
+					surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent())
+							.updateDescription(surveyQuestion.getId(), questionDescriptionFld.getValue());
 					optionsUpdatedObserver.onNext(true);
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);
@@ -166,9 +161,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 				try {
 					Boolean value = event.getValue();
 					requiredErrorFld.setVisible(value);
-					ISurveyQuestionService surveyQuestionService = ContextProvider
-							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateRequired(surveyQuestion.getId(), event.getValue());
+					surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent())
+							.updateRequired(surveyQuestion.getId(), event.getValue());
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);
 				}
@@ -180,10 +174,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 			@Override
 			public void valueChange(ValueChangeEvent<String> event) {
 				try {
-					ISurveyQuestionService surveyQuestionService = ContextProvider
-							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateRequiredError(surveyQuestion.getId(),
-							requiredErrorFld.getValue());
+					surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent())
+							.updateRequiredError(surveyQuestion.getId(), requiredErrorFld.getValue());
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);
 				}
@@ -197,10 +189,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 			public void valueChange(ValueChangeEvent<Object> event) {
 				SurveySection surveySection = (SurveySection) event.getValue();
 				try {
-					ISurveyQuestionService surveyQuestionService = ContextProvider
-							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateSurveyQuestionSection(surveyQuestion.getId(),
-							surveySection == null ? null : surveySection.getId());
+					surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent()).updateSurveyQuestionSection(
+							surveyQuestion.getId(), surveySection == null ? null : surveySection.getId());
 					sectionUpdatedObserver.onNext(surveySection);
 					optionsUpdatedObserver.onNext(true);
 				} catch (FrameworkException e) {
@@ -216,10 +206,8 @@ public class QuestionOptionsLayout extends VerticalLayout {
 			public void valueChange(ValueChangeEvent<Object> event) {
 				SurveyGroup surveyGroup = (SurveyGroup) event.getValue();
 				try {
-					ISurveyQuestionService surveyQuestionService = ContextProvider
-							.getBean(ISurveyQuestionService.class);
-					surveyQuestion = surveyQuestionService.updateSurveyQuestionGroup(surveyQuestion.getId(),
-							surveyGroup == null ? null : surveyGroup.getId());
+					surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent()).updateSurveyQuestionGroup(
+							surveyQuestion.getId(), surveyGroup == null ? null : surveyGroup.getId());
 					optionsUpdatedObserver.onNext(true);
 				} catch (FrameworkException e) {
 					new MessageWindowHandler(e);

@@ -8,15 +8,15 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.MarginInfo;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionAnswerChoiceProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
 import software.simple.solutions.framework.core.components.CDiscreetNumberField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.NumberUtil;
 
 public class WholeNumberColumnConfigurationView extends VerticalLayout {
@@ -26,7 +26,7 @@ public class WholeNumberColumnConfigurationView extends VerticalLayout {
 		public void valueChange(ValueChangeEvent<String> event) {
 			try {
 				Long id = surveyQuestionAnswerChoice.getId();
-				surveyQuestionAnswerChoiceService.updateMinValue(id,
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateMinValue(id,
 						NumberUtil.getBigDecimal(minValueFld.getLongValue()));
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
@@ -40,7 +40,7 @@ public class WholeNumberColumnConfigurationView extends VerticalLayout {
 		public void valueChange(ValueChangeEvent<String> event) {
 			try {
 				Long id = surveyQuestionAnswerChoice.getId();
-				surveyQuestionAnswerChoiceService.updateMaxValue(id,
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateMaxValue(id,
 						NumberUtil.getBigDecimal(maxValueFld.getLongValue()));
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
@@ -55,12 +55,6 @@ public class WholeNumberColumnConfigurationView extends VerticalLayout {
 	private CDiscreetNumberField minValueFld;
 	private CDiscreetNumberField maxValueFld;
 
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-
-	{
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-	}
-
 	public WholeNumberColumnConfigurationView(SurveyQuestionAnswerChoice surveyQuestionAnswerChoice) {
 		this.surveyQuestionAnswerChoice = surveyQuestionAnswerChoice;
 		try {
@@ -73,8 +67,8 @@ public class WholeNumberColumnConfigurationView extends VerticalLayout {
 
 	public void buildMainLayout() throws FrameworkException {
 
-		surveyQuestionAnswerChoice = surveyQuestionAnswerChoiceService.get(SurveyQuestionAnswerChoice.class,
-				surveyQuestionAnswerChoice.getId());
+		surveyQuestionAnswerChoice = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+				.get(SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId());
 
 		setMargin(new MarginInfo(false, false, false, true));
 		setWidth("100%");

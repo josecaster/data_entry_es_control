@@ -24,6 +24,7 @@ import com.vaadin.ui.Grid.Column;
 import com.vaadin.ui.Grid.SelectionMode;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -36,9 +37,10 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonCellPojo;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceSelectionServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.impl.SurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CDecimalField;
@@ -48,7 +50,6 @@ import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Constants;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionTypeMatrixLayout extends VerticalLayout {
 
@@ -62,9 +63,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 	private SessionHolder sessionHolder;
 	private Grid<MatrixRow> grid;
 
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-	private ISurveyQuestionAnswerChoiceSelectionService surveyQuestionAnswerChoiceSelectionService;
-
 	private boolean editable = false;
 
 	public QuestionTypeMatrixLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion,
@@ -73,9 +71,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponse = surveyResponse;
 		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-		surveyQuestionAnswerChoiceSelectionService = ContextProvider
-				.getBean(ISurveyQuestionAnswerChoiceSelectionService.class);
 	}
 
 	public void build() {
@@ -106,14 +101,12 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 
 		List<SurveyResponseAnswer> surveyResponseAnswers = null;
 		if (surveyResponse != null) {
-			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-					.getBean(ISurveyResponseAnswerService.class);
-			surveyResponseAnswers = surveyResponseAnswerService.getSurveyResponseAnswers(surveyResponse.getId(),
-					surveyQuestion.getId());
+			surveyResponseAnswers = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
+					.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
 		}
 
-		List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-				.findBySurveyQuestion(surveyQuestion.getId());
+		List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+				.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId());
 		if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
 			grid = new Grid<MatrixRow>();
 			grid.setHeightMode(HeightMode.UNDEFINED);
@@ -233,8 +226,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 						@Override
 						public void valueChange(ValueChangeEvent<String> event) {
 							String value = event.getValue();
-							ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-									.getBean(ISurveyResponseAnswerService.class);
 							SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 							surveyResponseAnswerVO
 									.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
@@ -249,7 +240,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
 							try {
-								surveyResponseAnswer = surveyResponseAnswerService
+								surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
 							} catch (FrameworkException e) {
 								e.printStackTrace();
@@ -286,8 +277,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 						public void valueChange(ValueChangeEvent<LocalDate> event) {
 							LocalDate localDate = event.getValue();
 
-							ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-									.getBean(ISurveyResponseAnswerService.class);
 							SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 							surveyResponseAnswerVO
 									.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
@@ -304,7 +293,8 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 									: localDate.format(
 											DateTimeFormatter.ofPattern(Constants.SIMPLE_DATE_FORMAT.toPattern())));
 							try {
-								surveyResponseAnswerService.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+								SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
+										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
 							} catch (FrameworkException e) {
 								e.printStackTrace();
 							}
@@ -341,8 +331,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 						@Override
 						public void valueChange(ValueChangeEvent<String> event) {
 							String value = event.getValue();
-							ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-									.getBean(ISurveyResponseAnswerService.class);
 							SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 							surveyResponseAnswerVO
 									.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
@@ -357,7 +345,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
 							try {
-								surveyResponseAnswer = surveyResponseAnswerService
+								surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
 							} catch (FrameworkException e) {
 								e.printStackTrace();
@@ -391,8 +379,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 						@Override
 						public void valueChange(ValueChangeEvent<String> event) {
 							String value = event.getValue();
-							ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-									.getBean(ISurveyResponseAnswerService.class);
 							SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 							surveyResponseAnswerVO
 									.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
@@ -407,7 +393,8 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
 							try {
-								surveyResponseAnswerService.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
+								SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
+										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
 							} catch (FrameworkException e) {
 								e.printStackTrace();
 							}
@@ -430,8 +417,8 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 				horizontalLayout.setMargin(false);
 				horizontalLayout.setWidth("-1px");
 				try {
-					List<SurveyQuestionAnswerChoiceSelection> selections = surveyQuestionAnswerChoiceSelectionService
-							.getBySurveyQuestionAnswerChoice(column.getId());
+					List<SurveyQuestionAnswerChoiceSelection> selections = SurveyQuestionAnswerChoiceSelectionServiceFacade
+							.get(UI.getCurrent()).getBySurveyQuestionAnswerChoice(column.getId());
 					if (selections != null) {
 
 						if (responseJsonCellPojosMap == null) {
@@ -459,8 +446,6 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 									public void valueChange(ValueChangeEvent<Boolean> event) {
 										Boolean selected = event.getValue();
 
-										ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-												.getBean(ISurveyResponseAnswerService.class);
 										SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 										surveyResponseAnswerVO.setId(
 												surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
@@ -478,7 +463,8 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 										surveyResponseAnswerVO.setQuestionAnswerChoiceSelectionId(selection.getId());
 										surveyResponseAnswerVO.setSelected(selected);
 										try {
-											surveyResponseAnswer = surveyResponseAnswerService
+											surveyResponseAnswer = SurveyResponseAnswerServiceFacade
+													.get(UI.getCurrent())
 													.updateAnswerMatrixCellForSelection(surveyResponseAnswerVO);
 										} catch (FrameworkException e) {
 											e.printStackTrace();

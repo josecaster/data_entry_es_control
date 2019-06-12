@@ -16,16 +16,15 @@ import com.vaadin.ui.VerticalLayout;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionAnswerChoiceProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyGroupServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class ChoiceConfigurationView extends HorizontalLayout {
 
@@ -38,15 +37,9 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 	private SurveyQuestionAnswerChoice surveyQuestionAnswerChoice;
 	private SessionHolder sessionHolder;
 
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-
-	{
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
-	}
-
 	public ChoiceConfigurationView(SurveyQuestionAnswerChoice surveyQuestionAnswerChoice) {
 		this.surveyQuestionAnswerChoice = surveyQuestionAnswerChoice;
+		sessionHolder = (SessionHolder) UI.getCurrent().getData();
 		try {
 			buildMainLayout();
 		} catch (FrameworkException e) {
@@ -56,8 +49,8 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 	}
 
 	public void buildMainLayout() throws FrameworkException {
-		surveyQuestionAnswerChoice = surveyQuestionAnswerChoiceService.get(SurveyQuestionAnswerChoice.class,
-				surveyQuestionAnswerChoice.getId());
+		surveyQuestionAnswerChoice = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+				.get(SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId());
 		setMargin(new MarginInfo(false, false, false, true));
 		setWidth("-1px");
 
@@ -74,8 +67,7 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 		verticalLayout.setSpacing(true);
 		addComponent(verticalLayout);
 
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		List<ComboItem> questions = surveyQuestionService
+		List<ComboItem> questions = SurveyQuestionServiceFacade.get(UI.getCurrent())
 				.getNextQuestions(surveyQuestionAnswerChoice.getSurveyQuestion().getOrder());
 		makeQuestionRequiredFld = new CComboBox();
 		makeQuestionRequiredFld.setItems(questions);
@@ -88,7 +80,7 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 			@Override
 			public void valueChange(ValueChangeEvent<ComboItem> event) {
 				try {
-					surveyQuestionAnswerChoiceService.updateMakeSelectedQuestionRequired(
+					SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateMakeSelectedQuestionRequired(
 							surveyQuestionAnswerChoice.getId(), makeQuestionRequiredFld.getLongValue());
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -97,8 +89,7 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 			}
 		});
 
-		ISurveyGroupService surveyGroupService = ContextProvider.getBean(ISurveyGroupService.class);
-		List<ComboItem> surveyGroups = surveyGroupService
+		List<ComboItem> surveyGroups = SurveyGroupServiceFacade.get(UI.getCurrent())
 				.findBySurvey(surveyQuestionAnswerChoice.getSurveyQuestion().getSurvey().getId());
 		makeGroupQuestionRequiredFld = new CComboBox();
 		makeGroupQuestionRequiredFld.setItems(surveyGroups);
@@ -111,9 +102,8 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 
 			@Override
 			public void valueChange(ValueChangeEvent<ComboItem> event) {
-				ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
 				try {
-					surveyQuestionAnswerChoiceService.updateMakeSelectedGroupRequired(
+					SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateMakeSelectedGroupRequired(
 							surveyQuestionAnswerChoice.getId(), makeGroupQuestionRequiredFld.getLongValue());
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -127,7 +117,8 @@ public class ChoiceConfigurationView extends HorizontalLayout {
 		@Override
 		public void valueChange(ValueChangeEvent<Boolean> event) {
 			try {
-				surveyQuestionAnswerChoiceService.updateIsOther(surveyQuestionAnswerChoice.getId(), event.getValue());
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+						.updateIsOther(surveyQuestionAnswerChoice.getId(), event.getValue());
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);

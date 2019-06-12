@@ -18,6 +18,7 @@ import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import com.wcs.wcslib.vaadin.widget.multifileupload.ui.MultiFileUpload;
@@ -32,7 +33,7 @@ import software.simple.solutions.data.entry.es.control.constants.EscontrolPrivil
 import software.simple.solutions.data.entry.es.control.constants.TypeOfFile;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.properties.SurveyProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyVO;
 import software.simple.solutions.framework.core.annotations.SupportedPrivileges;
 import software.simple.solutions.framework.core.components.CButton;
@@ -55,10 +56,9 @@ import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.properties.SystemMessageProperty;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.service.IFileService;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
+import software.simple.solutions.framework.core.service.facade.FileServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.web.BasicTemplate;
@@ -72,7 +72,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 
 	public SurveyView() {
 		setEntityClass(Survey.class);
-		setServiceClass(ISurveyService.class);
+		setServiceClass(SurveyServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 
@@ -170,16 +170,14 @@ public class SurveyView extends BasicTemplate<Survey> {
 			activeFld.setValue(survey.getActive());
 			uploadFileLayout.setVisible(false);
 
-			IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
-			Configuration configuration = configurationService
+			Configuration configuration = ConfigurationServiceFacade.get(UI.getCurrent())
 					.getByCode(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION);
 			if (configuration != null && configuration.getValue() != null) {
 				if (getViewDetail().getPrivileges().contains(EscontrolPrivileges.SURVEY_UPLOAD_FORM)) {
 					uploadFileLayout.setVisible(true);
 				}
 
-				IFileService fileService = ContextProvider.getBean(IFileService.class);
-				entityFile = fileService.findFileByEntityAndType(survey.getId().toString(),
+				entityFile = FileServiceFacade.get(UI.getCurrent()).findFileByEntityAndType(survey.getId().toString(),
 						EsControlTables.SURVEYS_.NAME, TypeOfFile.DATA_ENTRY_FORM);
 
 				if (entityFile != null && entityFile.getFilePath() != null) {
@@ -310,8 +308,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 						@Override
 						public void handlePositive() {
 							try {
-								IFileService fileService = ContextProvider.getBean(IFileService.class);
-								fileService.delete(EntityFile.class, entityFile.getId());
+								FileServiceFacade.get(UI.getCurrent()).delete(EntityFile.class, entityFile.getId());
 								fileActionLayout.setVisible(false);
 								uploadFileLayout.setMargin(false);
 								uploadFileLayout.removeStyleName(ValoTheme.LAYOUT_CARD);
@@ -335,7 +332,6 @@ public class SurveyView extends BasicTemplate<Survey> {
 		}
 
 		protected void uploadFileToRepository(InputStream stream, String fileName) {
-			ISurveyService surveyService = ContextProvider.getBean(ISurveyService.class);
 
 			EntityFileVO vo = new EntityFileVO();
 			vo.setEntityId(survey.getId().toString());
@@ -345,7 +341,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 				vo.setFileObject(bytes);
 				vo.setFilename(fileName);
 				vo.setTypeOfFile(TypeOfFile.DATA_ENTRY_FORM);
-				entityFile = surveyService.upLoadFile(vo);
+				entityFile = SurveyServiceFacade.get(UI.getCurrent()).upLoadFile(vo);
 				setPdfViewerContent(bytes, fileName);
 			} catch (InvalidDataAccessResourceUsageException | IOException | FrameworkException e) {
 				logger.error(e.getMessage(), e);

@@ -13,6 +13,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.CheckBoxGroup;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.ItemCaptionGenerator;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.data.entry.es.control.constants.Axis;
@@ -24,6 +25,7 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAn
 import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonPojo;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.SessionHolder;
@@ -185,8 +187,9 @@ public class SingleSelectField extends HorizontalLayout {
 	}
 
 	private void update() {
-		ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-				.getBean(ISurveyResponseAnswerService.class);
+		// ISurveyResponseAnswerService surveyResponseAnswerService =
+		// ContextProvider
+		// .getBean(ISurveyResponseAnswerService.class);
 		SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 		surveyResponseAnswerVO.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
 		surveyResponseAnswerVO.setActive(true);
@@ -199,7 +202,8 @@ public class SingleSelectField extends HorizontalLayout {
 				surveyQuestionAnswerChoice == null ? null : surveyQuestionAnswerChoice.getId());
 		surveyResponseAnswerVO.setSelected(surveyQuestionAnswerChoice != null);
 		try {
-			surveyResponseAnswer = surveyResponseAnswerService.updateAnswerSingleSelection(surveyResponseAnswerVO);
+			surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
+					.updateAnswerSingleSelection(surveyResponseAnswerVO);
 		} catch (FrameworkException e) {
 			e.printStackTrace();
 		}

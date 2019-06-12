@@ -9,7 +9,7 @@ import software.simple.solutions.data.entry.es.control.constants.EsControlTables
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
@@ -32,7 +32,7 @@ public class SurveySectionView extends BasicTemplate<SurveySection> {
 
 	public SurveySectionView() {
 		setEntityClass(SurveySection.class);
-		setServiceClass(ISurveySectionService.class);
+		setServiceClass(SurveySectionServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 		setEntityReferenceKey(EsControlTables.SURVEY_SECTIONS_.NAME);

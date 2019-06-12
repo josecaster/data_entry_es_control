@@ -18,7 +18,7 @@ import software.simple.solutions.data.entry.es.control.constants.Position;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CComboBox;
@@ -27,7 +27,6 @@ import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionOrderLayout extends VerticalLayout {
 
@@ -97,9 +96,8 @@ public class QuestionOrderLayout extends VerticalLayout {
 	private void initSurveyQuestionsData() {
 
 		try {
-			ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-			List<ComboItem> questions = surveyQuestionService.getQuestionListForOrder(survey.getId(),
-					surveyQuestion.getId());
+			List<ComboItem> questions = SurveyQuestionServiceFacade.get(UI.getCurrent())
+					.getQuestionListForOrder(survey.getId(), surveyQuestion.getId());
 			surveyQuestionsFld.setItems(questions);
 		} catch (FrameworkException e) {
 			logger.error(e.getMessage(), e);
@@ -113,8 +111,7 @@ public class QuestionOrderLayout extends VerticalLayout {
 		vo.setId(surveyQuestion == null ? null : surveyQuestion.getId());
 		vo.setPosition(positionFld.getStringValue() + "-" + surveyQuestionsFld.getStringValue());
 
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		surveyQuestion = surveyQuestionService.updateOrder(vo);
+		surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent()).updateOrder(vo);
 	}
 
 	public BehaviorSubject<SurveyQuestion> getObserver() {

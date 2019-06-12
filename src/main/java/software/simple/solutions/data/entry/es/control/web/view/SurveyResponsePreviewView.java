@@ -16,6 +16,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -28,9 +29,9 @@ import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyResponseService;
-import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyApplicationUserServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.QuestionSectionPreviewLayout;
 import software.simple.solutions.framework.core.components.CCheckBox;
@@ -45,7 +46,6 @@ import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemProperty;
 import software.simple.solutions.framework.core.util.ComponentUtil;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
 public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
@@ -56,7 +56,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 	public SurveyResponsePreviewView() {
 		setEntityClass(SurveyResponse.class);
-		setServiceClass(ISurveyResponseService.class);
+		setServiceClass(SurveyResponseServiceFacade.class);
 		setFilterClass(Filter.class);
 		setFormClass(Form.class);
 	}
@@ -222,8 +222,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 		private void createMenu() throws FrameworkException {
 			sectionPanelLayout.removeAllComponents();
 			sectionsPanel.setVisible(false);
-			ISurveySectionService surveySectionService = ContextProvider.getBean(ISurveySectionService.class);
-			List<SurveySection> surveySections = surveySectionService
+			List<SurveySection> surveySections = SurveySectionServiceFacade.get(UI.getCurrent())
 					.findAllBySurveyId(surveyResponse.getSurvey().getId());
 			if (surveySections != null && !surveySections.isEmpty()) {
 				sectionsPanel.setVisible(true);
@@ -312,9 +311,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			applicationUserFld.removeAllItems();
 			Long surveyId = surveyFld.getItemId();
 			if (surveyId != null) {
-				ISurveyApplicationUserService surveyApplicationUserService = ContextProvider
-						.getBean(ISurveyApplicationUserService.class);
-				List<ApplicationUser> applicationUsers = surveyApplicationUserService
+				List<ApplicationUser> applicationUsers = SurveyApplicationUserServiceFacade.get(UI.getCurrent())
 						.findApplicationUserBySurvey(surveyId);
 				applicationUserFld.setValues(applicationUsers);
 			}

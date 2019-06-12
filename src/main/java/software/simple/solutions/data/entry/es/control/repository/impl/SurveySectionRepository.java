@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
+import software.simple.solutions.data.entry.es.control.valueobjects.SurveySectionVO;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.repository.impl.GenericRepository;
@@ -72,6 +73,23 @@ public class SurveySectionRepository extends GenericRepository implements ISurve
 		}
 		Long count = getByQuery(query, paramMap);
 		return (count == null || count.compareTo(0L) == 0);
+	}
+
+	@Override
+	public List<ComboItem> getForListing(SurveySectionVO vo) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		String query = "select new software.simple.solutions.framework.core.pojo.ComboItem(id,name) from SurveySection where 1=1 ";
+		if (vo.getSurveyId() != null) {
+			query += "and survey.id=:surveyId ";
+			paramMap.put("surveyId", vo.getSurveyId());
+		}
+		if (vo.getActive() != null) {
+			query += "and active=:active ";
+			paramMap.put("active", vo.getActive());
+		}
+		query += " order by id ";
+
+		return createListQuery(query, paramMap);
 	}
 
 }

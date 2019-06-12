@@ -87,4 +87,9 @@ public class SurveySectionService extends SuperService implements ISurveySection
 	public SurveySection getPinnedSectionBySurvey(Long surveyId) throws FrameworkException {
 		return surveyQuestionSectionRepository.getPinnedSectionBySurvey(surveyId);
 	}
+
+	@Override
+	public List<ComboItem> getForListing(SurveySectionVO vo) throws FrameworkException {
+		return surveyQuestionSectionRepository.getForListing(vo);
+	}
 }

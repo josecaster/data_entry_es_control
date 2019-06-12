@@ -12,6 +12,7 @@ import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.data.entry.es.control.components.SingleSelectField;
@@ -22,15 +23,14 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonPojo;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionTypeChoiceLayout extends VerticalLayout {
 
@@ -44,15 +44,12 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 	private SessionHolder sessionHolder;
 	private boolean editable = false;
 
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-
 	public QuestionTypeChoiceLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion,
 			SurveyResponse surveyResponse, SurveyResponseAnswerHistory surveyResponseAnswerHistory) {
 		this.sessionHolder = sessionHolder;
 		this.surveyQuestion = surveyQuestion;
 		this.surveyResponse = surveyResponse;
 		this.surveyResponseAnswerHistory = surveyResponseAnswerHistory;
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
 	}
 
 	public void build() {
@@ -86,10 +83,11 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 				String responseJson = surveyResponseAnswerHistory.getResponseJson();
 				ResponseJsonPojo responseJsonPojo = new Gson().fromJson(responseJson, ResponseJsonPojo.class);
 				if (responseJsonPojo != null && responseJsonPojo.getSelectedChoices() != null) {
-					List<SurveyQuestionAnswerChoice> answerChoiceIds = surveyQuestionAnswerChoiceService
+					List<SurveyQuestionAnswerChoice> answerChoiceIds = SurveyQuestionAnswerChoiceServiceFacade
+							.get(UI.getCurrent())
 							.findBySurveyQuestionChoiceIds(responseJsonPojo.getSelectedChoices(), Axis.ROW);
-					List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-							.findBySurveyQuestion(surveyQuestion.getId());
+					List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+							.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId());
 					if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
 						for (SurveyQuestionAnswerChoice surveyQuestionAnswerChoice : surveyQuestionAnswerChoices) {
 							Optional<SurveyQuestionAnswerChoice> optional = answerChoiceIds.stream()
@@ -108,16 +106,14 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 
 				List<SurveyResponseAnswer> surveyResponseAnswers = null;
 				if (surveyResponse != null) {
-					ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-							.getBean(ISurveyResponseAnswerService.class);
-					surveyResponseAnswers = surveyResponseAnswerService.getSurveyResponseAnswers(surveyResponse.getId(),
-							surveyQuestion.getId());
+					surveyResponseAnswers = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
+							.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
 				}
 				if (surveyResponseAnswers == null) {
 					surveyResponseAnswers = new ArrayList<SurveyResponseAnswer>();
 				}
-				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-						.findBySurveyQuestion(surveyQuestion.getId());
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+						.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId());
 				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
 					for (SurveyQuestionAnswerChoice surveyQuestionAnswerChoice : surveyQuestionAnswerChoices) {
 						Optional<SurveyResponseAnswer> optional = surveyResponseAnswers.stream()
@@ -134,24 +130,23 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 			}
 		} else {
 			if (surveyResponseAnswerHistory != null) {
-				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-						.findBySurveyQuestion(surveyQuestion.getId());
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+						.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId());
 				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
 					createSingleSelectionRow(surveyQuestionAnswerChoices, null, surveyResponseAnswerHistory);
 				}
 			} else {
 				SurveyResponseAnswer surveyResponseAnswer = null;
 				if (surveyResponse != null) {
-					ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-							.getBean(ISurveyResponseAnswerService.class);
-					List<SurveyResponseAnswer> surveyResponseAnswers = surveyResponseAnswerService
+					List<SurveyResponseAnswer> surveyResponseAnswers = SurveyResponseAnswerServiceFacade
+							.get(UI.getCurrent())
 							.getSurveyResponseAnswers(surveyResponse.getId(), surveyQuestion.getId());
 					if (surveyResponseAnswers != null && !surveyResponseAnswers.isEmpty()) {
 						surveyResponseAnswer = surveyResponseAnswers.get(0);
 					}
 				}
-				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-						.findBySurveyQuestion(surveyQuestion.getId());
+				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+						.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId());
 				if (surveyQuestionAnswerChoices != null && !surveyQuestionAnswerChoices.isEmpty()) {
 					createSingleSelectionRow(surveyQuestionAnswerChoices, surveyResponseAnswer, null);
 				}
@@ -222,8 +217,6 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 			}
 
 			Boolean selected = event.getValue();
-			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-					.getBean(ISurveyResponseAnswerService.class);
 			SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 			surveyResponseAnswerVO.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
 			surveyResponseAnswerVO.setActive(true);
@@ -236,7 +229,7 @@ public class QuestionTypeChoiceLayout extends VerticalLayout {
 			surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(surveyQuestionAnswerChoice.getId());
 			surveyResponseAnswerVO.setSelected(selected);
 			try {
-				surveyResponseAnswer = surveyResponseAnswerService
+				surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 						.updateAnswerMultipleSelection(surveyResponseAnswerVO);
 			} catch (FrameworkException e) {
 				e.printStackTrace();

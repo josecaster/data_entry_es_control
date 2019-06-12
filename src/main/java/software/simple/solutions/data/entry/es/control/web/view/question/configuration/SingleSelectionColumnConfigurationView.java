@@ -16,15 +16,13 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoiceSelection;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceSelectionServiceFacade;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
-import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 
@@ -33,16 +31,6 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 	private SurveyQuestionAnswerChoice surveyQuestionAnswerChoice;
 	private HorizontalLayout selectionContainer;
 	private CButton addBtn;
-
-	private SessionHolder sessionHolder;
-
-	private ISurveyQuestionAnswerChoiceSelectionService surveyQuestionAnswerChoiceSelectionService;
-
-	{
-		surveyQuestionAnswerChoiceSelectionService = ContextProvider
-				.getBean(ISurveyQuestionAnswerChoiceSelectionService.class);
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
-	}
 
 	private final class DeleteSelection implements ClickListener {
 
@@ -61,7 +49,7 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 		public void buttonClick(ClickEvent event) {
 			selectionContainer.removeComponent(h1);
 			try {
-				surveyQuestionAnswerChoiceSelectionService.deleteAndUpdateIndex(
+				SurveyQuestionAnswerChoiceSelectionServiceFacade.get(UI.getCurrent()).deleteAndUpdateIndex(
 						SurveyQuestionAnswerChoiceSelection.class, surveyQuestionAnswerChoiceSelection.getId(),
 						surveyQuestionAnswerChoiceSelection.getSurveyQuestionAnswerChoice().getId(), componentIndex);
 			} catch (FrameworkException e) {
@@ -82,8 +70,8 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 		@Override
 		public void valueChange(ValueChangeEvent<String> event) {
 			try {
-				surveyQuestionAnswerChoiceSelectionService.updateLabel(surveyQuestionAnswerChoiceSelection.getId(),
-						event.getValue());
+				SurveyQuestionAnswerChoiceSelectionServiceFacade.get(UI.getCurrent())
+						.updateLabel(surveyQuestionAnswerChoiceSelection.getId(), event.getValue());
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -125,8 +113,8 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 		selectionContainer.setMargin(false);
 		addComponent(selectionContainer);
 
-		List<SurveyQuestionAnswerChoiceSelection> selections = surveyQuestionAnswerChoiceSelectionService
-				.getBySurveyQuestionAnswerChoice(surveyQuestionAnswerChoice.getId());
+		List<SurveyQuestionAnswerChoiceSelection> selections = SurveyQuestionAnswerChoiceSelectionServiceFacade
+				.get(UI.getCurrent()).getBySurveyQuestionAnswerChoice(surveyQuestionAnswerChoice.getId());
 		if (selections != null) {
 			selections.forEach(p -> createSelectionLayout(p));
 		}
@@ -143,8 +131,8 @@ public class SingleSelectionColumnConfigurationView extends HorizontalLayout {
 
 		if (surveyQuestionAnswerChoiceSelection == null) {
 			try {
-				surveyQuestionAnswerChoiceSelection = surveyQuestionAnswerChoiceSelectionService
-						.create(surveyQuestionAnswerChoice.getId(), componentIndex);
+				surveyQuestionAnswerChoiceSelection = SurveyQuestionAnswerChoiceSelectionServiceFacade
+						.get(UI.getCurrent()).create(surveyQuestionAnswerChoice.getId(), componentIndex);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);

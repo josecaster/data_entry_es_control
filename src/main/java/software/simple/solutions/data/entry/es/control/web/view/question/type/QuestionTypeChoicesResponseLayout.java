@@ -21,8 +21,8 @@ import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionAnswerChoiceProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionAnswerChoiceVO;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.ChoiceConfigurationView;
@@ -30,11 +30,9 @@ import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CTextField;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
-import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 
@@ -44,16 +42,6 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 	private VerticalLayout rowContainerLayout;
 
 	private SurveyQuestion surveyQuestion;
-	private SessionHolder sessionHolder;
-
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-	private ISurveyQuestionService surveyQuestionService;
-
-	{
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
-		surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		sessionHolder = (SessionHolder) UI.getCurrent().getData();
-	}
 
 	public QuestionTypeChoicesResponseLayout(SurveyQuestion surveyQuestion) {
 		this.surveyQuestion = surveyQuestion;
@@ -88,8 +76,8 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 	}
 
 	public void createRowsFromSurveyQuestion() throws FrameworkException {
-		List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
-				.findBySurveyQuestion(surveyQuestion.getId(), Axis.ROW);
+		List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade
+				.get(UI.getCurrent()).findBySurveyQuestion(surveyQuestion.getId(), Axis.ROW);
 		if (surveyQuestionAnswerChoices == null || surveyQuestionAnswerChoices.isEmpty()) {
 			createRowIfNonExists();
 		} else {
@@ -103,8 +91,8 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 	private void updateQuestionTypeIfNeeded(SurveyQuestionAnswerChoice surveyQuestionAnswerChoice)
 			throws FrameworkException {
 		if (!surveyQuestionAnswerChoice.getQuestionType().equalsIgnoreCase(QuestionType.CHOICES)) {
-			surveyQuestionAnswerChoiceService.updateQuestionType(surveyQuestionAnswerChoice.getId(),
-					QuestionType.CHOICES);
+			SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+					.updateQuestionType(surveyQuestionAnswerChoice.getId(), QuestionType.CHOICES);
 		}
 	}
 
@@ -126,8 +114,8 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 		int componentIndex = rowContainerLayout.getComponentIndex(mainLayout);
 
 		if (surveyQuestionAnswerChoice == null) {
-			surveyQuestionAnswerChoice = surveyQuestionAnswerChoiceService.createNewRow(surveyQuestion.getId(),
-					QuestionType.CHOICES, componentIndex);
+			surveyQuestionAnswerChoice = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+					.createNewRow(surveyQuestion.getId(), QuestionType.CHOICES, componentIndex);
 		}
 
 		CTextField descriptionFld = new CTextField();
@@ -214,7 +202,7 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 				SurveyQuestionVO surveyQuestionVO = new SurveyQuestionVO();
 				surveyQuestionVO.setId(surveyQuestion.getId());
 				surveyQuestionVO.setMultipleSelection(event.getValue());
-				surveyQuestionService.updateMultipleSelection(surveyQuestionVO);
+				SurveyQuestionServiceFacade.get(UI.getCurrent()).updateMultipleSelection(surveyQuestionVO);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -236,7 +224,7 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 				SurveyQuestionAnswerChoiceVO surveyQuestionAnswerChoiceVO = new SurveyQuestionAnswerChoiceVO();
 				surveyQuestionAnswerChoiceVO.setId(surveyQuestionAnswerChoice.getId());
 				surveyQuestionAnswerChoiceVO.setLabel(event.getValue());
-				surveyQuestionAnswerChoiceService.updateLabel(surveyQuestionAnswerChoiceVO);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateLabel(surveyQuestionAnswerChoiceVO);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -258,8 +246,9 @@ public class QuestionTypeChoicesResponseLayout extends VerticalLayout {
 		public void buttonClick(ClickEvent event) {
 			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
-				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(),surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.ROW, componentIndex+1);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).deleteAndUpdateIndex(
+						SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId(),
+						surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.ROW, componentIndex + 1);
 				rowContainerLayout.removeComponent(rowLayout);
 				createRowIfNonExists();
 			} catch (FrameworkException e) {

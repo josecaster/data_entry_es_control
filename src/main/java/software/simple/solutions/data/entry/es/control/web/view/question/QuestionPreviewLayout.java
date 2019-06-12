@@ -11,6 +11,7 @@ import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Component;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -20,8 +21,8 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerHistoryService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerHistoryServiceFacade;
 import software.simple.solutions.data.entry.es.control.web.view.SurveyResponseHistoryPreviewGenerator;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeAreaFeetInchLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.preview.QuestionTypeChoiceLayout;
@@ -35,7 +36,6 @@ import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.RevisionPojo;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.view.audit.HistoryView;
 import software.simple.solutions.framework.core.web.view.audit.RevisionViewGenerator;
@@ -55,11 +55,9 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		@Override
 		public void buttonClick(ClickEvent event) {
 			try {
-				ISurveyResponseAnswerHistoryService surveyResponseAnswerHistoryService = ContextProvider
-						.getBean(ISurveyResponseAnswerHistoryService.class);
-				SurveyResponseAnswerHistory surveyResponseAnswerHistory = surveyResponseAnswerHistoryService
-						.getSurveyResponseAnswerHistoryByResponseAndQuestion(surveyResponse.getId(),
-								surveyQuestion.getId());
+				SurveyResponseAnswerHistory surveyResponseAnswerHistory = SurveyResponseAnswerHistoryServiceFacade
+						.get(UI.getCurrent()).getSurveyResponseAnswerHistoryByResponseAndQuestion(
+								surveyResponse.getId(), surveyQuestion.getId());
 				if (surveyResponseAnswerHistory != null) {
 					HistoryView historyView = new HistoryView(cl, surveyResponseAnswerHistory.getId());
 					historyView.setRevisionViewGenerator(new RevisionViewGenerator() {
@@ -239,8 +237,8 @@ public class QuestionPreviewLayout extends VerticalLayout {
 	}
 
 	public void reset() throws FrameworkException {
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		surveyQuestion = surveyQuestionService.getById(SurveyQuestion.class, surveyQuestion.getId());
+		surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent()).getById(SurveyQuestion.class,
+				surveyQuestion.getId());
 		removeAllComponents();
 		setUpLayout();
 		setValue();

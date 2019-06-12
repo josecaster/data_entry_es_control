@@ -9,6 +9,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -20,8 +21,8 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
-import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeChoicesResponseLayout;
 import software.simple.solutions.data.entry.es.control.web.view.question.type.QuestionTypeMatrixResponseLayout;
@@ -37,7 +38,6 @@ import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionDetailsLayout extends VerticalLayout {
 
@@ -159,9 +159,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 					@Override
 					public void handlePositive() {
 						try {
-							ISurveyQuestionService surveyQuestionService = ContextProvider
-									.getBean(ISurveyQuestionService.class);
-							surveyQuestionService.delete(SurveyQuestion.class, surveyQuestion.getId());
+							SurveyQuestionServiceFacade.get(UI.getCurrent()).delete(SurveyQuestion.class,
+									surveyQuestion.getId());
 							NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 							deletedObserver.onNext(true);
 						} catch (FrameworkException e) {
@@ -189,8 +188,7 @@ public class QuestionDetailsLayout extends VerticalLayout {
 		vo.setNew(surveyQuestion == null);
 		vo.setId(surveyQuestion == null ? null : surveyQuestion.getId());
 
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		surveyQuestion = surveyQuestionService.updateSingle(vo);
+		surveyQuestion = SurveyQuestionServiceFacade.get(UI.getCurrent()).updateSingle(vo);
 	}
 
 	public BehaviorSubject<SurveyQuestion> getObserver() {
@@ -210,8 +208,8 @@ public class QuestionDetailsLayout extends VerticalLayout {
 	public void setSurvey(Survey survey) {
 		this.survey = survey;
 		try {
-			ISurveySectionService surveyQuestionSectionService = ContextProvider.getBean(ISurveySectionService.class);
-			SurveySection surveySection = surveyQuestionSectionService.getPinnedSectionBySurvey(survey.getId());
+			SurveySection surveySection = SurveySectionServiceFacade.get(UI.getCurrent())
+					.getPinnedSectionBySurvey(survey.getId());
 			setSurveySection(surveySection);
 		} catch (FrameworkException e) {
 			new MessageWindowHandler(e);

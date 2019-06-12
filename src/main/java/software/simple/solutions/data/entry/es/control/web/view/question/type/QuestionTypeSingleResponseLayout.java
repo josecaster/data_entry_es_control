@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import io.reactivex.functions.Consumer;
@@ -14,14 +15,13 @@ import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyGroupServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.framework.core.components.CComboBox;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionTypeSingleResponseLayout extends VerticalLayout {
 
@@ -43,8 +43,8 @@ public class QuestionTypeSingleResponseLayout extends VerticalLayout {
 	}
 
 	public void buildMainLayout() throws FrameworkException {
-		ISurveyGroupService surveyGroupService = ContextProvider.getBean(ISurveyGroupService.class);
-		List<ComboItem> surveyGroups = surveyGroupService.findBySurvey(surveyQuestion.getSurvey().getId());
+		List<ComboItem> surveyGroups = SurveyGroupServiceFacade.get(UI.getCurrent())
+				.findBySurvey(surveyQuestion.getSurvey().getId());
 		makeGroupQuestionRequiredFld = new CComboBox();
 		makeGroupQuestionRequiredFld.setItems(surveyGroups);
 		makeGroupQuestionRequiredFld.setWidth("300px");
@@ -56,9 +56,8 @@ public class QuestionTypeSingleResponseLayout extends VerticalLayout {
 
 			@Override
 			public void valueChange(ValueChangeEvent<ComboItem> event) {
-				ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
 				try {
-					surveyQuestionService.updateSurveyQuestionGroup(surveyQuestion.getId(),
+					SurveyQuestionServiceFacade.get(UI.getCurrent()).updateSurveyQuestionGroup(surveyQuestion.getId(),
 							makeGroupQuestionRequiredFld.getLongValue());
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -74,8 +73,8 @@ public class QuestionTypeSingleResponseLayout extends VerticalLayout {
 
 				@Override
 				public void accept(SurveyGroup t) throws Exception {
-					ISurveyGroupService surveyGroupService = ContextProvider.getBean(ISurveyGroupService.class);
-					List<ComboItem> surveyGroups = surveyGroupService.findBySurvey(surveyQuestion.getSurvey().getId());
+					List<ComboItem> surveyGroups = SurveyGroupServiceFacade.get(UI.getCurrent())
+							.findBySurvey(surveyQuestion.getSurvey().getId());
 					makeGroupQuestionRequiredFld.setItems(surveyGroups);
 				}
 			});

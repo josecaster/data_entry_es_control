@@ -14,7 +14,7 @@ import com.vaadin.ui.themes.ValoTheme;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.properties.EsControlConfigurationProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyServiceFacade;
 import software.simple.solutions.framework.core.annotations.CxodeConfigurationComponent;
 import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CGridLayout;
@@ -25,8 +25,7 @@ import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemProperty;
-import software.simple.solutions.framework.core.service.IConfigurationService;
-import software.simple.solutions.framework.core.util.ContextProvider;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.valueobjects.ConfigurationVO;
 
 @CxodeConfigurationComponent(order = 100, captionKey = EsControlConfigurationProperty.ES_CONTROL_SURVEY_CONFIGURATION)
@@ -64,9 +63,8 @@ public class EsControlConfiguration extends CGridLayout {
 				List<ConfigurationVO> configurations = new ArrayList<ConfigurationVO>();
 				configurations.add(getValue(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION,
 						surveyFileStorageLocationFld.getValue()));
-				IConfigurationService configurationService = ContextProvider.getBean(IConfigurationService.class);
 				try {
-					configurationService.update(configurations);
+					ConfigurationServiceFacade.get(UI.getCurrent()).update(configurations);
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -80,8 +78,7 @@ public class EsControlConfiguration extends CGridLayout {
 	}
 
 	private void setValues() throws FrameworkException {
-		ISurveyService surveyService = ContextProvider.getBean(ISurveyService.class);
-		List<Configuration> configurations = surveyService.getEsControlConfigurations();
+		List<Configuration> configurations = SurveyServiceFacade.get(UI.getCurrent()).getEsControlConfigurations();
 		configurations.forEach(configuration -> {
 			switch (configuration.getCode()) {
 			case EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION:

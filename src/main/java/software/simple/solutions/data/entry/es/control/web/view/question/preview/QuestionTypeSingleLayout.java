@@ -4,18 +4,18 @@ import com.google.gson.Gson;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.ValueChangeMode;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswerHistory;
-import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CTextArea;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 
 public class QuestionTypeSingleLayout extends VerticalLayout {
 
@@ -30,8 +30,6 @@ public class QuestionTypeSingleLayout extends VerticalLayout {
 		@Override
 		public void valueChange(ValueChangeEvent<String> event) {
 			String value = event.getValue();
-			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-					.getBean(ISurveyResponseAnswerService.class);
 			SurveyResponseAnswerVO surveyResponseAnswerVO = new SurveyResponseAnswerVO();
 			surveyResponseAnswerVO.setId(surveyResponseAnswer == null ? null : surveyResponseAnswer.getId());
 			surveyResponseAnswerVO.setActive(true);
@@ -43,7 +41,7 @@ public class QuestionTypeSingleLayout extends VerticalLayout {
 			surveyResponseAnswerVO.setCurrentUserId(sessionHolder.getApplicationUser().getId());
 			surveyResponseAnswerVO.setResponseText(value);
 			try {
-				surveyResponseAnswerService.updateAnswerForSingle(surveyResponseAnswerVO);
+				SurveyResponseAnswerServiceFacade.get(UI.getCurrent()).updateAnswerForSingle(surveyResponseAnswerVO);
 			} catch (FrameworkException e) {
 				e.printStackTrace();
 			}
@@ -86,15 +84,13 @@ public class QuestionTypeSingleLayout extends VerticalLayout {
 		addComponent(answerFld);
 
 		if (surveyResponse != null) {
-			ISurveyResponseAnswerService surveyResponseAnswerService = ContextProvider
-					.getBean(ISurveyResponseAnswerService.class);
 			try {
 				if (surveyResponseAnswerHistory != null) {
 					String responseJson = surveyResponseAnswerHistory.getResponseJson();
 					String fromJson = new Gson().fromJson(responseJson, String.class);
 					answerFld.setValue(fromJson);
 				} else {
-					SurveyResponseAnswer surveyResponseAnswer = surveyResponseAnswerService
+					SurveyResponseAnswer surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 							.getSurveyResponseAnswer(surveyResponse.getId(), surveyQuestion.getId());
 					if (surveyResponseAnswer != null) {
 						answerFld.setValue(surveyResponseAnswer.getResponseText());

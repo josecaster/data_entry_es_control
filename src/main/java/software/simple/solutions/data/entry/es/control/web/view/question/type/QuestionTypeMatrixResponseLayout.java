@@ -13,6 +13,7 @@ import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Layout;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 
@@ -24,7 +25,7 @@ import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionAnswerChoiceVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.DateColumnConfigurationView;
 import software.simple.solutions.data.entry.es.control.web.view.question.configuration.DecimalNumberColumnConfigurationView;
@@ -39,7 +40,6 @@ import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.icons.CxodeIcons;
 import software.simple.solutions.framework.core.pojo.ComboItem;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
@@ -53,12 +53,9 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 	private SurveyQuestion surveyQuestion;
 	private SessionHolder sessionHolder;
 
-	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
-
 	public QuestionTypeMatrixResponseLayout(SessionHolder sessionHolder, SurveyQuestion surveyQuestion) {
 		this.sessionHolder = sessionHolder;
 		this.surveyQuestion = surveyQuestion;
-		surveyQuestionAnswerChoiceService = ContextProvider.getBean(ISurveyQuestionAnswerChoiceService.class);
 		setMargin(false);
 		buildMainLayout();
 	}
@@ -91,7 +88,8 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 	}
 
 	public void retrieveSurveyQuestionAnswerChoices() throws FrameworkException {
-		surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService.findBySurveyQuestion(surveyQuestion.getId());
+		surveyQuestionAnswerChoices = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+				.findBySurveyQuestion(surveyQuestion.getId());
 	}
 
 	public void createColumnsFromSurveyQuestion() throws FrameworkException {
@@ -132,8 +130,8 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 	private void updateQuestionTypeIfNeeded(SurveyQuestionAnswerChoice surveyQuestionAnswerChoice)
 			throws FrameworkException {
 		if (!surveyQuestionAnswerChoice.getQuestionType().equalsIgnoreCase(QuestionType.MATRIX)) {
-			surveyQuestionAnswerChoiceService.updateQuestionType(surveyQuestionAnswerChoice.getId(),
-					QuestionType.MATRIX);
+			SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+					.updateQuestionType(surveyQuestionAnswerChoice.getId(), QuestionType.MATRIX);
 		}
 	}
 
@@ -155,8 +153,8 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 		int componentIndex = columContainerLayout.getComponentIndex(mainLayout);
 
 		if (surveyQuestionAnswerChoice == null) {
-			surveyQuestionAnswerChoice = surveyQuestionAnswerChoiceService.createNewColumn(surveyQuestion.getId(),
-					QuestionType.MATRIX, componentIndex);
+			surveyQuestionAnswerChoice = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+					.createNewColumn(surveyQuestion.getId(), QuestionType.MATRIX, componentIndex);
 		}
 
 		CTextField descriptionFld = new CTextField();
@@ -218,8 +216,8 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 		int componentIndex = rowContainerLayout.getComponentIndex(mainLayout);
 
 		if (surveyQuestionAnswerChoice == null) {
-			surveyQuestionAnswerChoice = surveyQuestionAnswerChoiceService.createNewRow(surveyQuestion.getId(),
-					QuestionType.MATRIX, componentIndex);
+			surveyQuestionAnswerChoice = SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+					.createNewRow(surveyQuestion.getId(), QuestionType.MATRIX, componentIndex);
 		}
 
 		CTextField rowLabelFld = new CTextField();
@@ -370,7 +368,7 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 				SurveyQuestionAnswerChoiceVO surveyQuestionAnswerChoiceVO = new SurveyQuestionAnswerChoiceVO();
 				surveyQuestionAnswerChoiceVO.setId(surveyQuestionAnswerChoice.getId());
 				surveyQuestionAnswerChoiceVO.setLabel(event.getValue());
-				surveyQuestionAnswerChoiceService.updateLabel(surveyQuestionAnswerChoiceVO);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).updateLabel(surveyQuestionAnswerChoiceVO);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -411,7 +409,8 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 				} else {
 					surveyQuestionAnswerChoiceVO.setMultipleSelection(false);
 				}
-				surveyQuestionAnswerChoiceService.updateMatrixColumnType(surveyQuestionAnswerChoiceVO);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent())
+						.updateMatrixColumnType(surveyQuestionAnswerChoiceVO);
 			} catch (FrameworkException e) {
 				logger.error(e.getMessage(), e);
 				new MessageWindowHandler(e);
@@ -434,9 +433,9 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 
 			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
-				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(), surveyQuestionAnswerChoice.getSurveyQuestion().getId(),
-						Axis.COLUMN, componentIndex + 1);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).deleteAndUpdateIndex(
+						SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId(),
+						surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.COLUMN, componentIndex + 1);
 
 				columContainerLayout.removeComponent(rowLayout);
 				createColumnIfNonExists();
@@ -462,9 +461,9 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 
 			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
 			try {
-				surveyQuestionAnswerChoiceService.deleteAndUpdateIndex(SurveyQuestionAnswerChoice.class,
-						surveyQuestionAnswerChoice.getId(), surveyQuestionAnswerChoice.getSurveyQuestion().getId(),
-						Axis.ROW, componentIndex + 1);
+				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).deleteAndUpdateIndex(
+						SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId(),
+						surveyQuestionAnswerChoice.getSurveyQuestion().getId(), Axis.ROW, componentIndex + 1);
 				rowContainerLayout.removeComponent(rowLayout);
 				createRowIfNonExists();
 			} catch (FrameworkException e) {

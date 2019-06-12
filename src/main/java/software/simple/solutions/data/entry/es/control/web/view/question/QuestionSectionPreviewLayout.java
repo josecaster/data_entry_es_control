@@ -15,13 +15,12 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
-import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CaptionLabel;
 import software.simple.solutions.framework.core.components.SessionHolder;
 import software.simple.solutions.framework.core.constants.Style;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.util.ContextProvider;
 import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class QuestionSectionPreviewLayout extends VerticalLayout {
@@ -74,9 +73,8 @@ public class QuestionSectionPreviewLayout extends VerticalLayout {
 
 		sectionFld.setValue(surveySection.getName());
 
-		ISurveyQuestionService surveyQuestionService = ContextProvider.getBean(ISurveyQuestionService.class);
-		List<SurveyQuestion> questionList = surveyQuestionService.getQuestionList(surveySection.getSurvey().getId(),
-				null, surveySection.getId());
+		List<SurveyQuestion> questionList = SurveyQuestionServiceFacade.get(UI.getCurrent())
+				.getQuestionList(surveySection.getSurvey().getId(), null, surveySection.getId());
 		CGridLayout gridLayout = new CGridLayout();
 		gridLayout.setWidth("100%");
 		gridLayout.setColumns(2);
