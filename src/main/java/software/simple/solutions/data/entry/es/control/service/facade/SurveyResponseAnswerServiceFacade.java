@@ -8,13 +8,12 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAn
 import software.simple.solutions.data.entry.es.control.service.ISurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 
 public class SurveyResponseAnswerServiceFacade extends SuperServiceFacade<ISurveyResponseAnswerService>
 		implements ISurveyResponseAnswerService {
 
-	public SurveyResponseAnswerServiceFacade(UI ui, Class<? extends ISuperService> s) {
+	public SurveyResponseAnswerServiceFacade(UI ui, Class<ISurveyResponseAnswerService> s) {
 		super(ui, s);
 	}
 

@@ -9,13 +9,12 @@ import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionSe
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 
 public class SurveyQuestionServiceFacade extends SuperServiceFacade<ISurveyQuestionService>
 		implements ISurveyQuestionService {
 
-	public SurveyQuestionServiceFacade(UI ui, Class<? extends ISuperService> s) {
+	public SurveyQuestionServiceFacade(UI ui, Class<ISurveyQuestionService> s) {
 		super(ui, s);
 	}
 

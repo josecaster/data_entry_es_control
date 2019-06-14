@@ -7,13 +7,12 @@ import com.vaadin.ui.UI;
 import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 
 public class SurveyApplicationUserServiceFacade extends SuperServiceFacade<ISurveyApplicationUserService>
 		implements ISurveyApplicationUserService {
 
-	public SurveyApplicationUserServiceFacade(UI ui, Class<? extends ISuperService> s) {
+	public SurveyApplicationUserServiceFacade(UI ui, Class<ISurveyApplicationUserService> s) {
 		super(ui, s);
 	}
 

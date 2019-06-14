@@ -7,14 +7,13 @@ import com.vaadin.ui.UI;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoiceSelection;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 
 public class SurveyQuestionAnswerChoiceSelectionServiceFacade
 		extends SuperServiceFacade<ISurveyQuestionAnswerChoiceSelectionService>
 		implements ISurveyQuestionAnswerChoiceSelectionService {
 
-	public SurveyQuestionAnswerChoiceSelectionServiceFacade(UI ui, Class<? extends ISuperService> s) {
+	public SurveyQuestionAnswerChoiceSelectionServiceFacade(UI ui, Class<ISurveyQuestionAnswerChoiceSelectionService> s) {
 		super(ui, s);
 	}
 

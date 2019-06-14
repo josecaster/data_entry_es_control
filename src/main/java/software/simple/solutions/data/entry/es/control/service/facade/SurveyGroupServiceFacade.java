@@ -8,12 +8,11 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
-import software.simple.solutions.framework.core.service.ISuperService;
 import software.simple.solutions.framework.core.service.facade.SuperServiceFacade;
 
 public class SurveyGroupServiceFacade extends SuperServiceFacade<ISurveyGroupService> implements ISurveyGroupService {
 
-	public SurveyGroupServiceFacade(UI ui, Class<? extends ISuperService> s) {
+	public SurveyGroupServiceFacade(UI ui, Class<ISurveyGroupService> s) {
 		super(ui, s);
 	}
 
