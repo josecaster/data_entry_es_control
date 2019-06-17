@@ -87,4 +87,9 @@ public class SurveyQuestionServiceFacade extends SuperServiceFacade<ISurveyQuest
 	public SurveyQuestion updateRequiredError(Long surveyQuestionId, String requiredError) throws FrameworkException {
 		return service.updateRequiredError(surveyQuestionId, requiredError);
 	}
+
+	@Override
+	public void removeUsersFromQuestions(Long surveyId, Long userId) throws FrameworkException {
+		service.removeUsersFromQuestions(surveyId, userId);
+	}
 }

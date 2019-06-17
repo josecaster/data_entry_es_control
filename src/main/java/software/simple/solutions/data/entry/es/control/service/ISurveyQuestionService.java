@@ -47,4 +47,6 @@ public interface ISurveyQuestionService extends ISuperService {
 
 	SurveyQuestion updateRequiredError(Long surveyQuestionId, String requiredError) throws FrameworkException;
 
+	void removeUsersFromQuestions(Long surveyId, Long userId) throws FrameworkException;
+
 }

@@ -12,9 +12,10 @@ public interface ISurveyQuestionRepository extends IGenericRepository {
 	List<SurveyQuestion> getQuestionList(Long surveyId) throws FrameworkException;
 
 	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText) throws FrameworkException;
-	
-	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId) throws FrameworkException;
-	
+
+	List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId)
+			throws FrameworkException;
+
 	Long getNextOrder(Long surveyId) throws FrameworkException;
 
 	SurveyQuestion getSurveyQuestionByOrder(Long surveyId, Long order) throws FrameworkException;
@@ -27,6 +28,6 @@ public interface ISurveyQuestionRepository extends IGenericRepository {
 
 	List<ComboItem> getNextQuestions(Long order) throws FrameworkException;
 
-	
+	void removeUsersFromQuestions(Long surveyId, Long userId) throws FrameworkException;
 
 }

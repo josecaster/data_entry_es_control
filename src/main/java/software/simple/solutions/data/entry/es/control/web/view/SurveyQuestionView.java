@@ -226,7 +226,8 @@ public class SurveyQuestionView extends AbstractBaseView {
 				}
 			});
 		}
-		Long sectionId = surveySectionFld.getLongValue();
+		Long sectionId = surveyQuestion == null ? surveySectionFld.getLongValue()
+				: surveyQuestion.getSurveySection().getId();
 		SurveySection surveySection = SurveySectionServiceFacade.get(UI.getCurrent()).get(SurveySection.class,
 				sectionId);
 		// if (surveyQuestion != null) {

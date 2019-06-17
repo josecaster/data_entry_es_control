@@ -70,6 +70,18 @@ public class EsControlTables extends CxodeTables {
 			public static final String ENABLE_APPLICABILITY_ = "ENABLE_APPLICABILITY_";
 		}
 	}
+	
+	public final class SURVEY_QUESTION_USERS_ {
+
+		public static final String NAME = "SURVEY_QUESTION_USERS_";
+
+		public final class COLUMNS {
+			public static final String SURVEY_ID_ = "SURVEY_ID_";
+			public static final String QUESTION_ID_ = "QUESTION_ID_";
+			public static final String APPLICATION_USER_ID_ = "APPLICATION_USER_ID_";
+			public static final String ACTIVE_ = "ACTIVE_";
+		}
+	}
 
 	public final class SURVEY_QUESTION_ANSWER_CHOICES_ {
 

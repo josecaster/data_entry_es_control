@@ -7,5 +7,6 @@ public class SurveyGroupProperty {
 	public static final String NAME = "model.survey.group.name";
 	public static final String DESCRIPTION = "model.survey.group.description";
 	public static final String SURVEY = "model.survey.group.survey";
+	
 
 }

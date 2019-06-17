@@ -12,14 +12,17 @@ import software.simple.solutions.data.entry.es.control.constants.Position;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
+import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionUser;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionAnswerChoiceRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyQuestionRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveySectionRepository;
+import software.simple.solutions.data.entry.es.control.service.ISurveyApplicationUserService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyQuestionVO;
 import software.simple.solutions.framework.core.annotations.ServiceRepository;
+import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.Arg;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.pojo.ComboItem;
@@ -41,6 +44,9 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 
 	@Autowired
 	private ISurveySectionRepository surveyQuestionSectionRepository;
+
+	@Autowired
+	private ISurveyApplicationUserService surveyApplicationUserService;
 
 	@Override
 	public <T, R extends SuperVO> T updateSingle(R valueObject) throws FrameworkException {
@@ -66,6 +72,7 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 
 		if (vo.isNew()) {
 			updateSectionIfPinned(surveyQuestion);
+			addUsersToQuestion(surveyQuestion);
 		}
 
 		if (!vo.isNew()) {
@@ -73,6 +80,21 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 		}
 
 		return (T) saveOrUpdate(surveyQuestion, vo.isNew());
+	}
+
+	private void addUsersToQuestion(SurveyQuestion surveyQuestion) throws FrameworkException {
+		List<ApplicationUser> users = surveyApplicationUserService
+				.findApplicationUserBySurvey(surveyQuestion.getSurvey().getId());
+		if (users != null) {
+			for (ApplicationUser user : users) {
+				SurveyQuestionUser surveyQuestionUser = new SurveyQuestionUser();
+				surveyQuestionUser.setActive(true);
+				surveyQuestionUser.setApplicationUser(user);
+				surveyQuestionUser.setSurvey(surveyQuestion.getSurvey());
+				surveyQuestionUser.setSurveyQuestion(surveyQuestion);
+				saveOrUpdate(surveyQuestionUser, true);
+			}
+		}
 	}
 
 	private SurveyQuestion updateSectionIfPinned(SurveyQuestion surveyQuestion) throws FrameworkException {
@@ -165,9 +187,10 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText) throws FrameworkException {
 		return surveyQuestionRepository.getQuestionList(surveyId, queryText);
 	}
-	
+
 	@Override
-	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId) throws FrameworkException {
+	public List<SurveyQuestion> getQuestionList(Long surveyId, String queryText, Long surveySectionId)
+			throws FrameworkException {
 		return surveyQuestionRepository.getQuestionList(surveyId, queryText, surveySectionId);
 	}
 
@@ -216,7 +239,7 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 		surveyQuestion.setSurveySection(get(SurveySection.class, sectionId));
 		return saveOrUpdate(surveyQuestion, false);
 	}
-	
+
 	@Override
 	public SurveyQuestion updateSurveyQuestionGroup(Long surveyQuestionId, Long groupId) throws FrameworkException {
 		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, surveyQuestionId);
@@ -243,6 +266,11 @@ public class SurveyQuestionService extends SuperService implements ISurveyQuesti
 		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, surveyQuestionId);
 		surveyQuestion.setRequiredError(requiredError);
 		return saveOrUpdate(surveyQuestion, false);
+	}
+
+	@Override
+	public void removeUsersFromQuestions(Long surveyId, Long userId) throws FrameworkException {
+		surveyQuestionRepository.removeUsersFromQuestions(surveyId,userId);
 	}
 
 }

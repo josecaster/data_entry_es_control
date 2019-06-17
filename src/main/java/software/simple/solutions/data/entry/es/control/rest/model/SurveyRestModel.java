@@ -5,6 +5,7 @@ import java.util.List;
 public class SurveyRestModel {
 
 	private SurveyModel survey;
+	private List<SurveyQuestionUserModel> surveyQuestionUsers;
 	private List<SurveySectionModel> surveySections;
 	private List<SurveyGroupModel> surveyGroups;
 	private List<SurveyQuestionModel> surveyQuestions;
@@ -62,6 +63,14 @@ public class SurveyRestModel {
 	public void setSurveyQuestionAnswerChoiceSelections(
 			List<SurveyQuestionAnswerChoiceSelectionModel> surveyQuestionAnswerChoiceSelections) {
 		this.surveyQuestionAnswerChoiceSelections = surveyQuestionAnswerChoiceSelections;
+	}
+
+	public List<SurveyQuestionUserModel> getSurveyQuestionUsers() {
+		return surveyQuestionUsers;
+	}
+
+	public void setSurveyQuestionUsers(List<SurveyQuestionUserModel> surveyQuestionUsers) {
+		this.surveyQuestionUsers = surveyQuestionUsers;
 	}
 
 }

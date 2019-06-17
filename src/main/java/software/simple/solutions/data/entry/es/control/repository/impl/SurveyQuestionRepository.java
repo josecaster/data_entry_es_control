@@ -96,4 +96,13 @@ public class SurveyQuestionRepository extends GenericRepository implements ISurv
 		return createListQuery(query, paramMap);
 	}
 
+	@Override
+	public void removeUsersFromQuestions(Long surveyId, Long userId) throws FrameworkException {
+		String delete = "delete from SurveyQuestionUser squ where squ.survey.id=:surveyId and squ.applicationUser.id=:userId";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("surveyId", surveyId);
+		paramMap.put("userId", userId);
+		deleteByHql(delete, paramMap);
+	}
+
 }

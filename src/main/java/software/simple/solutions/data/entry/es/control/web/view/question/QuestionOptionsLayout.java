@@ -1,13 +1,22 @@
 package software.simple.solutions.data.entry.es.control.web.view.question;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.fo0.advancedtokenfield.listener.TokenAddListener;
+import com.fo0.advancedtokenfield.listener.TokenRemoveListener;
+import com.fo0.advancedtokenfield.main.AdvancedTokenField;
+import com.fo0.advancedtokenfield.model.Token;
+import com.fo0.advancedtokenfield.model.TokenLayout;
 import com.vaadin.data.HasValue.ValueChangeEvent;
 import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.shared.ui.ValueChangeMode;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.themes.ValoTheme;
 
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyGroupLookUpField;
@@ -18,15 +27,52 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyGroupProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveyQuestionUserProperty;
 import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyApplicationUserServiceFacade;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionServiceFacade;
+import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionUserServiceFacade;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CTextArea;
 import software.simple.solutions.framework.core.components.MessageWindowHandler;
 import software.simple.solutions.framework.core.components.SessionHolder;
+import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
+import software.simple.solutions.framework.core.util.NumberUtil;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 
 public class QuestionOptionsLayout extends VerticalLayout {
+
+	private final class UserTokenRemoved implements TokenRemoveListener {
+		@Override
+		public void action(TokenLayout event) {
+			Token token = event.getToken();
+			usersFld.getTokensOfInputField().add(token);
+			SurveyQuestionUserServiceFacade surveyQuestionUserServiceFacade = SurveyQuestionUserServiceFacade
+					.get(UI.getCurrent());
+			try {
+				surveyQuestionUserServiceFacade.removeUserFromSurveyQuestion(survey.getId(), surveyQuestion.getId(),
+						NumberUtil.getLong(token.getId()));
+			} catch (FrameworkException e) {
+				new MessageWindowHandler(e);
+			}
+		}
+	}
+
+	private final class UserTokenSelected implements TokenAddListener {
+		@Override
+		public void action(Token token) {
+			usersFld.getTokensOfInputField().remove(token);
+			SurveyQuestionUserServiceFacade surveyQuestionUserServiceFacade = SurveyQuestionUserServiceFacade
+					.get(UI.getCurrent());
+			try {
+				surveyQuestionUserServiceFacade.addUserToSurveyQuestion(survey.getId(), surveyQuestion.getId(),
+						NumberUtil.getLong(token.getId()));
+			} catch (FrameworkException e) {
+				new MessageWindowHandler(e);
+			}
+		}
+	}
 
 	private static final Logger logger = LogManager.getLogger(QuestionOptionsLayout.class);
 
@@ -35,6 +81,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 	private CTextArea requiredErrorFld;
 	private SurveySectionLookUpField sectionFld;
 	private SurveyGroupLookUpField groupFld;
+	private AdvancedTokenField usersFld;
 	// private CButton saveBtn;
 	private SurveyQuestion surveyQuestion;
 	private final BehaviorSubject<SurveyQuestion> observer;
@@ -90,38 +137,13 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		groupFld.setCaptionByKey(SurveyGroupProperty.SURVEY_GROUP);
 		addComponent(groupFld);
 
-		// saveBtn = new CButton();
-		// saveBtn.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_SUBMIT);
-		// saveBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-		// addComponent(saveBtn);
-		// saveBtn.addClickListener(new ClickListener() {
-		//
-		// @Override
-		// public void buttonClick(ClickEvent event) {
-		// try {
-		// handleSaveOrUpdate();
-		// observer.onNext(surveyQuestion);
-		// } catch (FrameworkException e) {
-		// logger.error(e.getMessage(), e);
-		// new MessageWindowHandler(e);
-		// }
-		// }
-		// });
+		usersFld = new AdvancedTokenField();
+		usersFld.setQuerySuggestionInputMinLength(0);
+		usersFld.addStyleName(ValoTheme.COMBOBOX_SMALL);
+		usersFld.setCaption(PropertyResolver.getPropertyValueByLocale(SurveyQuestionUserProperty.ACCESSIBLE_TO_USER,
+				UI.getCurrent().getLocale()));
+		addComponent(usersFld);
 	}
-
-	// protected void handleSaveOrUpdate() throws FrameworkException {
-	// SurveyQuestionVO vo = new SurveyQuestionVO();
-	// vo.setRequired(requiredFld.getValue());
-	// if (requiredFld.getValue()) {
-	// vo.setRequiredMessage(requiredErrorFld.getValue());
-	// }
-	// vo.setSurveyId(survey == null ? null : survey.getId());
-	// vo.setId(surveyQuestion == null ? null : surveyQuestion.getId());
-	// vo.setNew(surveyQuestion == null);
-	// vo.setUpdatedBy(sessionHolder.getApplicationUser().getId());
-	//
-	// ISurveyQuestionService surveyQuestionService =
-	// }
 
 	public BehaviorSubject<SurveyQuestion> getObserver() {
 		return observer;
@@ -214,6 +236,34 @@ public class QuestionOptionsLayout extends VerticalLayout {
 				}
 			}
 		});
+		SurveyApplicationUserServiceFacade surveyApplicationUserServiceFacade = SurveyApplicationUserServiceFacade
+				.get(UI.getCurrent());
+		try {
+			List<ApplicationUser> users = surveyApplicationUserServiceFacade
+					.findApplicationUserBySurvey(survey.getId());
+			if (users != null) {
+				List<Token> list = users.stream()
+						.map(p -> (Token.builder().id(p.getId().toString()).value(p.getUsername()).build()))
+						.collect(Collectors.toList());
+				usersFld.addTokensToInputField(list);
+
+				SurveyQuestionUserServiceFacade surveyQuestionUserServiceFacade = SurveyQuestionUserServiceFacade
+						.get(UI.getCurrent());
+				List<ApplicationUser> applicationUsers = surveyQuestionUserServiceFacade
+						.findBySurveyAndQuestion(survey.getId(), surveyQuestion.getId());
+				List<Token> applicationUserTokens = applicationUsers.stream()
+						.map(p -> (Token.builder().id(p.getId().toString()).value(p.getUsername()).build()))
+						.collect(Collectors.toList());
+				usersFld.addTokens(applicationUserTokens);
+				usersFld.getTokensOfInputField().removeAll(applicationUserTokens);
+
+				usersFld.addTokenAddListener(new UserTokenSelected());
+				usersFld.addTokenRemoveListener(new UserTokenRemoved());
+			}
+
+		} catch (FrameworkException e) {
+			new MessageWindowHandler(e);
+		}
 	}
 
 	public BehaviorSubject<Boolean> getOptionsUpdatedObserver() {

@@ -8,6 +8,9 @@
 	<include file="create-table-survey-questions.xml"
 		relativeToChangelogFile="true" />
 
+	<include file="create-table-survey-question-users.xml"
+		relativeToChangelogFile="true" />
+
 	<include file="create-table-survey-sections.xml"
 		relativeToChangelogFile="true" />
 

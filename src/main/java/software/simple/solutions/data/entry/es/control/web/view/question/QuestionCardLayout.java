@@ -183,7 +183,8 @@ public class QuestionCardLayout extends VerticalLayout {
 		if (privileges.contains(EscontrolPrivileges.SURVEY_SHOW_PREVIEW_TAB)) {
 			questionSectionPreviewLayout = new QuestionSectionPreviewLayout();
 			// questionSectionPreviewLayout.setSurveyQuestion(surveyQuestion);
-			questionSectionPreviewLayout.setSurveySection(surveySection);
+			questionSectionPreviewLayout
+					.setSurveySection(surveyQuestion == null ? surveySection : surveyQuestion.getSurveySection());
 			tabSheet.addComponent(questionSectionPreviewLayout);
 			tabSheet.getTab(questionSectionPreviewLayout)
 					.setCaption(PropertyResolver.getPropertyValueByLocale(SurveyQuestionProperty.QUESTION_PREVIEW));
@@ -206,6 +207,7 @@ public class QuestionCardLayout extends VerticalLayout {
 				@Override
 				public void accept(SurveyQuestion surveyQuestion) throws Exception {
 					QuestionCardLayout.this.surveyQuestion = surveyQuestion;
+					QuestionCardLayout.this.surveySection = surveyQuestion.getSurveySection();
 					observer.onNext(surveyQuestion);
 					redrawLayout();
 				}

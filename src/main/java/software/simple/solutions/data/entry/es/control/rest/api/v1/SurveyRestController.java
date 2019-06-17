@@ -15,19 +15,22 @@ import software.simple.solutions.data.entry.es.control.entities.SurveyGroup;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoice;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionAnswerChoiceSelection;
+import software.simple.solutions.data.entry.es.control.entities.SurveyQuestionUser;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyGroupModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyQuestionAnswerChoiceModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyQuestionAnswerChoiceSelectionModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyQuestionModel;
+import software.simple.solutions.data.entry.es.control.rest.model.SurveyQuestionUserModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveyRestModel;
 import software.simple.solutions.data.entry.es.control.rest.model.SurveySectionModel;
 import software.simple.solutions.data.entry.es.control.service.ISurveyGroupService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceSelectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionAnswerChoiceService;
-import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionService;
+import software.simple.solutions.data.entry.es.control.service.ISurveyQuestionUserService;
+import software.simple.solutions.data.entry.es.control.service.ISurveySectionService;
 import software.simple.solutions.data.entry.es.control.service.ISurveyService;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 
@@ -48,6 +51,9 @@ public class SurveyRestController {
 	private ISurveyQuestionService surveyQuestionService;
 
 	@Autowired
+	private ISurveyQuestionUserService surveyQuestionUserService;
+
+	@Autowired
 	private ISurveyQuestionAnswerChoiceService surveyQuestionAnswerChoiceService;
 
 	@Autowired
@@ -55,7 +61,8 @@ public class SurveyRestController {
 
 	@GetMapping(path = "/", produces = "application/json")
 	public List<SurveyRestModel> getSurveys() throws FrameworkException {
-//		String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		// String username = (String)
+		// SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 		String username = user.getUsername();
 		List<Survey> surveys = surveyService.findAllSurveysByUser(username);
@@ -73,6 +80,10 @@ public class SurveyRestController {
 
 				List<SurveyQuestion> surveyQuestions = surveyQuestionService.getQuestionList(survey.getId());
 				surveyModel.setSurveyQuestions(getSurveyQuestions(surveyQuestions));
+
+				List<SurveyQuestionUser> surveyQuestionUsers = surveyQuestionUserService
+						.getSurveyQuestionUserList(survey.getId());
+				surveyModel.setSurveyQuestionUsers(getSurveyQuestionUsers(surveyQuestionUsers));
 
 				List<SurveyQuestionAnswerChoice> surveyQuestionAnswerChoices = surveyQuestionAnswerChoiceService
 						.findBySurvey(survey.getId());
@@ -121,6 +132,16 @@ public class SurveyRestController {
 			}
 		}
 		return surveyQuestionModels;
+	}
+
+	private List<SurveyQuestionUserModel> getSurveyQuestionUsers(List<SurveyQuestionUser> surveyQuestionUsers) {
+		List<SurveyQuestionUserModel> surveyQuestionUserModels = new ArrayList<SurveyQuestionUserModel>();
+		if (surveyQuestionUsers != null) {
+			for (SurveyQuestionUser surveyQuestionUser : surveyQuestionUsers) {
+				surveyQuestionUserModels.add(new SurveyQuestionUserModel(surveyQuestionUser));
+			}
+		}
+		return surveyQuestionUserModels;
 	}
 
 	private List<SurveyGroupModel> getSurveyGroups(List<SurveyGroup> surveyGroups) {
