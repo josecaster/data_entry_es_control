@@ -16,6 +16,7 @@ public class SurveyResponseHistoryPreviewGenerator {
 		questionPreviewLayout.setShowInfo(false);
 		questionPreviewLayout.setShowSection(false);
 		questionPreviewLayout.setEditable(false);
+		questionPreviewLayout.setAuditView(true);
 		questionPreviewLayout.setPreviewData(surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
 	}
 

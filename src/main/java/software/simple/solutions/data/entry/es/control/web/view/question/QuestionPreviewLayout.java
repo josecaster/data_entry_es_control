@@ -57,21 +57,21 @@ public class QuestionPreviewLayout extends VerticalLayout {
 			try {
 				SurveyResponseAnswerHistory surveyResponseAnswerHistory = SurveyResponseAnswerHistoryServiceFacade
 						.get(UI.getCurrent()).getSurveyResponseAnswerHistoryByResponseAndQuestion(
-								surveyResponse.getId(), surveyQuestion.getId());
-				if (surveyResponseAnswerHistory != null) {
-					HistoryView historyView = new HistoryView(cl, surveyResponseAnswerHistory.getId());
-					historyView.setRevisionViewGenerator(new RevisionViewGenerator() {
+								surveyResponse == null ? null : surveyResponse.getId(),
+								surveyQuestion == null ? null : surveyQuestion.getId());
+				HistoryView historyView = new HistoryView(cl,
+						surveyResponseAnswerHistory == null ? null : surveyResponseAnswerHistory.getId());
+				historyView.setRevisionViewGenerator(new RevisionViewGenerator() {
 
-						@Override
-						public Component getRevisionView(RevisionPojo revisionPojo) {
-							SurveyResponseAnswerHistory surveyResponseAnswerHistory = (SurveyResponseAnswerHistory) revisionPojo
-									.getEntity();
-							SurveyResponseHistoryPreviewGenerator surveyResponseHistoryPreviewGenerator = new SurveyResponseHistoryPreviewGenerator(
-									sessionHolder, surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
-							return surveyResponseHistoryPreviewGenerator.getQuestionPreviewLayout();
-						}
-					});
-				}
+					@Override
+					public Component getRevisionView(RevisionPojo revisionPojo) {
+						SurveyResponseAnswerHistory surveyResponseAnswerHistory = (SurveyResponseAnswerHistory) revisionPojo
+								.getEntity();
+						SurveyResponseHistoryPreviewGenerator surveyResponseHistoryPreviewGenerator = new SurveyResponseHistoryPreviewGenerator(
+								sessionHolder, surveyQuestion, surveyResponse, surveyResponseAnswerHistory);
+						return surveyResponseHistoryPreviewGenerator.getQuestionPreviewLayout();
+					}
+				});
 			} catch (FrameworkException e) {
 				e.printStackTrace();
 			}
@@ -87,6 +87,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 	private boolean showSection = true;
 	private boolean showInfo = true;
 	private boolean editable = false;
+	private boolean auditView = false;
 	private SessionHolder sessionHolder;
 
 	private SurveyQuestion surveyQuestion;
@@ -157,7 +158,7 @@ public class QuestionPreviewLayout extends VerticalLayout {
 		questionFld = new CaptionLabel();
 		questionFld.addStyleName(Style.WORD_WRAP);
 		questionHeaderLayout.addComponent(questionFld);
-		if (surveyResponseAnswerHistory == null) {
+		if (surveyResponse != null && !auditView) {
 			CButton historyBtn = new CButton();
 			historyBtn.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 			historyBtn.setIcon(VaadinIcons.TIME_BACKWARD);
@@ -266,6 +267,14 @@ public class QuestionPreviewLayout extends VerticalLayout {
 
 	public void setEditable(boolean editable) {
 		this.editable = editable;
+	}
+
+	public boolean isAuditView() {
+		return auditView;
+	}
+
+	public void setAuditView(boolean auditView) {
+		this.auditView = auditView;
 	}
 
 }
