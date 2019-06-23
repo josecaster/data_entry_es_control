@@ -134,6 +134,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 
 		groupFld = new SurveyGroupLookUpField();
 		groupFld.setWidth("300px");
+		groupFld.setParentEntity(survey);
 		groupFld.setCaptionByKey(SurveyGroupProperty.SURVEY_GROUP);
 		addComponent(groupFld);
 
@@ -205,6 +206,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		});
 
 		sectionFld.setValue(surveyQuestion.getSurveySection());
+		sectionFld.setParentEntity(surveyQuestion.getSurvey());
 		sectionFld.addValueChangeListener(new ValueChangeListener<Object>() {
 
 			@Override
@@ -222,6 +224,7 @@ public class QuestionOptionsLayout extends VerticalLayout {
 		});
 
 		groupFld.setValue(surveyQuestion.getSurveyGroup());
+		groupFld.setParentEntity(surveyQuestion.getSurvey());
 		groupFld.addValueChangeListener(new ValueChangeListener<Object>() {
 
 			@Override

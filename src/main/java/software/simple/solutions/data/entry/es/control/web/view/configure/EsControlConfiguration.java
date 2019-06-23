@@ -36,6 +36,7 @@ public class EsControlConfiguration extends CGridLayout {
 	private static final Logger logger = LogManager.getLogger(EsControlConfiguration.class);
 
 	private CTextField surveyFileStorageLocationFld;
+	private CTextField reportServerFld;
 
 	private CButton persistBtn;
 	private SessionHolder sessionHolder;
@@ -50,6 +51,9 @@ public class EsControlConfiguration extends CGridLayout {
 				EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION, 0, ++i);
 		surveyFileStorageLocationFld.setWidth("600px");
 
+		reportServerFld = addField(CTextField.class, EsControlConfigurationCodes.SURVEY_REPORT_SERVER, 0, ++i);
+		reportServerFld.setWidth("600px");
+
 		persistBtn = addField(CButton.class, 0, ++i);
 		persistBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
 		persistBtn.setCaptionByKey(SystemProperty.SYSTEM_BUTTON_SUBMIT);
@@ -63,6 +67,8 @@ public class EsControlConfiguration extends CGridLayout {
 				List<ConfigurationVO> configurations = new ArrayList<ConfigurationVO>();
 				configurations.add(getValue(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION,
 						surveyFileStorageLocationFld.getValue()));
+				configurations
+						.add(getValue(EsControlConfigurationCodes.SURVEY_REPORT_SERVER, reportServerFld.getValue()));
 				try {
 					ConfigurationServiceFacade.get(UI.getCurrent()).update(configurations);
 					NotificationWindow.notificationNormalWindow(SystemProperty.UPDATE_SUCCESSFULL);
@@ -83,6 +89,9 @@ public class EsControlConfiguration extends CGridLayout {
 			switch (configuration.getCode()) {
 			case EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION:
 				surveyFileStorageLocationFld.setValue(configuration.getValue());
+				break;
+			case EsControlConfigurationCodes.SURVEY_REPORT_SERVER:
+				reportServerFld.setValue(configuration.getValue());
 				break;
 			default:
 				break;

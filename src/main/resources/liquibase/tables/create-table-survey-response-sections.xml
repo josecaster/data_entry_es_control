@@ -44,4 +44,16 @@
 		</createTable>
 	</changeSet>
 
+	<changeSet id="1561328281258" author="simple.solutions" >
+		<preConditions>
+			<not>
+				<columnExists tableName="survey_response_sections_aud"
+					columnName="REVISION_TYPE" />
+			</not>
+		</preConditions>
+		<addColumn tableName="survey_response_sections_aud">
+			<column name="REVISION_TYPE" type="TINYINT" />
+		</addColumn>
+	</changeSet>
+
 </databaseChangeLog>

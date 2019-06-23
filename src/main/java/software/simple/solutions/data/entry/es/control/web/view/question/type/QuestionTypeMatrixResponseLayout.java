@@ -431,7 +431,7 @@ public class QuestionTypeMatrixResponseLayout extends VerticalLayout {
 		@Override
 		public void buttonClick(ClickEvent event) {
 
-			Integer componentIndex = rowContainerLayout.getComponentIndex(rowLayout);
+			Integer componentIndex = columContainerLayout.getComponentIndex(rowLayout);
 			try {
 				SurveyQuestionAnswerChoiceServiceFacade.get(UI.getCurrent()).deleteAndUpdateIndex(
 						SurveyQuestionAnswerChoice.class, surveyQuestionAnswerChoice.getId(),

@@ -40,7 +40,6 @@ import software.simple.solutions.data.entry.es.control.pojo.ResponseJsonCellPojo
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceSelectionServiceFacade;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyQuestionAnswerChoiceServiceFacade;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseAnswerServiceFacade;
-import software.simple.solutions.data.entry.es.control.service.impl.SurveyResponseAnswerService;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseAnswerVO;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CDecimalField;
@@ -239,6 +238,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
+							surveyResponseAnswerVO.setMatrixColumnType(matrixColumnType);
 							try {
 								surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
@@ -292,6 +292,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setResponseText(localDate == null ? null
 									: localDate.format(
 											DateTimeFormatter.ofPattern(Constants.SIMPLE_DATE_FORMAT.toPattern())));
+							surveyResponseAnswerVO.setMatrixColumnType(matrixColumnType);
 							try {
 								SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
@@ -344,6 +345,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
+							surveyResponseAnswerVO.setMatrixColumnType(matrixColumnType);
 							try {
 								surveyResponseAnswer = SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
@@ -392,6 +394,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 							surveyResponseAnswerVO.setQuestionAnswerChoiceRowId(row.getId());
 							surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 							surveyResponseAnswerVO.setResponseText(value);
+							surveyResponseAnswerVO.setMatrixColumnType(matrixColumnType);
 							try {
 								SurveyResponseAnswerServiceFacade.get(UI.getCurrent())
 										.updateAnswerMatrixCellForText(surveyResponseAnswerVO);
@@ -462,6 +465,8 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 										surveyResponseAnswerVO.setQuestionAnswerChoiceColumnId(column.getId());
 										surveyResponseAnswerVO.setQuestionAnswerChoiceSelectionId(selection.getId());
 										surveyResponseAnswerVO.setSelected(selected);
+										surveyResponseAnswerVO
+												.setMatrixColumnType(MatrixColumnType.MULTIPLE_COMPOSITE_SELECTION);
 										try {
 											surveyResponseAnswer = SurveyResponseAnswerServiceFacade
 													.get(UI.getCurrent())

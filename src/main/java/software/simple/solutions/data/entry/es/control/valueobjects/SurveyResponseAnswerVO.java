@@ -18,6 +18,7 @@ public class SurveyResponseAnswerVO extends SuperVO {
 	private Long questionAnswerChoiceSelectionId;
 	private Boolean selected;
 	private String otherValue;
+	private String matrixColumnType;
 
 	public Long getId() {
 		return id;
@@ -113,6 +114,14 @@ public class SurveyResponseAnswerVO extends SuperVO {
 
 	public void setQuestionAnswerChoiceSelectionId(Long questionAnswerChoiceSelectionId) {
 		this.questionAnswerChoiceSelectionId = questionAnswerChoiceSelectionId;
+	}
+
+	public String getMatrixColumnType() {
+		return matrixColumnType;
+	}
+
+	public void setMatrixColumnType(String matrixColumnType) {
+		this.matrixColumnType = matrixColumnType;
 	}
 
 }

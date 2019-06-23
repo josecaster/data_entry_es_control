@@ -132,7 +132,8 @@ public class SurveyService extends SuperService implements ISurveyService {
 	@Override
 	public List<Configuration> getEsControlConfigurations() throws FrameworkException {
 		return configurationRepository
-				.getConfigurations(Arrays.asList(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION));
+				.getConfigurations(Arrays.asList(EsControlConfigurationCodes.SURVEY_FILE_STORAGE_LOCATION,
+						EsControlConfigurationCodes.SURVEY_REPORT_SERVER));
 	}
 
 }

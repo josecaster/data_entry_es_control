@@ -1,9 +1,22 @@
 package software.simple.solutions.data.entry.es.control.web.view;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.ByteArrayHttpMessageConverter;
+import org.springframework.web.client.RestTemplate;
 import org.vaadin.teemu.switchui.Switch;
 
 import com.vaadin.data.HasValue.ValueChangeEvent;
@@ -11,6 +24,7 @@ import com.vaadin.data.HasValue.ValueChangeListener;
 import com.vaadin.data.ValueProvider;
 import com.vaadin.event.LayoutEvents.LayoutClickEvent;
 import com.vaadin.event.LayoutEvents.LayoutClickListener;
+import com.vaadin.icons.VaadinIcons;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -23,6 +37,7 @@ import com.vaadin.ui.themes.ValoTheme;
 import io.reactivex.functions.Consumer;
 import io.reactivex.subjects.BehaviorSubject;
 import software.simple.solutions.data.entry.es.control.components.lookup.SurveyLookUpField;
+import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.constants.EsControlStyle;
 import software.simple.solutions.data.entry.es.control.constants.EsReferenceKey;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
@@ -34,6 +49,7 @@ import software.simple.solutions.data.entry.es.control.service.facade.SurveyResp
 import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseVO;
 import software.simple.solutions.data.entry.es.control.web.view.question.QuestionSectionPreviewLayout;
+import software.simple.solutions.framework.core.components.CButton;
 import software.simple.solutions.framework.core.components.CCheckBox;
 import software.simple.solutions.framework.core.components.CGridLayout;
 import software.simple.solutions.framework.core.components.CTextField;
@@ -42,10 +58,14 @@ import software.simple.solutions.framework.core.components.FormView;
 import software.simple.solutions.framework.core.components.filter.CStringIntervalLayout;
 import software.simple.solutions.framework.core.components.select.ApplicationUserSelect;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
+import software.simple.solutions.framework.core.entities.Configuration;
 import software.simple.solutions.framework.core.entities.MappedSuperClass;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.properties.SystemProperty;
+import software.simple.solutions.framework.core.service.facade.ConfigurationServiceFacade;
 import software.simple.solutions.framework.core.util.ComponentUtil;
+import software.simple.solutions.framework.core.util.OnDemandFileDownloader;
+import software.simple.solutions.framework.core.util.OnDemandStreamResource;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
 public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
@@ -144,6 +164,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 		private ApplicationUserSelect applicationUserFld;
 		private CCheckBox activeFld;
 		private Switch editAnswersSwitch;
+		private CButton generateFormFld;
 
 		private HorizontalLayout sectionMainLayout;
 		private VerticalLayout v1;
@@ -164,22 +185,27 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			addComponent(newFormGrid);
 
 			formNameFld = newFormGrid.addField(CTextField.class, SurveyResponseProperty.FORM_NAME, 0, 0);
+			formNameFld.setWidth("250px");
 			formNameFld.setRequiredIndicatorVisible(true);
 
-			surveyFld = newFormGrid.addField(SurveyLookUpField.class, SurveyResponseProperty.SURVEY, 0, 1);
+			generateFormFld = newFormGrid.addField(CButton.class, null, 1, 0);
+			generateFormFld.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
+			generateFormFld.setIcon(VaadinIcons.DOWNLOAD);
+
+			surveyFld = newFormGrid.addField(SurveyLookUpField.class, SurveyResponseProperty.SURVEY, 0, 1, 1, 1);
 			surveyFld.handleForParentEntity(getParentEntity());
 			surveyFld.setRequiredIndicatorVisible(true);
 
-			activeFld = newFormGrid.addField(CCheckBox.class, SystemProperty.SYSTEM_ENTITY_ACTIVE, 1, 0);
+			activeFld = newFormGrid.addField(CCheckBox.class, SystemProperty.SYSTEM_ENTITY_ACTIVE, 2, 0);
 			activeFld.setReadOnly(true);
 
 			applicationUserFld = newFormGrid.addField(ApplicationUserSelect.class,
-					SurveyResponseProperty.APPLICATION_USER, 1, 1, 2, 1);
+					SurveyResponseProperty.APPLICATION_USER, 2, 1, 3, 1);
 			applicationUserFld.setEmptySelectionAllowed(false);
 			applicationUserFld.setRequiredIndicatorVisible(true);
 			applicationUserFld.setWidth("200px");
 
-			editAnswersSwitch = newFormGrid.addField(Switch.class, SurveyResponseProperty.EDIT_ANSWERS, 2, 0);
+			editAnswersSwitch = newFormGrid.addField(Switch.class, SurveyResponseProperty.EDIT_ANSWERS, 3, 0);
 			editAnswersSwitch.setVisible(false);
 			editAnswersSwitch.setAnimationEnabled(true);
 			editAnswersSwitch.addStyleName("compact");
@@ -281,6 +307,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			activeFld.setValue(true);
 			newFormGrid.setVisible(true);
 			sectionMainLayout.setVisible(false);
+			generateFormFld.setVisible(false);
 			populateApplicationUserFld();
 
 			surveyFld.addValueChangeListener(new ValueChangeListener<Object>() {
@@ -375,6 +402,55 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 					populateApplicationUserFld();
 				}
 			});
+
+			OnDemandFileDownloader fileDownloader = new OnDemandFileDownloader(new OnDemandStreamResource() {
+
+				private static final long serialVersionUID = 2210160695902329446L;
+
+				@Override
+				public InputStream getStream() {
+					try {
+						return new ByteArrayInputStream(fetchFile());
+					} catch (IOException | FrameworkException e) {
+						e.printStackTrace();
+						return null;
+					}
+
+				}
+
+				@Override
+				public String getFilename() {
+					return surveyResponse.getFormName() + ".pdf";
+				}
+
+				public byte[] fetchFile() throws IOException, FrameworkException {
+
+					RestTemplate restTemplate = new RestTemplate();
+					restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
+
+					HttpHeaders headers = new HttpHeaders();
+//					headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+
+					HttpEntity<String> entity = new HttpEntity<String>(headers);
+
+					Long id = surveyResponse.getId();
+					ConfigurationServiceFacade configurationServiceFacade = ConfigurationServiceFacade
+							.get(UI.getCurrent());
+					Configuration configuration = configurationServiceFacade
+							.getByCode(EsControlConfigurationCodes.SURVEY_REPORT_SERVER);
+					if (configuration != null && StringUtils.isNotBlank(configuration.getValue())) {
+						String reportServerURL = configuration.getValue();
+						ResponseEntity<byte[]> response = restTemplate.exchange(reportServerURL + "/report/elv1/" + id,
+								HttpMethod.GET, entity, byte[].class);
+
+						if (response.getStatusCode() == HttpStatus.OK) {
+							return response.getBody();
+						}
+					}
+					return new byte[0];
+				}
+			});
+			fileDownloader.extend(generateFormFld);
 
 			return surveyResponse;
 		}

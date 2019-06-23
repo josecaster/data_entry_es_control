@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import software.simple.solutions.data.entry.es.control.constants.MatrixColumnType;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.constants.State;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
@@ -325,12 +326,15 @@ public class SurveyResponseAnswerService extends SuperService implements ISurvey
 		}
 		surveyResponseAnswer.setActive(vo.getActive());
 		surveyResponseAnswer.setSurveyResponse(get(SurveyResponse.class, vo.getSurveyResponseId()));
-		surveyResponseAnswer.setSurveyQuestion(get(SurveyQuestion.class, vo.getSurveyQuestionId()));
+		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, vo.getSurveyQuestionId());
+		surveyResponseAnswer.setSurveyQuestion(surveyQuestion);
 		surveyResponseAnswer.setSurveyQuestionAnswerChoiceRow(
 				get(SurveyQuestionAnswerChoice.class, vo.getQuestionAnswerChoiceRowId()));
 		surveyResponseAnswer.setSurveyQuestionAnswerChoiceColumn(
 				get(SurveyQuestionAnswerChoice.class, vo.getQuestionAnswerChoiceColumnId()));
 		surveyResponseAnswer.setResponseText(vo.getResponseText());
+		surveyResponseAnswer.setQuestionType(surveyQuestion.getQuestionType());
+		surveyResponseAnswer.setMatrixColumnType(vo.getMatrixColumnType());
 		surveyResponseAnswer.setState(State.UPDATED);
 		surveyResponseAnswer = saveOrUpdate(surveyResponseAnswer, newEntity);
 		createUpdateAnswerHistory(surveyResponseAnswer);
@@ -354,7 +358,8 @@ public class SurveyResponseAnswerService extends SuperService implements ISurvey
 		}
 		surveyResponseAnswer.setActive(vo.getActive());
 		surveyResponseAnswer.setSurveyResponse(get(SurveyResponse.class, vo.getSurveyResponseId()));
-		surveyResponseAnswer.setSurveyQuestion(get(SurveyQuestion.class, vo.getSurveyQuestionId()));
+		SurveyQuestion surveyQuestion = get(SurveyQuestion.class, vo.getSurveyQuestionId());
+		surveyResponseAnswer.setSurveyQuestion(surveyQuestion);
 		surveyResponseAnswer.setSurveyQuestionAnswerChoiceRow(
 				get(SurveyQuestionAnswerChoice.class, vo.getQuestionAnswerChoiceRowId()));
 		surveyResponseAnswer.setSurveyQuestionAnswerChoiceColumn(
@@ -362,6 +367,8 @@ public class SurveyResponseAnswerService extends SuperService implements ISurvey
 		surveyResponseAnswer.setSurveyQuestionAnswerChoiceSelection(
 				get(SurveyQuestionAnswerChoiceSelection.class, vo.getQuestionAnswerChoiceSelectionId()));
 		surveyResponseAnswer.setSelected(vo.getSelected());
+		surveyResponseAnswer.setQuestionType(surveyQuestion.getQuestionType());
+		surveyResponseAnswer.setMatrixColumnType(vo.getMatrixColumnType());
 		surveyResponseAnswer.setState(State.UPDATED);
 		surveyResponseAnswer = saveOrUpdate(surveyResponseAnswer, newEntity);
 		createUpdateAnswerHistory(surveyResponseAnswer);
