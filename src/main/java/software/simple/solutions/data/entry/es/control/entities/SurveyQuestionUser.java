@@ -11,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.hibernate.annotations.SelectBeforeUpdate;
 import org.hibernate.envers.AuditOverride;
 import org.hibernate.envers.Audited;
@@ -42,6 +44,7 @@ public class SurveyQuestionUser extends MappedSuperClass {
 	@JoinColumn(name = EsControlTables.SURVEY_QUESTION_USERS_.COLUMNS.SURVEY_ID_)
 	private Survey survey;
 
+	@NotFound(action = NotFoundAction.IGNORE)
 	@ManyToOne
 	@JoinColumn(name = EsControlTables.SURVEY_QUESTION_USERS_.COLUMNS.QUESTION_ID_)
 	private SurveyQuestion surveyQuestion;
