@@ -26,7 +26,7 @@ public class SurveyResponseSectionRepository extends GenericRepository implement
 		ConcurrentMap<String, Object> paramMap = createParamMap();
 		String query = "select srs from SurveyResponseSection srs where srs.surveyResponse.id=:surveyResponseId";
 		paramMap.put("surveyResponseId", surveyResponseId);
-		return getByQuery(query, paramMap);
+		return createListQuery(query, paramMap);
 	}
 
 	@Override
