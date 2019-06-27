@@ -37,4 +37,14 @@ public class SurveyResponseSectionRepository extends GenericRepository implement
 		deleteByHql(delete, paramMap);
 	}
 
+	@Override
+	public SurveyResponseSection getBySurveyResponseAndSection(Long surveyResponseId, Long surveySectionId)
+			throws FrameworkException {
+		String query = "select srs from SurveyResponseSection srs where srs.surveyResponse.id=:surveyResponseId and srs.surveySection.id=:surveySectionId";
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("surveyResponseId", surveyResponseId);
+		paramMap.put("surveySectionId", surveySectionId);
+		return getByQuery(query, paramMap);
+	}
+
 }

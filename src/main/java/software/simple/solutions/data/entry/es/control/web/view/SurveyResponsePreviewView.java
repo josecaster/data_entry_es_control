@@ -3,7 +3,6 @@ package software.simple.solutions.data.entry.es.control.web.view;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -13,7 +12,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
@@ -44,6 +42,7 @@ import software.simple.solutions.data.entry.es.control.entities.Survey;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveySection;
 import software.simple.solutions.data.entry.es.control.properties.SurveyResponseProperty;
+import software.simple.solutions.data.entry.es.control.properties.SurveySectionProperty;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyApplicationUserServiceFacade;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveyResponseServiceFacade;
 import software.simple.solutions.data.entry.es.control.service.facade.SurveySectionServiceFacade;
@@ -66,6 +65,7 @@ import software.simple.solutions.framework.core.service.facade.ConfigurationServ
 import software.simple.solutions.framework.core.util.ComponentUtil;
 import software.simple.solutions.framework.core.util.OnDemandFileDownloader;
 import software.simple.solutions.framework.core.util.OnDemandStreamResource;
+import software.simple.solutions.framework.core.util.PropertyResolver;
 import software.simple.solutions.framework.core.web.BasicTemplate;
 
 public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
@@ -173,10 +173,9 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 		private VerticalLayout sectionPanelLayout;
 		private boolean editAnswers = false;
 		private CssLayout selectedMenuLayout;
+		private QuestionSectionPreviewLayout questionSectionPreviewLayout;
 
 		private SurveyResponse surveyResponse;
-
-		private QuestionSectionPreviewLayout questionSectionPreviewLayout;
 
 		@Override
 		public void executeBuild() {
@@ -231,6 +230,8 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			sectionsPanel.setHeight("350px");
 			v1.addComponent(sectionsPanel);
 			v1.setExpandRatio(sectionsPanel, 1);
+			sectionsPanel.setCaption(PropertyResolver.getPropertyValueByLocale(SurveySectionProperty.SURVEY_SECTIONS,
+					UI.getCurrent().getLocale()));
 
 			sectionPanelLayout = new VerticalLayout();
 			sectionPanelLayout.setMargin(false);
@@ -294,7 +295,6 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 			questionSectionPreviewLayout = new QuestionSectionPreviewLayout(sessionHolder);
 			questionSectionPreviewLayout.setShowInfo(false);
-			questionSectionPreviewLayout.setUseGrid(false);
 			questionSectionPreviewLayout.setEditable(editAnswers);
 			questionSectionPreviewLayout.setSurveySection(surveySection, surveyResponse);
 			questionSectionPreviewLayout.setWidth("100%");
@@ -429,7 +429,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 					restTemplate.getMessageConverters().add(new ByteArrayHttpMessageConverter());
 
 					HttpHeaders headers = new HttpHeaders();
-//					headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
+					// headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
 
 					HttpEntity<String> entity = new HttpEntity<String>(headers);
 

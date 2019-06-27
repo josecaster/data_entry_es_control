@@ -24,4 +24,14 @@ public class SurveyResponseSectionServiceFacade extends SuperServiceFacade<ISurv
 	public List<SurveyResponseSection> getSurveyResponseSections(Long surveyResponseId) throws FrameworkException {
 		return service.getSurveyResponseSections(surveyResponseId);
 	}
+
+	public SurveyResponseSection updateNotApplicable(Long surveyResponseId, Long surveySectionId, Boolean selected)
+			throws FrameworkException {
+		return service.updateNotApplicable(surveyResponseId, surveySectionId, selected);
+	}
+
+	public SurveyResponseSection getSurveyResponseSectionByResponseAndSection(Long surveyResponseId,
+			Long surveySectionId) throws FrameworkException {
+		return service.getSurveyResponseSectionByResponseAndSection(surveyResponseId, surveySectionId);
+	}
 }

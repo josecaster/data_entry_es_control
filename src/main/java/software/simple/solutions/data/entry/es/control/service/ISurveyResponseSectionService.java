@@ -10,4 +10,10 @@ public interface ISurveyResponseSectionService extends ISuperService {
 
 	List<SurveyResponseSection> getSurveyResponseSections(Long surveyResponseId) throws FrameworkException;
 
+	SurveyResponseSection updateNotApplicable(Long surveyId, Long surveySectionId, Boolean selected)
+			throws FrameworkException;
+
+	SurveyResponseSection getSurveyResponseSectionByResponseAndSection(Long surveyResponseId, Long surveySectionId)
+			throws FrameworkException;
+
 }

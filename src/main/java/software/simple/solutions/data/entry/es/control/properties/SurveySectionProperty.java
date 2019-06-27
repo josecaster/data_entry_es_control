@@ -4,6 +4,7 @@ public class SurveySectionProperty {
 
 	public static final String ID = "model.survey.section.id";
 	public static final String SURVEY_SECTION = "model.survey.section";
+	public static final String SURVEY_SECTIONS = "model.survey.sections";
 	public static final String CODE = "model.survey.section.code";
 	public static final String NAME = "model.survey.section.name";
 	public static final String DESCRIPTION = "model.survey.section.description";
