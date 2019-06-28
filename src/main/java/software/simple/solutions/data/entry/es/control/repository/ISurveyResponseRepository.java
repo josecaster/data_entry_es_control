@@ -14,4 +14,6 @@ public interface ISurveyResponseRepository extends IGenericRepository {
 
 	List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException;
 
+	Boolean removeAllFormData(Long surveyResponseId) throws FrameworkException;
+
 }

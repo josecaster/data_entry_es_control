@@ -35,4 +35,8 @@ public class SurveyResponseServiceFacade extends SuperServiceFacade<ISurveyRespo
 	public List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException {
 		return service.findAllActiveSurveyResponseUuIdsByUser(username);
 	}
+
+	public Boolean removeAllFormData(Long surveyResponseId) throws FrameworkException {
+		return service.removeAllFormData(surveyResponseId);
+	}
 }

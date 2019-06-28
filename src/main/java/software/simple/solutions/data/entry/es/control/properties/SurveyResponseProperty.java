@@ -10,5 +10,6 @@ public class SurveyResponseProperty {
 	public static final String APPLICATION_USER = "model.survey.response.application.user";
 	public static final String EDIT_ANSWERS = "model.survey.response.edit.answers";
 	public static final String GENERATE_FORM = "model.survey.response.generate.form";
-
+	public static final String CLEAR_ALL_FORM_DATA = "model.survey.response.clear.all.form.data";
+	public static final String CLEAR_ALL_FORM_DATA_CONFIRMATION = "model.survey.response.clear.all.form.data.confirmation";
 }

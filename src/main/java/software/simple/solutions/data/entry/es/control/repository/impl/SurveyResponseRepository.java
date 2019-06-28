@@ -14,8 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseAnswer;
+import software.simple.solutions.data.entry.es.control.entities.SurveyResponseSection;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyApplicationUserRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveyResponseAnswerRepository;
 import software.simple.solutions.data.entry.es.control.repository.ISurveyResponseRepository;
+import software.simple.solutions.data.entry.es.control.repository.ISurveyResponseSectionRepository;
 import software.simple.solutions.data.entry.es.control.valueobjects.SurveyResponseVO;
 import software.simple.solutions.framework.core.entities.ApplicationUser;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
@@ -27,6 +31,12 @@ public class SurveyResponseRepository extends GenericRepository implements ISurv
 
 	@Autowired
 	private ISurveyApplicationUserRepository surveyApplicationUserRepository;
+
+	@Autowired
+	private ISurveyResponseAnswerRepository surveyResponseAnswerRepository;
+
+	@Autowired
+	private ISurveyResponseSectionRepository surveyResponseSectionRepository;
 
 	@Override
 	public JoinLeftBuilder createJoinBuilder(Object o, CriteriaBuilder criteriaBuilder) {
@@ -80,6 +90,23 @@ public class SurveyResponseRepository extends GenericRepository implements ISurv
 		paramMap.put("username", username);
 		paramMap.put("active", true);
 		return createListQuery(query, paramMap);
+	}
+
+	@Override
+	public Boolean removeAllFormData(Long surveyResponseId) throws FrameworkException {
+		ConcurrentMap<String, Object> paramMap = createParamMap();
+		paramMap.put("surveyResponseId", surveyResponseId);
+		List<SurveyResponseAnswer> surveyResponseAnswers = surveyResponseAnswerRepository
+				.getSurveyResponseAnswers(surveyResponseId);
+		if (surveyResponseAnswers != null) {
+			deleteAll(surveyResponseAnswers);
+		}
+		List<SurveyResponseSection> surveyResponseSections = surveyResponseSectionRepository
+				.getSurveyResponseSections(surveyResponseId);
+		if (surveyResponseSections != null) {
+			deleteAll(surveyResponseSections);
+		}
+		return true;
 	}
 
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
@@ -174,18 +173,18 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 		List<SurveyResponseAnswerModel> surveyResponseAnswers = surveyResponseRestModel.getSurveyResponseAnswers();
 		if (surveyResponseAnswers != null) {
 			Map<Pair<String, Long>, List<SurveyResponseAnswerModel>> map = null;
-			try{
-			map = surveyResponseAnswers.stream()
-					.filter(p -> (p.getQuestionType().equalsIgnoreCase(QuestionType.CHOICES)
-							|| p.getQuestionType().equalsIgnoreCase(QuestionType.MATRIX)))
-					.collect(Collectors
-							.groupingBy(p -> Pair.of(p.getSurveyResponseUniqueId(), p.getSurveyQuestionId())));
-			}catch (Exception e) {
+			try {
+				map = surveyResponseAnswers.stream()
+						.filter(p -> (p.getQuestionType().equalsIgnoreCase(QuestionType.CHOICES)
+								|| p.getQuestionType().equalsIgnoreCase(QuestionType.MATRIX)))
+						.collect(Collectors
+								.groupingBy(p -> Pair.of(p.getSurveyResponseUniqueId(), p.getSurveyQuestionId())));
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			for(Entry<Pair<String, Long>, List<SurveyResponseAnswerModel>> entry:map.entrySet()){
+			for (Entry<Pair<String, Long>, List<SurveyResponseAnswerModel>> entry : map.entrySet()) {
 				try {
-					Pair<String,Long> key = entry.getKey();
+					Pair<String, Long> key = entry.getKey();
 					surveyResponseAnswerRepository.removeByResponseUniqueIdAndQuestion(key.getFirst(), key.getSecond());
 				} catch (FrameworkException e) {
 					logger.error(e.getMessage(), e);
@@ -275,6 +274,11 @@ public class SurveyResponseService extends SuperService implements ISurveyRespon
 	@Override
 	public List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException {
 		return surveyResponseRepository.findAllActiveSurveyResponseUuIdsByUser(username);
+	}
+
+	@Override
+	public Boolean removeAllFormData(Long surveyResponseId) throws FrameworkException {
+		return surveyResponseRepository.removeAllFormData(surveyResponseId);
 	}
 
 }

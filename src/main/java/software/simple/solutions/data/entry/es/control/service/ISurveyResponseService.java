@@ -15,4 +15,6 @@ public interface ISurveyResponseService extends ISuperService {
 
 	List<String> findAllActiveSurveyResponseUuIdsByUser(String username) throws FrameworkException;
 
+	Boolean removeAllFormData(Long surveyResponseId) throws FrameworkException;
+
 }
