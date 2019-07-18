@@ -209,6 +209,7 @@ public class SurveyView extends BasicTemplate<Survey> {
 				}
 			}, fileName == null ? "unknown" : fileName);
 			pdfViewer.setResource(streamResource);
+			pdfViewer.firstPage();
 			BrowserWindowOpener browserWindowOpener = new BrowserWindowOpener(streamResource);
 			browserWindowOpener.setFeatures("resizable");
 			browserWindowOpener.extend(toExternalWindowBtn);

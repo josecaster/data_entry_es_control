@@ -1,8 +1,3 @@
-// If you edit this file you need to compile the theme. See README.md for details.
-
-// Global variable overrides. Must be declared before importing Valo.
-
-// Defines the plaintext font size, weight and family. Font size affects general component sizing.
 $v-font-size: 12px;
 $v-font-weight: 300;
 $v-font-family: "Open Sans", sans-serif;
@@ -15,6 +10,8 @@ $v-border-radius: 4px;
 
 // Affects the color of some component elements, e.g Button, Panel title, etc
 $v-background-color: hsl(210, 0%, 98%);
+//$v-background-color: hsl(47, 42%, 46%);
+
 // Affects the color of content areas, e.g  Panel and Window content, TextField input etc
 $v-app-background-color: $v-background-color;
 
@@ -24,7 +21,7 @@ $v-bevel-depth: 30%;
 $v-shadow-opacity: 5%;
 
 // Defines colors for indicating status (focus, success, failure)
-$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+$v-focus-color: #37528D; // Calculates a suitable color automatically
 $v-friendly-color: #2c9720;
 $v-error-indicator-color: #ed473b;
 
@@ -39,6 +36,14 @@ $v-layout-margin-right: 10px !default;
 
 // Slight adjustment to menu background-color
 $valo-menu-background-color: #414B56;
+
 $v-disabled-opacity: 0.8 !default;
+
+$v-unit-size: 26px;
+$v-unit-size--small: 20px;
+$v-unit-size--tiny: 18px;
+
+$v-layout-spacing-vertical: 3px;
+//$v-layout-spacing-horizontal: 6px;
 
 @import "../valo/valo";
