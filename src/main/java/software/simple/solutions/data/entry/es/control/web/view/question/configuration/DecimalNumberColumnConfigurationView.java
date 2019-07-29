@@ -80,7 +80,7 @@ public class DecimalNumberColumnConfigurationView extends VerticalLayout {
 		horizontalLayout.setMargin(false);
 		addComponent(horizontalLayout);
 
-		minValueFld = new CDecimalField(sessionHolder);
+		minValueFld = new CDecimalField();
 		minValueFld.setWidth("100px");
 		minValueFld.setCaptionByKey(SurveyQuestionAnswerChoiceProperty.VALIDATE_MIN_VALUE);
 		horizontalLayout.addComponent(minValueFld);
@@ -88,7 +88,7 @@ public class DecimalNumberColumnConfigurationView extends VerticalLayout {
 		minValueFld.setValueChangeMode(ValueChangeMode.BLUR);
 		minValueFld.addValueChangeListener(new MinValueChangeListener());
 
-		maxValueFld = new CDecimalField(sessionHolder);
+		maxValueFld = new CDecimalField();
 		maxValueFld.setWidth("100px");
 		maxValueFld.setCaptionByKey(SurveyQuestionAnswerChoiceProperty.VALIDATE_MAX_VALUE);
 		horizontalLayout.addComponent(maxValueFld);

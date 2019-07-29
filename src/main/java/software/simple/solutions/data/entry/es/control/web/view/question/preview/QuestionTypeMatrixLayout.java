@@ -315,7 +315,7 @@ public class QuestionTypeMatrixLayout extends VerticalLayout {
 
 				return dateField;
 			case MatrixColumnType.DECIMAL_NUMBER:
-				CDecimalField decimalField = new CDecimalField(sessionHolder);
+				CDecimalField decimalField = new CDecimalField();
 				decimalField.setEnabled(editable);
 				decimalField.setValueChangeMode(ValueChangeMode.BLUR);
 				decimalField.setWidth("100%");

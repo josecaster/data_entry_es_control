@@ -55,14 +55,14 @@ public class QuestionTypeLengthFeetInchLayout extends VerticalLayout {
 		horizontalLayout.setSpacing(true);
 		addComponent(horizontalLayout);
 
-		lenghtFeetFld = new CDecimalField(sessionHolder);
+		lenghtFeetFld = new CDecimalField();
 		lenghtFeetFld.setValueChangeMode(ValueChangeMode.BLUR);
 		lenghtFeetFld.setWidth("100px");
 		horizontalLayout.addComponent(lenghtFeetFld);
 
 		horizontalLayout.addComponent(new Label("feet"));
 
-		lenghtInchFld = new CDecimalField(sessionHolder);
+		lenghtInchFld = new CDecimalField();
 		lenghtInchFld.setValueChangeMode(ValueChangeMode.BLUR);
 		lenghtInchFld.setWidth("100px");
 		horizontalLayout.addComponent(lenghtInchFld);
