@@ -3,10 +3,11 @@ package software.simple.solutions.data.entry.es.control.service.impl;
 import java.util.List;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponse;
 import software.simple.solutions.data.entry.es.control.entities.SurveyResponseSection;
@@ -17,7 +18,7 @@ import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.impl.SuperService;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = ISurveyResponseSectionRepository.class)
 public class SurveyResponseSectionService extends SuperService implements ISurveyResponseSectionService {

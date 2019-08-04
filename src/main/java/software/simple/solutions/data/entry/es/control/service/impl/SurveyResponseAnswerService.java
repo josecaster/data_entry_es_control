@@ -8,15 +8,15 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import com.google.gson.Gson;
 
-import software.simple.solutions.data.entry.es.control.constants.MatrixColumnType;
 import software.simple.solutions.data.entry.es.control.constants.QuestionType;
 import software.simple.solutions.data.entry.es.control.constants.State;
 import software.simple.solutions.data.entry.es.control.entities.SurveyQuestion;
@@ -34,7 +34,7 @@ import software.simple.solutions.framework.core.annotations.ServiceRepository;
 import software.simple.solutions.framework.core.exceptions.FrameworkException;
 import software.simple.solutions.framework.core.service.impl.SuperService;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = ISurveyResponseAnswerRepository.class)
 public class SurveyResponseAnswerService extends SuperService implements ISurveyResponseAnswerService {

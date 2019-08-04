@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import software.simple.solutions.data.entry.es.control.constants.EsControlConfigurationCodes;
 import software.simple.solutions.data.entry.es.control.entities.Survey;
@@ -35,7 +36,7 @@ import software.simple.solutions.framework.core.service.impl.SuperService;
 import software.simple.solutions.framework.core.valueobjects.EntityFileVO;
 import software.simple.solutions.framework.core.valueobjects.SuperVO;
 
-@Transactional
+@Transactional(propagation=Propagation.REQUIRED, rollbackFor = Exception.class)
 @Service
 @ServiceRepository(claz = ISurveyRepository.class)
 public class SurveyService extends SuperService implements ISurveyService {
