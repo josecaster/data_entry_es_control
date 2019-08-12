@@ -7,7 +7,7 @@ import org.springframework.boot.system.ApplicationHome;
 import software.simple.solutions.framework.core.constants.Constants;
 
 @SpringBootApplication
-//(scanBasePackages = { "software.simple.solutions" })
+// (scanBasePackages = { "software.simple.solutions" })
 // @EnableAutoConfiguration
 // @EnableAutoConfiguration(exclude = { SecurityAutoConfiguration.class,
 // ManagementWebSecurityAutoConfiguration.class })

@@ -25,6 +25,7 @@ import com.vaadin.event.LayoutEvents.LayoutClickListener;
 import com.vaadin.icons.VaadinIcons;
 import com.vaadin.server.FontAwesome;
 import com.vaadin.shared.MouseEventDetails.MouseButton;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
@@ -222,13 +223,16 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 
 			editAnswersLbl = new CaptionLabel();
 			editAnswersLbl.setValueByKey(SurveyResponseProperty.EDIT_ANSWERS);
+			editAnswersLbl.addStyleName(ValoTheme.LABEL_H3);
 			actionLayout.addComponent(editAnswersLbl);
+			actionLayout.setComponentAlignment(editAnswersLbl, Alignment.MIDDLE_LEFT);
 
 			editAnswersSwitch = new Switch();
 			editAnswersSwitch.setVisible(false);
 			editAnswersSwitch.setAnimationEnabled(true);
 			editAnswersSwitch.addStyleName("compact");
 			actionLayout.addComponent(editAnswersSwitch);
+			actionLayout.setComponentAlignment(editAnswersSwitch, Alignment.MIDDLE_LEFT);
 
 			generateFormFld = new CButton();
 			generateFormFld.setCaptionByKey(SurveyResponseProperty.GENERATE_FORM);
@@ -236,6 +240,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			generateFormFld.addStyleName(ValoTheme.BUTTON_BORDERLESS_COLORED);
 			generateFormFld.setIcon(VaadinIcons.DOWNLOAD);
 			actionLayout.addComponent(generateFormFld);
+			actionLayout.setComponentAlignment(generateFormFld, Alignment.MIDDLE_LEFT);
 
 			clearAllDataFld = new CButton();
 			clearAllDataFld.setCaptionByKey(SurveyResponseProperty.CLEAR_ALL_FORM_DATA);
@@ -243,6 +248,7 @@ public class SurveyResponsePreviewView extends BasicTemplate<SurveyResponse> {
 			clearAllDataFld.addStyleName(ValoTheme.BUTTON_DANGER);
 			clearAllDataFld.setIcon(FontAwesome.WARNING);
 			actionLayout.addComponent(clearAllDataFld);
+			actionLayout.setComponentAlignment(clearAllDataFld, Alignment.MIDDLE_LEFT);
 
 			clearAllDataFld.addClickListener(new ClickListener() {
 
